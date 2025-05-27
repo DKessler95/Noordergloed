@@ -7,7 +7,7 @@ export function StorySection() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-8">
-              Ons Verhaal
+              Wie zijn wij?
             </h2>
             
             <div className="space-y-6 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
@@ -45,8 +45,8 @@ export function StorySection() {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img 
-                src="https://images.unsplash.com/photo-1551582045-6ec9c11d8697?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000" 
-                alt="Portret met Elfie bij de Hamburgervijver" 
+                src="/attached_assets/IMG-20250501-WA0035.jpg" 
+                alt="Portret met mijn honden in de tuin" 
                 className="w-full h-auto" 
               />
               

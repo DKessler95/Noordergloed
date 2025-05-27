@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Calendar, Clock, Users, CheckCircle, Info, MapPin, ExternalLink } from "lucide-react";
+import { RamenCalendar } from "./ramen-calendar";
 import ramenImage from "@assets/IMG_20250527_233628.jpg";
 
 const ramenOrderSchema = z.object({
@@ -25,7 +26,7 @@ const ramenOrderSchema = z.object({
 type RamenOrderForm = z.infer<typeof ramenOrderSchema>;
 
 export function RamenPreorder() {
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const { toast } = useToast();
 
   const form = useForm<RamenOrderForm>({
@@ -38,6 +39,11 @@ export function RamenPreorder() {
       notes: "",
     },
   });
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    form.setValue("preferredDate", date.toISOString().split('T')[0]);
+  };
 
   const orderMutation = useMutation({
     mutationFn: async (data: RamenOrderForm) => {
@@ -165,44 +171,10 @@ export function RamenPreorder() {
           <CardContent className="p-8">
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="font-display text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-                  Kies je datum
-                </h3>
-                
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
-                  <div className="text-center mb-4">
-                    <h4 className="font-semibold text-lg text-gray-900 dark:text-white">
-                      Beschikbare vrijdagen
-                    </h4>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3">
-                    {availableDates.map((date) => {
-                      const dateString = date.toISOString().split('T')[0];
-                      const isSelected = selectedDate === dateString;
-                      
-                      return (
-                        <button
-                          key={dateString}
-                          type="button"
-                          onClick={() => {
-                            setSelectedDate(dateString);
-                            form.setValue("preferredDate", dateString);
-                          }}
-                          className={`p-3 rounded-lg text-sm font-medium transition-colors ${
-                            isSelected
-                              ? "bg-purple-600 text-white"
-                              : "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800"
-                          }`}
-                        >
-                          {date.toLocaleDateString('nl-NL', { 
-                            day: 'numeric', 
-                            month: 'short' 
-                          })}
-                        </button>
-                      );
-                    })}
-                  </div>
+                <RamenCalendar 
+                  onDateSelect={handleDateSelect}
+                  selectedDate={selectedDate}
+                />
                   
                   <div className="mt-4 space-y-3">
                     <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
