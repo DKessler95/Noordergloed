@@ -103,10 +103,10 @@ export function RamenPreorder() {
                 <Users className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="font-display text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Maximaal 6 Personen
+                Minimaal 6 Personen
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Intieme setting voor de beste kwaliteit. Elk kom wordt met zorg bereid.
+                Avond wordt alleen bevestigd bij minimaal 6 reserveringen. Elk kom wordt met zorg bereid.
               </p>
             </CardContent>
           </Card>
