@@ -24,11 +24,17 @@ export function Header() {
               className="w-10 h-10 rounded-full object-cover"
             />
             <span className="font-display font-semibold text-xl text-purple-600 dark:text-purple-400">
-              Ik & Elfie
+              Pluk & Poot
             </span>
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
+            <button
+              onClick={() => scrollToSection("verhaal")}
+              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            >
+              Ons Verhaal
+            </button>
             <button
               onClick={() => scrollToSection("producten")}
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
@@ -40,12 +46,6 @@ export function Header() {
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             >
               Ramen Pre-order
-            </button>
-            <button
-              onClick={() => scrollToSection("verhaal")}
-              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-            >
-              Ons Verhaal
             </button>
             <button
               onClick={() => scrollToSection("contact")}
