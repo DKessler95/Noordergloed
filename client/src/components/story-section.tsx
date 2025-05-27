@@ -39,17 +39,6 @@ export function StorySection() {
                 <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">30+</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">Schermen per liter</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">4</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Dagen uittrektijd</div>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center space-x-1">
-                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">1</div>
-                  <Heart className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Elfie</div>
-              </div>
             </div>
           </div>
           
@@ -69,12 +58,7 @@ export function StorySection() {
                 </div>
               </div>
               
-              <div className="absolute bottom-6 left-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                <div className="flex items-center space-x-2">
-                  <Heart className="w-4 h-4 text-yellow-500" />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">Team Elfie</span>
-                </div>
-              </div>
+
             </div>
             
             {/* Floating elements */}
