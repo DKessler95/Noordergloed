@@ -138,9 +138,9 @@ export default function ProductDetail() {
     );
   }
 
-  const isElderflower = product.name.includes("Vlierbloesem");
-  const isRose = product.name.includes("Rozen");
-  const otherProducts = allProducts?.filter(p => p.id !== product.id) || [];
+  const isElderflower = product?.name.includes("Vlierbloesem") || false;
+  const isRose = product?.name.includes("Rozen") || false;
+  const otherProducts = allProducts?.filter(p => p.id !== product?.id) || [];
 
   const getProductTheme = () => {
     if (isElderflower) {
