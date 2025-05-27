@@ -40,7 +40,7 @@ export function ProductShowcase() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
           {syrupProducts.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}

@@ -22,14 +22,10 @@ export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps
   // Simuleer beschikbaarheid voor vrijdagen (in werkelijke app zou dit van server komen)
   const getAvailability = (date: Date): { available: number; total: number } => {
     // Alleen vrijdagen zijn beschikbaar
-    if (date.getDay() !== 5) return { available: 0, total: 6 };
+    if (date.getDay() !== 5) return { available: 0, total: 12 };
     
-    // Simuleer verschillende bezettingsgraden
-    const dayOfMonth = date.getDate();
-    if (dayOfMonth % 4 === 0) return { available: 0, total: 6 }; // Rood - vol
-    if (dayOfMonth % 3 === 0) return { available: 1, total: 6 }; // Oranje - bijna vol
-    if (dayOfMonth % 2 === 0) return { available: 3, total: 6 }; // Blauw - half vol
-    return { available: 6, total: 6 }; // Groen - ruim beschikbaar
+    // Alle vrijdagavonden zijn beschikbaar - evenement wordt alleen bevestigd bij minimaal 6 mensen
+    return { available: 12, total: 12 };
   };
 
   const getStatusColor = (available: number, total: number) => {
