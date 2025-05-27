@@ -1,84 +1,23 @@
 import { useParams, useLocation } from "wouter";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { ArrowLeft, Star, Leaf, Heart, Package, Truck, Shield } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, Star, Leaf, Heart, Package, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { StockIndicator } from "@/components/stock-indicator";
 import { ProductCard } from "@/components/product-card";
-import { useToast } from "@/hooks/use-toast";
+import { ShoppingCart, AddToCartButton } from "@/components/shopping-cart";
 import { apiRequest } from "@/lib/queryClient";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@shared/schema";
 
-// Form validation schema
-const orderSchema = z.object({
-  customerName: z.string().min(1, "Naam is verplicht"),
-  customerEmail: z.string().email("Ongeldig e-mailadres"),
-  customerPhone: z.string().optional(),
-  quantity: z.number().min(1, "Minimaal 1 product"),
-  notes: z.string().optional(),
-  productId: z.number(),
-  totalAmount: z.string(),
-  orderType: z.string(),
-});
-
-type OrderForm = z.infer<typeof orderSchema>;
-
 export default function ProductDetail() {
   const params = useParams();
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
   
   const productId = parseInt(params.id || "0");
-
-  // All hooks must be called unconditionally
-  const form = useForm<OrderForm>({
-    resolver: zodResolver(orderSchema),
-    defaultValues: {
-      customerName: "",
-      customerEmail: "",
-      customerPhone: "",
-      quantity: 1,
-      notes: "",
-      productId: productId,
-      totalAmount: "0",
-      orderType: "product",
-    },
-  });
-
-  const orderMutation = useMutation({
-    mutationFn: async (data: OrderForm) => {
-      const response = await apiRequest("POST", "/api/orders", data);
-      return response;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Bestelling geplaatst!",
-        description: "Je bestelling is succesvol geplaatst.",
-      });
-      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
-      form.reset();
-    },
-    onError: () => {
-      toast({
-        title: "Fout bij bestellen",
-        description: "Er is iets misgegaan. Probeer het opnieuw.",
-        variant: "destructive",
-      });
-    },
-  });
 
   // Get single product
   const { data: product, isLoading } = useQuery({
@@ -90,17 +29,6 @@ export default function ProductDetail() {
   const { data: allProducts } = useQuery<Product[]>({
     queryKey: ["/api/products"],
   });
-
-  const onSubmit = (data: OrderForm) => {
-    if (product) {
-      const finalData = {
-        ...data,
-        productId: product.id,
-        totalAmount: (parseFloat(product.price) * data.quantity).toFixed(2),
-      };
-      orderMutation.mutate(finalData);
-    }
-  };
 
   // Loading state
   if (isLoading) {
@@ -285,130 +213,19 @@ export default function ProductDetail() {
                   </Card>
                 </div>
               )}
+
+              {/* Add to Cart Button */}
+              <div className="pt-4">
+                <AddToCartButton product={product} />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Order Section */}
+      {/* Shopping Cart Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <Card className="shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl">Bestel {product.name}</CardTitle>
-            <CardDescription>
-              Vul je gegevens in om deze artisanale siroop te bestellen
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="customerName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Naam *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Je volledige naam" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="customerEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>E-mail *</FormLabel>
-                        <FormControl>
-                          <Input type="email" placeholder="je@email.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="customerPhone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Telefoon</FormLabel>
-                        <FormControl>
-                          <Input placeholder="06-12345678" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="quantity"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Aantal *</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number" 
-                            min="1" 
-                            max={product.stock}
-                            {...field}
-                            onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="notes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Opmerkingen</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Bijzondere wensen of opmerkingen..."
-                          className="min-h-[100px]"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Totaal</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {formatPrice((parseFloat(product.price) * (form.watch("quantity") || 1)).toFixed(2))}
-                    </p>
-                  </div>
-                  
-                  <Button
-                    type="submit"
-                    disabled={orderMutation.isPending || product.stock === 0}
-                    className={`${theme.button} text-white px-8 py-3 text-lg font-semibold`}
-                    size="lg"
-                  >
-                    {orderMutation.isPending ? "Bezig..." : product.stock === 0 ? "Uitverkocht" : "Bestellen"}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+        <ShoppingCart />
       </div>
 
       {/* Related Products */}

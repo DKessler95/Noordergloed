@@ -95,27 +95,13 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className={`font-display text-3xl font-bold ${priceClass}`}>
                 €{product.price}
               </span>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => window.location.href = `/producten/${product.id}`}
-                  disabled={product.stock === 0}
-                  className={`${buttonClass} text-white px-4 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105 flex-1`}
-                >
-                  {product.stock === 0 ? "Uitverkocht" : "Bekijk Product"}
-                </Button>
-                {product.stock > 0 && (
-                  <Button
-                    onClick={() => {
-                      // Add to cart logic - for now just show alert
-                      alert(`${product.name} toegevoegd aan winkelwagen! (Max 1 per persoon)`);
-                    }}
-                    variant="outline"
-                    className="px-4 py-3 rounded-xl font-semibold border-2 hover:scale-105 transition-all"
-                  >
-                    +1
-                  </Button>
-                )}
-              </div>
+              <Button
+                onClick={() => window.location.href = `/producten/${product.id}`}
+                disabled={product.stock === 0}
+                className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
+              >
+                {product.stock === 0 ? "Uitverkocht" : "Bekijk Product"}
+              </Button>
             </div>
           </div>
           
