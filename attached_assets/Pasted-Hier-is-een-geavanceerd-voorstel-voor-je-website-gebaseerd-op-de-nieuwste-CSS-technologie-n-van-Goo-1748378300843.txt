@@ -1,0 +1,214 @@
+Hier is een geavanceerd voorstel voor je website, gebaseerd op de nieuwste CSS-technologieën van Google I/O 2024 en persoonlijke elementen:
+text
+**Replit Agent Prompt - Geavanceerde Siroop Website**
+
+---
+
+### **Core Features**
+1. **Dynamische View Transitions**:
+   - Gebruik `@view-transition` voor smooth overgangen tussen productpagina's
+   - CSS:
+     ```
+     ::view-transition-old(root),
+     ::view-transition-new(root) {
+       animation: slide-left 0.5s ease;
+     }
+     ```
+
+2. **Scroll-Driven Animations**:
+   - Animaties gekoppeld aan scrollpositie met `animation-timeline: view()`
+   - Voorbeeld (Elfie's foto):
+     ```
+     .elfie-photo {
+       animation: parallax linear;
+       animation-timeline: view(block);
+     }
+     ```
+
+3. **Persoonlijke Design Tokens**:
+
+@property --syrup-hue {
+ syntax: "<number>";
+ initial-value: 260;
+ inherits: true;
+ }
+ :root {
+ --syrup-accent: oklch(65% 0.25 var(--syrup-hue));
+ }
+text
+
+4. **Adaptieve Container Queries**:
+
+.product-card {
+ container-type: inline-size;
+ }
+ @container (width > 400px) {
+ .product-details { grid-template-columns: 1fr 2fr; }
+ }
+text
+
+---
+
+### **Specifieke Implementaties**
+
+**Hero Sectie**:
+
+<section class="hero" style="view-transition-name: hero"> <img src="jouw-foto.jpg" alt="Jij & Elfie" class="parallax-image"> <h1 class="animate-fade-in" style="--delay: 0.2s"> Ambachtelijke Siroop uit Groningen <span class="elfie-badge">🐕 Met liefde gemaakt door Elfie</span> </h1> </section> ```
+Product Carousel:
+text
+const carousel = document.querySelector('.products');
+carousel.animate(
+  [{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }],
+  {
+    timeline: new ScrollTimeline({
+      source: document.documentElement,
+      axis: 'inline'
+    }),
+    rangeStart: new CSSUnitValue(0, 'percent'),
+    rangeEnd: new CSSUnitValue(100, 'percent')
+  }
+);
+
+Ramen Pre-order Systeem:
+text
+const calendar = new FullCalendar.Calendar(..., {
+  validRange: {
+    start: new Date().setDate(new Date().getDate() + 4)
+  },
+  datesSet: function(info) {
+    this.getEvents().forEach(event => {
+      event.setProp('backgroundColor', 
+        event.start < Date.now() ? 'var(--md-sys-color-error)' : 'var(--syrup-accent)'
+      );
+    });
+  }
+});
+
+
+Geavanceerde CSS Features
+Relative Color Syntax:
+
+ text
+.limited-stock {
+  background: hsl(from var(--syrup-accent) h s calc(l - 20%));
+}
+
+
+CSS Anchor Positioning:
+
+ text
+.tooltip {
+  position: absolute;
+  anchor-name: --product-card;
+  top: anchor(bottom);
+}
+
+
+Material Web Components:
+
+ text
+<md-elevated-card class="product-card">
+  <md-asset>
+    <img src="siroop-foto.jpg" loading="lazy" decoding="async">
+  </md-asset>
+  <div class="stock-indicator">
+    <md-linear-progress value="0.7"></md-linear-progress>
+  </div>
+</md-elevated-card>
+
+
+
+Performance Optimalisaties
+CSS Size Containment:
+
+ text
+.product-grid {
+  container-type: size;
+  contain: style layout paint;
+}
+
+
+Scroll-driven Lazy Loading:
+
+ text
+<img src="placeholder.jpg" loading="lazy"
+     data-src="siroop.jpg" decoding="async"
+     style="view-timeline: --image;">
+
+
+CSS Fontpalette:
+
+ text
+@font-palette-values --syrup-palette {
+  font-family: "Playfair Display";
+  base-palette: 3;
+}
+h1 {
+  font-palette: --syrup-palette;
+}
+
+
+
+Persoonlijke Elementen
+Elfie's Dashboard:
+
+ text
+const elfieScore = new ScrollTimeline({
+  source: document.querySelector('.elfie-section'),
+  axis: 'block'
+});
+document.querySelector('.elfie-energy').animate(
+  { transform: ['scaleX(0)', 'scaleX(1)'] },
+  { timeline: elfieScore }
+);
+
+
+Dynamische Thema's:
+
+ text
+@media (prefers-color-scheme: dark) {
+  :root {
+    --syrup-hue: 200;
+  }
+}
+
+
+Handgemaakte SVG Patronen:
+
+ text
+.background {
+  background: paint(syrup-pattern);
+  --pattern-color: oklch(80% 0.15 var(--syrup-hue));
+}
+
+
+
+Implementatiestappen:
+Basisarchitectuur met Vite + React
+
+
+Material Web Components installeren
+
+
+View Transitions polyfill toevoegen
+
+
+Replit DB configureren voor productdata
+
+
+Custom SVG patterns definiëren
+
+
+Scroll-driven animations testen
+
+
+Dark/light theme toggle implementeren
+
+
+text
+
+Deze implementatie gebruikt cutting-edge features terwijl het toegankelijk blijft. Voor de volledige ervaring raad ik aan de Chrome Flags voor experimental features aan te zetten tijdens ontwikkeling. 🚀
+
+
+
+

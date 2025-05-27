@@ -1,0 +1,144 @@
+Hier is een geavanceerd SEO-plan specifiek afgestemd op je siroopwebsite, gebaseerd op je eerdere specificaties en actuele SEO-best practices:
+
+SEO-optimalisatie Prompt voor Siroopwebsite
+1. Technische SEO Basis
+text
+- Implementeer HTTPS via Replit
+- Optimaliseer laadsnelheid (<2s):
+  * Gebruik WebP-formaat voor productfoto's (max 800px breedte)
+  * Minimaliseer CSS/JS via Vite's built-in bundler
+- Zet browser caching in voor statische assets
+- Maak XML-sitemap met automatische updates bij productwijzigingen
+
+2. On-Page Optimalisatie
+Productpagina's (Vlier/Rozen)
+text
+<title>Ambachtelijke [PRODUCTNAAM] | Handgemaakt in Groningen | Digimaatwerk</title>
+<meta name="description" content="Proef de zomer met onze [UNIEKE SELLING POINT]. [X] schermen vlierbloesem per liter. Bestel nu voor €6,99 - Slechts [AANTAL] flessen beschikbaar!">
+
+<!-- Voorbeeld keywords -->
+"vlierbloesemsiroop Groningen", "ambachtelijke limonade Star Numanstraat", "rozensiroop met Elfie"
+
+Ramen Pre-order Pagina
+text
+<title>Chicken Shoyu Ramen Pre-order | Elke vrijdag ophalen in Groningen</title>
+<meta name="description" content="Exclusieve ramen voor 6 personen - Kies je datum (minimaal 4 dagen van tevoren). Samen koken met lokale ingrediënten uit de Korrewegwijk.">
+
+3. Lokale SEO Strategie
+text
+- Google Mijn Bedrijf profiel aanmaken met:
+  * Foto's van jou+Elfie bij de Hamburgervijver
+  * Openingstijden "Op afspraak"
+  * Servicegebied: Groningen-Stad
+- Embed Google Maps widget met Star Numanstraat marker
+- Vermeld in footer:
+  "Handgemaakt in Groningen, nabij de iconische Hamburgervijver"
+
+4. Structured Data (JSON-LD)
+Productvoorbeeld
+json
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Vlierbloesemsiroop 1L",
+  "image": ["/images/vlier-1.webp", "/images/vlier-2.webp"],
+  "description": "Ambachtelijk gemaakt met 30 verse schermen per liter, geplukt in Groningen.",
+  "brand": {
+    "@type": "Brand",
+    "name": "Digimaatwerk Siroperij"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "6.99",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "seller": {
+      "@type": "LocalBusiness",
+      "name": "Digimaatwerk Siroperij",
+      "image": "/images/logo.webp",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Star Numanstraat",
+        "addressLocality": "Groningen",
+        "postalCode": "9717JE",
+        "addressCountry": "NL"
+      }
+    }
+  }
+}
+</script>
+
+Lokale Business Markup
+json
+{
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "name": "Digimaatwerk Siroperij",
+  "currenciesAccepted": "EUR",
+  "priceRange": "€",
+  "image": "/images/elfie-bedrijf.webp",
+  "telephone": "+31612345678",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Star Numanstraat",
+    "addressLocality": "Groningen",
+    "postalCode": "9717JE",
+    "addressCountry": "NL"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 53.219383,
+    "longitude": 6.568203
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+    "opens": "09:00",
+    "closes": "17:00"
+  }
+}
+
+5. Content Strategie
+text
+- Blog sectie met posts zoals:
+  * "Hoe wij vlierbloesem plukken bij de Hamburgervijver"
+  * "Elfie's favoriete wandelroutes voor kruidenpluk"
+  * "Van Star Numanstraat naar je glas: Ons productieproces"
+- Embed Instagram feed met #digimaatwerksiroop
+- Maak een "Behind the Scenes" video over het brouwproces
+
+6. Conversie Optimalisatie
+text
+- Stock indicator component:
+  ▰▰▰▰▰▰▰▰▰ 16/20 beschikbaar (rood bij <5)
+- Pre-order kalender:
+  * Toon alleen dagen vanaf [vandaag + 4 dagen]
+  * Geef feedback bij 3/6 aanmeldingen: "Nog 3 nodig voor deze datum!"
+- Voeg Trustpilot widget toe met reviews
+
+7. Prestatiemonitoring
+text
+- Integreer Google Analytics 4 met:
+  * Custom event: "pre_order_started"
+  * User property: "aantal_flessen_gekocht"
+- Maak Search Console property aan
+- Stel wekelijkse SEO health check in via Lighthouse CI
+
+
+Implementatie Tips:
+Gebruik react-helmet-async voor dynamische meta tags
+
+
+Voorbeeld routing: /producten/vlierbloesem, /ramen-preorder
+
+
+Gebruik sharp package voor automatische image optimization
+
+
+Sitemap generatie via vite-plugin-pages-sitemap
+
+
+Deze structuur combineert je persoonlijke verhaal met technische SEO-optimalisatie, specifiek gericht op lokale vindbaarheid in Groningen. 🐕✨
+
+
