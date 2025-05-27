@@ -67,7 +67,7 @@ export class MemStorage implements IStorage {
       stock: 8,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "/images/vlierbloesem-siroop.png",
+      imageUrl: "/images/voorkant-siroop.png",
       featured: true,
       createdAt: new Date(),
     };
@@ -80,7 +80,7 @@ export class MemStorage implements IStorage {
       stock: 5,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "/images/rozen-siroop.png",
+      imageUrl: "/images/achterkant-siroop.png",
       featured: true,
       createdAt: new Date(),
     };
