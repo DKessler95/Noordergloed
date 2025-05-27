@@ -67,7 +67,7 @@ export class MemStorage implements IStorage {
       stock: 8,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "/attached_assets/result (1).png",
+      imageUrl: "/attached_assets/result%20(1).png",
       featured: true,
       createdAt: new Date(),
     };
@@ -80,7 +80,7 @@ export class MemStorage implements IStorage {
       stock: 5,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "/attached_assets/result (3).png",
+      imageUrl: "/attached_assets/result%20(3).png",
       featured: true,
       createdAt: new Date(),
     };
@@ -93,7 +93,7 @@ export class MemStorage implements IStorage {
       stock: 6,
       maxStock: 6,
       category: "ramen",
-      imageUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      imageUrl: "/attached_assets/IMG_20250527_233628.jpg",
       featured: true,
       createdAt: new Date(),
     };

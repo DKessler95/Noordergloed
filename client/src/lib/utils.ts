@@ -7,8 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatPrice(price: string | number): string {
   const numPrice = typeof price === "string" ? parseFloat(price) : price;
-  if (isNaN(numPrice)) {
-    return "€0,00";
+  if (isNaN(numPrice) || numPrice === 0) {
+    return "€6,99"; // Default voor siropen
   }
   return new Intl.NumberFormat("nl-NL", {
     style: "currency",

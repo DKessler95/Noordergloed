@@ -81,7 +81,7 @@ export default function ProductDetail() {
   // Product data is available, continue with rendering
   const isElderflower = product?.name?.includes("Vlierbloesem") ?? false;
   const isRose = product?.name?.includes("Rozen") ?? false;
-  const otherProducts = allProducts?.filter(p => p.id !== product?.id) || [];
+  const otherProducts = allProducts?.filter(p => p.id !== product?.id && p.category === product?.category) || [];
 
   const getProductTheme = () => {
     if (isElderflower) {
