@@ -56,6 +56,47 @@ export default function ProductDetail() {
     queryKey: ["/api/products"],
   });
 
+  // Early return if loading or no product to avoid undefined errors
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-8" />
+            <div className="grid lg:grid-cols-2 gap-12">
+              <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+              <div className="space-y-4">
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Product niet gevonden
+          </h1>
+          <Button onClick={() => setLocation("/")} variant="outline">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Terug naar home
+          </Button>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   const form = useForm<OrderForm>({
     resolver: zodResolver(orderSchema),
     defaultValues: {

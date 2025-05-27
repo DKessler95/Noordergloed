@@ -96,7 +96,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 €{product.price}
               </span>
               <Button
-                onClick={() => window.location.href = `/product/${product.id}`}
+                onClick={() => window.location.href = `/producten/${product.id}`}
                 disabled={product.stock === 0}
                 className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
               >
