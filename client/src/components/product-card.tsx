@@ -96,11 +96,11 @@ export function ProductCard({ product }: ProductCardProps) {
                 €{product.price}
               </span>
               <Button
-                onClick={() => orderMutation.mutate()}
-                disabled={orderMutation.isPending || product.stock === 0}
+                onClick={() => window.location.href = `/product/${product.id}`}
+                disabled={product.stock === 0}
                 className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
               >
-                {orderMutation.isPending ? "Bezig..." : product.stock === 0 ? "Uitverkocht" : "Bestellen"}
+                {product.stock === 0 ? "Uitverkocht" : "Bekijk Product"}
               </Button>
             </div>
           </div>
