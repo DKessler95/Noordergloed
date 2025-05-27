@@ -69,8 +69,8 @@ export function ProductCard({ product }: ProductCardProps) {
     : "bg-purple-600 hover:bg-purple-700";
 
   return (
-    <div className="group">
-      <div className={`bg-gradient-to-br ${gradientClass} rounded-2xl p-8 transition-all duration-500 hover:shadow-2xl hover:scale-105`}>
+    <div className="group h-full">
+      <div className={`bg-gradient-to-br ${gradientClass} rounded-2xl p-8 transition-all duration-500 hover:shadow-2xl hover:scale-105 h-full flex flex-col`}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1">
             <Badge className={`${badgeClass} mb-4`}>

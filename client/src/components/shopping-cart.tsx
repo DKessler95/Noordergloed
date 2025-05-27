@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@shared/schema";
@@ -291,8 +292,8 @@ export function ShoppingCart() {
           </div>
         ) : (
           <div className="space-y-4">
-            {items.map((item, index) => (
-              <div key={`${item.product.id}-${index}`} className="flex items-center gap-4 p-4 border rounded-lg">
+            {items.map((item) => (
+              <div key={`cart-item-${item.product.id}`} className="flex items-center gap-4 p-4 border rounded-lg">
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
                   {item.product.imageUrl ? (
                     <img
@@ -400,5 +401,39 @@ export function AddToCartButton({ product }: { product: Product }) {
     >
       {product.stock === 0 ? "Uitverkocht" : "Toevoegen aan winkelwagen"}
     </Button>
+  );
+}
+
+export function CartButton() {
+  const { items } = useShoppingCart();
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+  
+  return (
+    <>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => setIsOpen(true)}
+        className="relative"
+      >
+        <ShoppingCart className="h-5 w-5" />
+        {itemCount > 0 && (
+          <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
+            {itemCount}
+          </span>
+        )}
+      </Button>
+      
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Winkelwagen</DialogTitle>
+          </DialogHeader>
+          <ShoppingCart />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
