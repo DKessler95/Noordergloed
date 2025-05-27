@@ -45,7 +45,7 @@ export function StorySection() {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img 
-                src="/attached_assets/IMG-20250501-WA0035.jpg" 
+                src="/images/dc_foto.jpg" 
                 alt="Portret met mijn honden in de tuin" 
                 className="w-full h-auto" 
               />
