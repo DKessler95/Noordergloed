@@ -18,11 +18,13 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
-              <Leaf className="text-white w-5 h-5" />
-            </div>
+            <img 
+              src="/images/logo.png" 
+              alt="Ik & Elfie Logo" 
+              className="w-10 h-10 rounded-full object-cover"
+            />
             <span className="font-display font-semibold text-xl text-purple-600 dark:text-purple-400">
-              Digimaatwerk
+              Ik & Elfie
             </span>
           </div>
           
