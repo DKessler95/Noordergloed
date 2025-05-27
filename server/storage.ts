@@ -26,6 +26,8 @@ export interface IStorage {
   getRamenOrders(): Promise<RamenOrder[]>;
   createRamenOrder(ramenOrder: InsertRamenOrder): Promise<RamenOrder>;
   getRamenOrdersByDate(date: Date): Promise<RamenOrder[]>;
+  updateRamenOrderStatus(id: number, status: string): Promise<RamenOrder | undefined>;
+  confirmRamenOrdersForDate(date: Date): Promise<RamenOrder[]>;
   
   // Contact Messages
   getContactMessages(): Promise<ContactMessage[]>;
@@ -171,10 +173,47 @@ export class MemStorage implements IStorage {
     const ramenOrder: RamenOrder = { 
       ...insertRamenOrder, 
       id, 
+      customerPhone: insertRamenOrder.customerPhone || null,
+      status: insertRamenOrder.status || "pending",
+      notes: insertRamenOrder.notes || null,
+      servings: insertRamenOrder.servings || 1,
       createdAt: new Date()
     };
     this.ramenOrders.set(id, ramenOrder);
+    
+    // Check if we have 6 people for this date and auto-confirm
+    const ordersForDate = await this.getRamenOrdersByDate(new Date(ramenOrder.preferredDate));
+    if (ordersForDate.length >= 6) {
+      await this.confirmRamenOrdersForDate(new Date(ramenOrder.preferredDate));
+    }
+    
     return ramenOrder;
+  }
+
+  async updateRamenOrderStatus(id: number, status: string): Promise<RamenOrder | undefined> {
+    const order = this.ramenOrders.get(id);
+    if (order) {
+      const updatedOrder = { ...order, status };
+      this.ramenOrders.set(id, updatedOrder);
+      return updatedOrder;
+    }
+    return undefined;
+  }
+
+  async confirmRamenOrdersForDate(date: Date): Promise<RamenOrder[]> {
+    const ordersForDate = await this.getRamenOrdersByDate(date);
+    const confirmedOrders: RamenOrder[] = [];
+    
+    for (const order of ordersForDate) {
+      if (order.status === "pending") {
+        const confirmedOrder = await this.updateRamenOrderStatus(order.id, "confirmed");
+        if (confirmedOrder) {
+          confirmedOrders.push(confirmedOrder);
+        }
+      }
+    }
+    
+    return confirmedOrders;
   }
 
   async getRamenOrdersByDate(date: Date): Promise<RamenOrder[]> {

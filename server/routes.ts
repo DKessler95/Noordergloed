@@ -65,18 +65,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create ramen order
+  // Create ramen order (per person)
   app.post("/api/orders/ramen", async (req, res) => {
     try {
       const requestData = ramenOrderRequestSchema.parse(req.body);
       
-      // Get ramen product
-      const products = await storage.getProducts();
-      const ramenProduct = products.find(p => p.category === "ramen");
-      if (!ramenProduct) {
-        return res.status(404).json({ message: "Ramen product not found" });
-      }
-
       // Check if date is at least 4 days in the future
       const preferredDate = new Date(requestData.preferredDate);
       const minDate = new Date();
@@ -103,27 +96,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Create order
-      const order = await storage.createOrder({
+      // Create ramen order (per person)
+      const ramenOrder = await storage.createRamenOrder({
         customerName: requestData.customerName,
         customerEmail: requestData.customerEmail,
-        customerPhone: requestData.customerPhone || "",
-        productId: ramenProduct.id,
-        quantity: 1,
-        totalAmount: ramenProduct.price,
-        orderType: "ramen",
-        status: "pending",
-        notes: requestData.notes || "",
-      });
-
-      // Create ramen order details
-      const ramenOrder = await storage.createRamenOrder({
-        orderId: order.id,
+        customerPhone: requestData.customerPhone,
         preferredDate,
-        servings: 6,
+        servings: 1, // Per person
+        status: "pending",
+        notes: requestData.notes,
       });
 
-      res.json({ order, ramenOrder });
+      // Check if this booking completed the group of 6
+      const updatedOrders = await storage.getRamenOrdersByDate(preferredDate);
+      const isConfirmed = updatedOrders.length >= 6 && updatedOrders.every(o => o.status === "confirmed");
+
+      res.json({ 
+        ramenOrder, 
+        totalBookings: updatedOrders.length,
+        isConfirmed,
+        message: isConfirmed 
+          ? "Gefeliciteerd! Jullie groep is compleet en de ramen-avond is bevestigd!" 
+          : `Bedankt voor je boeking! Nog ${6 - updatedOrders.length} personen nodig voor deze datum.`
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid order data", errors: error.errors });

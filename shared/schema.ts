@@ -31,9 +31,13 @@ export const orders = pgTable("orders", {
 
 export const ramenOrders = pgTable("ramen_orders", {
   id: serial("id").primaryKey(),
-  orderId: integer("order_id").references(() => orders.id),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email").notNull(),
+  customerPhone: text("customer_phone"),
   preferredDate: timestamp("preferred_date").notNull(),
-  servings: integer("servings").notNull().default(6),
+  servings: integer("servings").notNull().default(1), // Per person booking
+  status: text("status").notNull().default("pending"), // "pending" | "confirmed" | "cancelled"
+  notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
