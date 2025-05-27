@@ -1,7 +1,6 @@
 import { useTheme } from "./theme-provider";
 import { Moon, Sun, Menu, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CartButton } from "@/components/cart";
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -54,7 +53,6 @@ export function Header() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <CartButton />
             <Button
               variant="ghost"
               size="icon"
