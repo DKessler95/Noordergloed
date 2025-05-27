@@ -6,8 +6,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Serve static files from attached_assets
+// Serve static files from attached_assets and client/public
 app.use('/attached_assets', express.static('attached_assets'));
+app.use('/images', express.static('client/public/images'));
 
 app.use((req, res, next) => {
   const start = Date.now();
