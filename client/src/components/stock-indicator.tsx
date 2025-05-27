@@ -17,8 +17,8 @@ export function StockIndicator({ current, max, productName }: StockIndicatorProp
   };
 
   const getTextColor = () => {
-    if (productName.includes("Vlierbloesem")) return "text-yellow-600 dark:text-yellow-400";
-    if (productName.includes("Rozen")) return "text-pink-600 dark:text-pink-400";
+    if (productName?.includes("Vlierbloesem")) return "text-yellow-600 dark:text-yellow-400";
+    if (productName?.includes("Rozen")) return "text-pink-600 dark:text-pink-400";
     return "text-purple-600 dark:text-purple-400";
   };
 
