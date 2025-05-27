@@ -67,7 +67,7 @@ export class MemStorage implements IStorage {
       stock: 8,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "/attached_assets/result%20(1).png",
+      imageUrl: "/images/vlierbloesem-siroop.png",
       featured: true,
       createdAt: new Date(),
     };
@@ -80,7 +80,7 @@ export class MemStorage implements IStorage {
       stock: 5,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "/attached_assets/result%20(3).png",
+      imageUrl: "/images/rozen-siroop.png",
       featured: true,
       createdAt: new Date(),
     };
@@ -93,7 +93,7 @@ export class MemStorage implements IStorage {
       stock: 6,
       maxStock: 6,
       category: "ramen",
-      imageUrl: "/attached_assets/IMG_20250527_233628.jpg",
+      imageUrl: "/images/chicken-shoyu-ramen.jpg",
       featured: true,
       createdAt: new Date(),
     };
