@@ -237,9 +237,11 @@ export default function ProductDetail() {
           <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8 text-center">
             Andere Producten
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-12">
             {otherProducts.slice(0, 3).map((otherProduct) => (
-              <ProductCard key={otherProduct.id} product={otherProduct} />
+              <div key={otherProduct.id} className="w-full max-w-none">
+                <ProductCard product={otherProduct} />
+              </div>
             ))}
           </div>
         </div>
