@@ -1,0 +1,179 @@
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema } from "@shared/schema";
+import { z } from "zod";
+
+const ramenOrderRequestSchema = z.object({
+  customerName: z.string().min(1),
+  customerEmail: z.string().email(),
+  customerPhone: z.string().min(1),
+  preferredDate: z.string(),
+  notes: z.string().optional(),
+});
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  // Get all products
+  app.get("/api/products", async (_req, res) => {
+    try {
+      const products = await storage.getProducts();
+      res.json(products);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch products" });
+    }
+  });
+
+  // Get single product
+  app.get("/api/products/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const product = await storage.getProduct(id);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.json(product);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch product" });
+    }
+  });
+
+  // Create syrup order
+  app.post("/api/orders/syrup", async (req, res) => {
+    try {
+      const orderData = insertOrderSchema.parse({
+        ...req.body,
+        orderType: "syrup",
+        status: "pending",
+      });
+
+      const order = await storage.createOrder(orderData);
+      
+      // Update product stock if productId is provided
+      if (order.productId) {
+        const product = await storage.getProduct(order.productId);
+        if (product && product.stock > 0) {
+          await storage.updateProductStock(order.productId, product.stock - order.quantity);
+        }
+      }
+
+      res.json(order);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid order data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create order" });
+    }
+  });
+
+  // Create ramen order
+  app.post("/api/orders/ramen", async (req, res) => {
+    try {
+      const requestData = ramenOrderRequestSchema.parse(req.body);
+      
+      // Get ramen product
+      const products = await storage.getProducts();
+      const ramenProduct = products.find(p => p.category === "ramen");
+      if (!ramenProduct) {
+        return res.status(404).json({ message: "Ramen product not found" });
+      }
+
+      // Check if date is at least 4 days in the future
+      const preferredDate = new Date(requestData.preferredDate);
+      const minDate = new Date();
+      minDate.setDate(minDate.getDate() + 4);
+      
+      if (preferredDate < minDate) {
+        return res.status(400).json({ 
+          message: "Ramen orders must be placed at least 4 days in advance" 
+        });
+      }
+
+      // Check if it's a Friday
+      if (preferredDate.getDay() !== 5) {
+        return res.status(400).json({ 
+          message: "Ramen pickup is only available on Fridays" 
+        });
+      }
+
+      // Check existing orders for that date
+      const existingOrders = await storage.getRamenOrdersByDate(preferredDate);
+      if (existingOrders.length >= 6) {
+        return res.status(400).json({ 
+          message: "This date is fully booked. Please choose another Friday." 
+        });
+      }
+
+      // Create order
+      const order = await storage.createOrder({
+        customerName: requestData.customerName,
+        customerEmail: requestData.customerEmail,
+        customerPhone: requestData.customerPhone || "",
+        productId: ramenProduct.id,
+        quantity: 1,
+        totalAmount: ramenProduct.price,
+        orderType: "ramen",
+        status: "pending",
+        notes: requestData.notes || "",
+      });
+
+      // Create ramen order details
+      const ramenOrder = await storage.createRamenOrder({
+        orderId: order.id,
+        preferredDate,
+        servings: 6,
+      });
+
+      res.json({ order, ramenOrder });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid order data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create ramen order" });
+    }
+  });
+
+  // Get ramen availability for a specific date
+  app.get("/api/ramen/availability/:date", async (req, res) => {
+    try {
+      const date = new Date(req.params.date);
+      const existingOrders = await storage.getRamenOrdersByDate(date);
+      const available = 6 - existingOrders.length;
+      
+      res.json({ 
+        date: req.params.date,
+        available,
+        total: 6,
+        isAvailable: available > 0
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to check availability" });
+    }
+  });
+
+  // Submit contact form
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const messageData = insertContactMessageSchema.parse(req.body);
+      const message = await storage.createContactMessage(messageData);
+      res.json(message);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid message data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to send message" });
+    }
+  });
+
+  // Get all orders (admin)
+  app.get("/api/orders", async (_req, res) => {
+    try {
+      const orders = await storage.getOrders();
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
