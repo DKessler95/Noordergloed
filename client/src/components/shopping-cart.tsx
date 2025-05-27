@@ -294,7 +294,7 @@ export function CartButton() {
       </Button>
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Winkelwagen</DialogTitle>
           </DialogHeader>

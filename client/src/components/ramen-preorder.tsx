@@ -78,7 +78,7 @@ export function RamenPreorder() {
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Authentieke Japanse ramen bereid met verse lokale ingrediënten. 
-            Alleen op vrijdag, maximaal 6 personen per avond.
+            Alleen op vrijdag, minimaal 6 personen voor bevestiging.
           </p>
         </div>
 

@@ -8,7 +8,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { StockIndicator } from "@/components/stock-indicator";
 import { ProductCard } from "@/components/product-card";
-import { ShoppingCart, AddToCartButton } from "@/components/shopping-cart";
+import { AddToCartButton } from "@/components/shopping-cart";
 import { apiRequest } from "@/lib/queryClient";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@shared/schema";
@@ -17,7 +17,13 @@ export default function ProductDetail() {
   const params = useParams();
   const [, setLocation] = useLocation();
   
-  const productId = parseInt(params.id || "0");
+  // Convert slug to product ID
+  const productSlugMap: Record<string, number> = {
+    "vlierbloesem-siroop": 1,
+    "rozen-siroop": 2
+  };
+  
+  const productId = productSlugMap[params.slug as string] || parseInt(params.id || "0");
 
   // Get single product
   const { data: product, isLoading } = useQuery({

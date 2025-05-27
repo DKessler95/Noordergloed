@@ -67,7 +67,7 @@ export class MemStorage implements IStorage {
       stock: 8,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=500&h=500&fit=crop&crop=center",
+      imageUrl: "/attached_assets/result%20%281%29.png",
       featured: true,
       createdAt: new Date(),
     };
@@ -80,7 +80,7 @@ export class MemStorage implements IStorage {
       stock: 5,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "https://images.unsplash.com/photo-1596800468336-f45e2fd0ac9e?w=500&h=500&fit=crop&crop=center",
+      imageUrl: "/attached_assets/result%20%283%29.png",
       featured: true,
       createdAt: new Date(),
     };
