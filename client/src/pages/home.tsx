@@ -12,7 +12,7 @@ export default function Home() {
       <Header />
       <StorySection />
       <ProductShowcase />
-      <RamenPreorder />
+      <RamenPreorderFixed />
       <ContactSection />
       <Footer />
     </div>
