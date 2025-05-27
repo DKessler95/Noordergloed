@@ -1,7 +1,7 @@
 import { Header } from "@/components/header";
 import { HeroSection } from "@/components/hero-section";
 import { ProductShowcase } from "@/components/product-showcase";
-import { RamenPreorder } from "@/components/ramen-preorder";
+import { RamenPreorderFixed } from "@/components/ramen-preorder-fixed";
 import { StorySection } from "@/components/story-section";
 import { ContactSection } from "@/components/contact-section";
 import { Footer } from "@/components/footer";

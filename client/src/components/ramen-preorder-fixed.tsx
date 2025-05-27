@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Calendar, Clock, Users, CheckCircle, MapPin, ExternalLink } from "lucide-react";
+import { Calendar, Clock, Users, CheckCircle, Info, MapPin, ExternalLink } from "lucide-react";
 import { RamenCalendar } from "./ramen-calendar";
 import ramenImage from "@assets/IMG_20250527_233628.jpg";
 
@@ -24,7 +25,7 @@ const ramenOrderSchema = z.object({
 
 type RamenOrderForm = z.infer<typeof ramenOrderSchema>;
 
-export function RamenPreorder() {
+export function RamenPreorderFixed() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const { toast } = useToast();
 
