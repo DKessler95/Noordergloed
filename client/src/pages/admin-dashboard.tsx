@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,10 +13,39 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Package, Plus, Users, ShoppingCart, LogOut, Edit, Save, X, Check, Upload, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { useLocation } from "wouter";
 import type { Product, RamenOrder } from "@shared/schema";
 
 export default function AdminDashboard() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
+
+  // Check admin authentication
+  const { data: adminStatus, isLoading: adminLoading } = useQuery({
+    queryKey: ['/api/admin/status'],
+    retry: false,
+  });
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!adminLoading && !adminStatus?.isAdmin) {
+      setLocation('/admin/login');
+    }
+  }, [adminStatus, adminLoading, setLocation]);
+
+  // Show loading while checking authentication
+  if (adminLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!adminStatus?.isAdmin) {
+    return null;
+  }
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
   const [editProductData, setEditProductData] = useState<any>(null);
   const [categories, setCategories] = useState(["syrup", "ramen", "accessoires"]);
