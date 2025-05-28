@@ -20,6 +20,9 @@ interface EmailParams {
 
 export async function sendBulkEmail(params: EmailParams): Promise<boolean> {
   try {
+    console.log('Attempting to send email to:', params.to);
+    console.log('From email:', params.fromEmail || "dc@damian.kessler.nl");
+    
     const request = mailjet
       .post("send", { 'version': 'v3.1' })
       .request({
@@ -41,8 +44,22 @@ export async function sendBulkEmail(params: EmailParams): Promise<boolean> {
       });
 
     const result = await request;
-    console.log('Email sent successfully:', result.body);
-    return true;
+    console.log('Mailjet response status:', result.response?.status);
+    console.log('Mailjet response body:', JSON.stringify(result.body, null, 2));
+    
+    // Check if email was actually accepted
+    if (result.body && result.body.Messages) {
+      const firstMessage = result.body.Messages[0];
+      if (firstMessage && firstMessage.Status === 'success') {
+        console.log('Email accepted by Mailjet for delivery');
+        return true;
+      } else {
+        console.log('Email not accepted by Mailjet:', firstMessage);
+        return false;
+      }
+    }
+    
+    return false;
   } catch (error) {
     console.error('Mailjet email error:', error);
     return false;
