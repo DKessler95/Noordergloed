@@ -82,6 +82,12 @@ export default function ProductDetail() {
       ingredients: product.ingredients || getDefaultIngredients(product.name),
       nutrition: product.nutrition || getDefaultNutrition(),
       usage: product.usage || getDefaultUsage(product.name),
+      // Detailed page content
+      ingredientsTitle: product.ingredientsTitle || "Ingrediënten & Voedingswaarden",
+      ingredientsContent: product.ingredientsContent || getDefaultIngredientsContent(product.name),
+      nutritionContent: product.nutritionContent || getDefaultNutritionContent(),
+      storyTitle: product.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Siroop",
+      storyContent: product.storyContent || getDefaultStoryContent(product.name),
     });
   };
 
@@ -115,6 +121,58 @@ export default function ProductDetail() {
       return "Heerlijk in thee, over yoghurt, in cocktails of als basis voor rozenlimonade. Ook perfect als topping voor taarten.";
     }
     return "Veelzijdig te gebruiken in dranken en desserts";
+  };
+
+  const getDefaultIngredientsContent = (name: string) => {
+    if (name.includes("Vlierbloesem")) {
+      return `Ingrediënten per 100 ml verdunde siroop (1:7 verhouding):
+• Vlierbloeseminfusie (water, verse vlierbloesemschermen)
+• Suiker (33 g per 100 ml siroop)
+• Citroensap (vers geperst)
+• Citroenzuur (natuurlijk conserveermiddel)`;
+    } else if (name.includes("Rozen")) {
+      return `Ingrediënten per 100 ml verdunde siroop (1:7 verhouding):
+• Rozenextract (water, verse rozenblaadjes)
+• Biologische rietsuiker (35 g per 100 ml siroop)
+• Citroensap (vers geperst)
+• Citroenzuur (natuurlijk conserveermiddel)`;
+    }
+    return "Natuurlijke ingrediënten van hoge kwaliteit";
+  };
+
+  const getDefaultNutritionContent = () => {
+    return `Voedingswaarden per 100 ml verdund met water:
+
+Energie: 138 kJ
+Koolhydraten: 8,3 g
+Waarvan suikers: 8,3 g
+
+Bevat geen kunstmatige kleur-, geur- of smaakstoffen. Gegarandeerd glutenvrij en veganistisch.`;
+  };
+
+  const getDefaultStoryContent = (name: string) => {
+    if (name.includes("Vlierbloesem")) {
+      return `Midden in de levendige Groningse wijk Korreweg, verscholen tussen karakteristieke jaren-30-woningen en moderne flatgebouwen, ligt de Hamburgervijver – een oase van rust waar jouw vlierbloesemsiroop zijn roots vindt. Deze iconische vijver, onderdeel van het Molukkenplantsoen, werd in de jaren 30 aangelegd als onderdeel van Berlage's visie voor een groene gordel rond de stad.
+
+Historische Verbinding
+
+De naam "Hamburgervijver" verwijst naar de Hamburgerstraat, die al in 1503 werd vermeld als Curreweg. In de jaren 50 fietsten arbeiders hier dagelijks langs naar de nabijgelegen fabrieken aan het Boterdiep. Vandaag vangen karpervissers er nog steeds karpers tot 5 pond, omringd door treurwilgen en het gelach van kinderen die over het slingerpad rennen.
+
+Natuur in de Stad
+
+Het water reflecteert de seizoenen: in de lente bloeien dotterbloemen langs de oevers, in de zomer weerspiegelen de vlierbloesemschermen zich in het oppervlak. Juist deze bloesems, geplukt in de straten rondom Star Numanstraat, vormen het hart van je siroop. De combinatie van stadse dynamiek en wildpluktraditionele geeft elk flesje een uniek karakter – een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.`;
+    } else if (name.includes("Rozen")) {
+      return `Deze rozensiroop wordt gemaakt van delicate rozenblaadjes uit onze eigen tuin aan de Star Numanstraat. Een subtiele bloemensmaak die perfect past bij thee of prosecco.
+
+De Tuin
+
+Onze rozentuin ligt verscholen in het hart van Groningen, waar elke ochtend de rozen worden geplukt wanneer de dauw nog op de blaadjes ligt. Dit zorgt voor de meest intense smaak en geur.
+
+Ambachtelijk Proces
+
+Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perfecte moment voor optimale smaak en geur. Het traditionele recept wordt al generaties doorgegeven.`;
+    }
+    return "Een verhaal over dit bijzondere product...";
   };
 
   const handleSave = () => {
@@ -520,82 +578,100 @@ export default function ProductDetail() {
       {/* Detailed Product Information - Always show */}
       {product && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          {isEditing && (
+            <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                Bewerk Mode Actief
+              </h3>
+              <p className="text-blue-700 dark:text-blue-300">
+                Je kunt nu alle content op deze pagina aanpassen. Scroll naar boven om de basis productinfo te bewerken.
+              </p>
+            </div>
+          )}
+          
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Ingredients & Nutrition */}
             <div>
-              <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8">
-                Ingrediënten & Voedingswaarden
-              </h2>
-              
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                    Ingrediënten per 100 ml verdunde siroop (1:7 verhouding):
-                  </h3>
-                  <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                    <li>• Vlierbloeseminfusie (water, verse vlierbloesemschermen)</li>
-                    <li>• Suiker (33 g per 100 ml siroop)</li>
-                    <li>• Citroensap (vers geperst)</li>
-                    <li>• Citroenzuur (natuurlijk conserveermiddel)</li>
-                  </ul>
+              {isEditing ? (
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Sectie Titel - Ingrediënten</label>
+                    <Input
+                      value={editData.ingredientsTitle || "Ingrediënten & Voedingswaarden"}
+                      onChange={(e) => setEditData({ ...editData, ingredientsTitle: e.target.value })}
+                      placeholder="Ingrediënten & Voedingswaarden"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Ingrediënten Content</label>
+                    <Textarea
+                      value={editData.ingredientsContent || getDefaultIngredientsContent(product.name)}
+                      onChange={(e) => setEditData({ ...editData, ingredientsContent: e.target.value })}
+                      rows={8}
+                      placeholder="Volledige ingrediënten tekst..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Voedingswaarden Content</label>
+                    <Textarea
+                      value={editData.nutritionContent || getDefaultNutritionContent()}
+                      onChange={(e) => setEditData({ ...editData, nutritionContent: e.target.value })}
+                      rows={6}
+                      placeholder="Volledige voedingswaarden tekst..."
+                    />
+                  </div>
                 </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                    Voedingswaarden per 100 ml verdund met water:
-                  </h3>
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                    <div className="grid grid-cols-3 gap-4 text-center">
-                      <div>
-                        <div className="font-semibold text-gray-900 dark:text-white">Energie</div>
-                        <div className="text-gray-600 dark:text-gray-300">138 kJ</div>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900 dark:text-white">Koolhydraten</div>
-                        <div className="text-gray-600 dark:text-gray-300">8,3 g</div>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900 dark:text-white">Waarvan suikers</div>
-                        <div className="text-gray-600 dark:text-gray-300">8,3 g</div>
-                      </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8">
+                    {product.ingredientsTitle || "Ingrediënten & Voedingswaarden"}
+                  </h2>
+                  
+                  <div className="space-y-6">
+                    <div className="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                      {product.ingredientsContent || getDefaultIngredientsContent(product.name)}
+                    </div>
+                    <div className="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                      {product.nutritionContent || getDefaultNutritionContent()}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-4">
-                    Bevat geen kunstmatige kleur-, geur- of smaakstoffen. Gegarandeerd glutenvrij en veganistisch.
-                  </p>
-                </div>
-              </div>
+                </>
+              )}
             </div>
 
             {/* Story */}
             <div>
-              <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8">
-                Verhaal: De Hamburgervijver en de Ziel van de Siroop
-              </h2>
-              
-              <div className="space-y-6 text-gray-600 dark:text-gray-300 leading-relaxed">
-                <p>
-                  Midden in de levendige Groningse wijk Korreweg, verscholen tussen karakteristieke jaren-30-woningen en moderne flatgebouwen, ligt de Hamburgervijver – een oase van rust waar jouw vlierbloesemsiroop zijn roots vindt. Deze iconische vijver, onderdeel van het Molukkenplantsoen, werd in de jaren 30 aangelegd als onderdeel van Berlage's visie voor een groene gordel rond de stad.
-                </p>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                    Historische Verbinding
-                  </h3>
-                  <p>
-                    De naam "Hamburgervijver" verwijst naar de Hamburgerstraat, die al in 1503 werd vermeld als Curreweg. In de jaren 50 fietsten arbeiders hier dagelijks langs naar de nabijgelegen fabrieken aan het Boterdiep. Vandaag vangen karpervissers er nog steeds karpers tot 5 pond, omringd door treurwilgen en het gelach van kinderen die over het slingerpad rennen.
-                  </p>
+              {isEditing ? (
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Verhaal Titel</label>
+                    <Input
+                      value={editData.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Siroop"}
+                      onChange={(e) => setEditData({ ...editData, storyTitle: e.target.value })}
+                      placeholder="Verhaal titel..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Verhaal Content</label>
+                    <Textarea
+                      value={editData.storyContent || getDefaultStoryContent(product.name)}
+                      onChange={(e) => setEditData({ ...editData, storyContent: e.target.value })}
+                      rows={12}
+                      placeholder="Het volledige verhaal..."
+                    />
+                  </div>
                 </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                    Natuur in de Stad
-                  </h3>
-                  <p>
-                    Het water reflecteert de seizoenen: in de lente bloeien dotterbloemen langs de oevers, in de zomer weerspiegelen de vlierbloesemschermen zich in het oppervlak. Juist deze bloesems, geplukt in de straten rondom Star Numanstraat, vormen het hart van je siroop. De combinatie van stadse dynamiek en wildpluktraditionele geeft elk flesje een uniek karakter – een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.
-                  </p>
-                </div>
-              </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8">
+                    {product.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Siroop"}
+                  </h2>
+                  
+                  <div className="space-y-6 text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {product.storyContent || getDefaultStoryContent(product.name)}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
