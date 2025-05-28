@@ -48,8 +48,8 @@ export default function AdminDashboard() {
     );
   }
 
-  // Don't render if not authenticated
-  if (!adminStatus?.isAdmin) {
+  // Don't render if not authenticated (but only if we have data)
+  if (adminStatus && !adminStatus.isAdmin) {
     return null;
   }
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
