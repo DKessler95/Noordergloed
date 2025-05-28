@@ -25,7 +25,7 @@ export async function sendBulkEmail(params: EmailParams): Promise<boolean> {
       .request({
         Messages: params.to.map(email => ({
           From: {
-            Email: params.fromEmail || "noreply@plukenpoot.nl",
+            Email: params.fromEmail || "dc@damian.kessler.nl",
             Name: params.fromName || "Pluk & Poot"
           },
           To: [
