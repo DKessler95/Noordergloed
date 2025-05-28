@@ -37,13 +37,58 @@ export default function ProductDetail() {
   // Get single product
   const { data: product, isLoading } = useQuery({
     queryKey: ["/api/products", productId],
-    queryFn: () => apiRequest("GET", `/api/products/${productId}`),
-  }) as { data: Product | undefined, isLoading: boolean };
+    queryFn: () => apiRequest("GET", `/api/products/${productId}`).then(res => res.json()),
+    enabled: productId > 0
+  });
 
   // Get all products for carousel
   const { data: allProducts } = useQuery<Product[]>({
     queryKey: ["/api/products"],
   });
+
+  const updateProductMutation = useMutation({
+    mutationFn: async (updatedProduct: Partial<Product>) => {
+      return apiRequest("PATCH", `/api/products/${productId}`, updatedProduct);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products", productId] });
+      setIsEditing(false);
+      setEditData({});
+      toast({
+        title: "Product bijgewerkt!",
+        description: "De productinformatie is succesvol opgeslagen.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Fout bij opslaan",
+        description: error.message || "Er ging iets mis bij het opslaan.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleEdit = () => {
+    if (!product) return;
+    setIsEditing(true);
+    setEditData({
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+    });
+  };
+
+  const handleSave = () => {
+    if (!product || !editData) return;
+    updateProductMutation.mutate(editData);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditData({});
+  };
 
   // Loading state
   if (isLoading) {
