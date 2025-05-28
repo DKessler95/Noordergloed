@@ -223,6 +223,17 @@ export default function AdminDashboard() {
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Producten Beheer</h2>
+              <Button
+                onClick={() => window.open('/', '_blank')}
+                variant="outline"
+                className="gap-2"
+              >
+                📄 Bekijk Product Pagina's
+              </Button>
+            </div>
+            
             {/* Add New Product */}
             <Card>
               <CardHeader>
@@ -675,30 +686,32 @@ export default function AdminDashboard() {
                           {dateOrders.length} reserveringen ({dateOrders.reduce((sum, o) => sum + o.servings, 0)} personen)
                         </p>
                       </div>
-                      {dateOrders.length >= 6 && (
+                      {dateOrders.filter(o => o.status === 'confirmed').length >= 6 && (
                         <Button
                           onClick={async () => {
                             try {
+                              console.log("Sending invitations for date:", dateOrders[0].preferredDate);
                               const response = await apiRequest('POST', '/api/ramen-orders/send-invitations', {
                                 date: dateOrders[0].preferredDate
                               });
                               const result = await response.json();
+                              console.log("Email response:", result);
                               toast({
                                 title: "Uitnodigingen Verstuurd!",
-                                description: result.message,
+                                description: `${result.message} Emails verzonden naar: ${dateOrders.filter(o => o.status === 'confirmed').map(o => o.customerEmail).join(', ')}`,
                               });
-                              // refetchRamenOrders();
                             } catch (error) {
+                              console.error("Email error:", error);
                               toast({
                                 title: "Fout",
-                                description: "Kon uitnodigingen niet versturen",
+                                description: "Kon uitnodigingen niet versturen. Check console voor details.",
                                 variant: "destructive",
                               });
                             }
                           }}
                           className="bg-green-600 hover:bg-green-700"
                         >
-                          📧 Uitnodigingen Versturen
+                          📧 Uitnodigingen Versturen ({dateOrders.filter(o => o.status === 'confirmed').length} bevestigd)
                         </Button>
                       )}
                     </div>

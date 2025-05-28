@@ -317,6 +317,17 @@ export class MemStorage implements IStorage {
     if (order) {
       const updatedOrder = { ...order, status };
       this.ramenOrders.set(id, updatedOrder);
+      
+      // If order is confirmed, check if we should send emails
+      if (status === 'confirmed') {
+        const ordersForDate = await this.getRamenOrdersByDate(new Date(order.preferredDate));
+        const confirmedOrdersForDate = ordersForDate.filter(o => o.status === 'confirmed');
+        
+        if (confirmedOrdersForDate.length >= 6) {
+          console.log(`6+ confirmed orders for ${order.preferredDate}, ready to send emails`);
+        }
+      }
+      
       return updatedOrder;
     }
     return undefined;
