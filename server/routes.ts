@@ -349,6 +349,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Send individual confirmation email for a ramen order (admin)
+  app.post("/api/ramen-orders/:id/send-confirmation", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { email, name, date } = req.body;
+      
+      if (isNaN(id) || !email || !name || !date) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      const targetDate = new Date(date);
+      const dateStr = targetDate.toLocaleDateString('nl-NL', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      try {
+        await sendRamenInvitation([email], dateStr);
+        console.log(`Individual confirmation email sent to ${email} for ${dateStr}`);
+        
+        res.json({ 
+          message: `Bevestigingsmail verzonden naar ${email}`,
+          email: email,
+          date: dateStr
+        });
+      } catch (emailError) {
+        console.error("Failed to send individual confirmation email:", emailError);
+        res.status(500).json({ message: "Failed to send confirmation email" });
+      }
+    } catch (error: any) {
+      console.error("Error sending individual confirmation:", error);
+      res.status(500).json({ message: "Error sending confirmation: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
