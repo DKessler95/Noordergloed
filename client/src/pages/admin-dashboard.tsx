@@ -18,9 +18,11 @@ import type { Product, RamenOrder } from "@shared/schema";
 export default function AdminDashboard() {
   const { toast } = useToast();
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
+  const [editProductData, setEditProductData] = useState<any>(null);
   const [categories, setCategories] = useState(["syrup", "ramen", "accessoires"]);
   const [newCategory, setNewCategory] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [newBadge, setNewBadge] = useState("");
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -34,7 +36,7 @@ export default function AdminDashboard() {
     badges: [] as string[]
   });
 
-  const [availableBadges] = useState(["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]);
+  const [availableBadges, setAvailableBadges] = useState(["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]);
 
   // Fetch data
   const { data: products = [] } = useQuery({
@@ -116,6 +118,21 @@ export default function AdminDashboard() {
     },
     onError: () => {
       toast({ title: "Fout bij bijwerken status", variant: "destructive" });
+    },
+  });
+
+  // Delete ramen order mutation
+  const deleteRamenOrderMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("DELETE", `/api/ramen-orders/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
+      toast({ title: "Ramen bestelling verwijderd!" });
+    },
+    onError: () => {
+      toast({ title: "Fout bij verwijderen bestelling", variant: "destructive" });
     },
   });
 
@@ -390,39 +407,146 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex items-center gap-2">
                         {editingProduct === product.id ? (
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="number"
-                              defaultValue={product.stock}
-                              className="w-20"
-                              id={`stock-${product.id}`}
-                            />
-                            <Button
-                              size="sm"
-                              onClick={() => {
-                                const input = document.getElementById(`stock-${product.id}`) as HTMLInputElement;
-                                const newStock = parseInt(input.value);
-                                handleStockUpdate(product.id, newStock);
-                              }}
-                              className="gap-2"
-                            >
-                              <Check className="w-4 h-4" />
-                              Opslaan
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => setEditingProduct(null)}
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
+                          <div className="space-y-4 w-full">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <Label>Naam</Label>
+                                <Input
+                                  value={editProductData?.name || product.name}
+                                  onChange={(e) => setEditProductData({...editProductData, name: e.target.value})}
+                                />
+                              </div>
+                              <div>
+                                <Label>Prijs (€)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={editProductData?.price || product.price}
+                                  onChange={(e) => setEditProductData({...editProductData, price: e.target.value})}
+                                />
+                              </div>
+                              <div>
+                                <Label>Voorraad</Label>
+                                <Input
+                                  type="number"
+                                  value={editProductData?.stock ?? product.stock}
+                                  onChange={(e) => setEditProductData({...editProductData, stock: parseInt(e.target.value)})}
+                                />
+                              </div>
+                              <div>
+                                <Label>Max Voorraad</Label>
+                                <Input
+                                  type="number"
+                                  value={editProductData?.maxStock ?? product.maxStock}
+                                  onChange={(e) => setEditProductData({...editProductData, maxStock: parseInt(e.target.value)})}
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <Label>Beschrijving</Label>
+                              <Textarea
+                                value={editProductData?.description || product.description}
+                                onChange={(e) => setEditProductData({...editProductData, description: e.target.value})}
+                                rows={2}
+                              />
+                            </div>
+                            <div>
+                              <Label>Badges</Label>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {availableBadges.map((badge) => (
+                                  <div
+                                    key={badge}
+                                    onClick={() => {
+                                      const currentBadges = editProductData?.badges || product.badges || [];
+                                      const isSelected = currentBadges.includes(badge);
+                                      if (isSelected) {
+                                        setEditProductData({
+                                          ...editProductData,
+                                          badges: currentBadges.filter(b => b !== badge)
+                                        });
+                                      } else {
+                                        setEditProductData({
+                                          ...editProductData,
+                                          badges: [...currentBadges, badge]
+                                        });
+                                      }
+                                    }}
+                                    className={`cursor-pointer px-3 py-1 rounded-full text-sm transition-colors ${
+                                      (editProductData?.badges || product.badges || []).includes(badge)
+                                        ? 'bg-blue-500 text-white'
+                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300'
+                                    }`}
+                                  >
+                                    {badge}
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="flex gap-2 mt-2">
+                                <Input
+                                  placeholder="Nieuwe badge"
+                                  value={newBadge}
+                                  onChange={(e) => setNewBadge(e.target.value)}
+                                  className="flex-1"
+                                />
+                                <Button
+                                  size="sm"
+                                  onClick={() => {
+                                    if (newBadge.trim() && !availableBadges.includes(newBadge.trim())) {
+                                      setAvailableBadges([...availableBadges, newBadge.trim()]);
+                                      setNewBadge("");
+                                    }
+                                  }}
+                                >
+                                  <Plus className="w-4 h-4" />
+                                </Button>
+                              </div>
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {availableBadges.map((badge) => (
+                                  <div key={badge} className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">
+                                    {badge}
+                                    <button
+                                      onClick={() => setAvailableBadges(availableBadges.filter(b => b !== badge))}
+                                      className="text-red-500 hover:text-red-700"
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                onClick={() => {
+                                  updateProductMutation.mutate({...product, ...editProductData});
+                                }}
+                                className="gap-2"
+                              >
+                                <Check className="w-4 h-4" />
+                                Opslaan
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  setEditingProduct(null);
+                                  setEditProductData(null);
+                                }}
+                              >
+                                <X className="w-4 h-4" />
+                                Annuleren
+                              </Button>
+                            </div>
                           </div>
                         ) : (
                           <div className="flex gap-2">
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => setEditingProduct(product.id)}
+                              onClick={() => {
+                                setEditingProduct(product.id);
+                                setEditProductData(product);
+                              }}
                               className="gap-2"
                             >
                               <Edit className="w-4 h-4" />
