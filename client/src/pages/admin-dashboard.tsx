@@ -187,6 +187,26 @@ export default function AdminDashboard() {
     },
   });
 
+  const testEmailMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/test-email", {});
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Test email verzonden",
+        description: "Controleer je inbox op dckessler95@gmail.com",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Test email mislukt",
+        description: error.message || "Er ging iets mis bij het verzenden van de test email.",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!adminLoading && adminStatus && !adminStatus.isAdmin) {
@@ -226,25 +246,7 @@ export default function AdminDashboard() {
     createProductMutation.mutate(cleanData);
   };
 
-  const testEmailMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/test-email", {});
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "Test email verzonden",
-        description: "Controleer je inbox op dckessler95@gmail.com",
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Test email mislukt",
-        description: error.message || "Er ging iets mis bij het verzenden van de test email.",
-        variant: "destructive",
-      });
-    },
-  });
+
 
   const handleDeleteRamenOrder = (id: number) => {
     deleteRamenOrderMutation.mutate(id);
