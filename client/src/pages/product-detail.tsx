@@ -24,6 +24,11 @@ export default function ProductDetail() {
   const [editData, setEditData] = useState<Partial<Product>>({});
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Check if user is admin
+  const isAdmin = () => {
+    return localStorage.getItem('adminToken') !== null;
+  };
   
   // Convert slug to product ID
   const productSlugMap: Record<string, number> = {
