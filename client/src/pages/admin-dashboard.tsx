@@ -51,6 +51,15 @@ export default function AdminDashboard() {
     staleTime: 0, // Always fetch fresh data
   });
 
+  // Fetch data - MUST be before conditional returns
+  const { data: products = [] } = useQuery({
+    queryKey: ["/api/products"],
+  });
+
+  const { data: ramenOrders = [] } = useQuery({
+    queryKey: ["/api/ramen-orders"],
+  });
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!adminLoading && adminStatus && !adminStatus.isAdmin) {
@@ -75,14 +84,7 @@ export default function AdminDashboard() {
     return null;
   }
 
-  // Fetch data
-  const { data: products = [] } = useQuery({
-    queryKey: ["/api/products"],
-  });
-
-  const { data: ramenOrders = [] } = useQuery({
-    queryKey: ["/api/ramen-orders"],
-  });
+  // Data queries already declared above
 
   // Update stock mutation
   const updateStockMutation = useMutation({
