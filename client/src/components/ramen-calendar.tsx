@@ -59,8 +59,14 @@ export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps
       
       const isCurrentMonth = currentDate.getMonth() === month;
       const isFriday = currentDate.getDay() === 5;
-      const isFuture = currentDate > new Date();
-      const isSelectable = isCurrentMonth && isFriday && isFuture;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const currentDateNormalized = new Date(currentDate);
+      currentDateNormalized.setHours(0, 0, 0, 0);
+      const daysDifference = Math.ceil((currentDateNormalized.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      const isWithin4Days = daysDifference <= 4 && daysDifference >= 0;
+      const isFuture = currentDateNormalized > today;
+      const isSelectable = isCurrentMonth && isFriday && isFuture && !isWithin4Days;
       
       const availability = getAvailability(currentDate);
       
@@ -131,6 +137,12 @@ export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps
           {days.map((day, index) => {
             const isCurrentMonth = day.date.getMonth() === currentMonth.getMonth();
             const isFriday = day.date.getDay() === 5;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const dayDateNormalized = new Date(day.date);
+            dayDateNormalized.setHours(0, 0, 0, 0);
+            const daysDifference = Math.ceil((dayDateNormalized.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+            const isWithin4Days = daysDifference <= 4 && daysDifference >= 0;
             const statusColor = getStatusColor(day.available, day.total);
             
             return (
@@ -144,6 +156,7 @@ export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps
                   ${day.isSelectable ? 'hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer' : 'cursor-not-allowed'}
                   ${isSelectedDate(day.date) ? 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500' : ''}
                   ${!isCurrentMonth ? 'opacity-30' : ''}
+                  ${isFriday && isCurrentMonth && isWithin4Days ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300' : ''}
                 `}
               >
                 <span className="relative z-10">{day.date.getDate()}</span>

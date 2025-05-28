@@ -72,10 +72,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Check if date is at least 4 days in the future
       const preferredDate = new Date(requestData.preferredDate);
-      const minDate = new Date();
-      minDate.setDate(minDate.getDate() + 4);
+      preferredDate.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const daysDifference = Math.ceil((preferredDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
       
-      if (preferredDate < minDate) {
+      if (daysDifference <= 4) {
         return res.status(400).json({ 
           message: "Ramen orders must be placed at least 4 days in advance" 
         });
