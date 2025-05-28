@@ -40,12 +40,8 @@ export default function AdminLogin() {
         title: "Ingelogd",
         description: "Welkom in het admin dashboard!",
       });
-      // Invalidate admin status query to refresh auth state
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/status'] });
-      // Small delay to ensure the query is refreshed
-      setTimeout(() => {
-        setLocation("/admin/dashboard");
-      }, 200);
+      // Force a hard redirect to ensure the page refreshes with new auth state
+      window.location.href = "/admin/dashboard";
     },
     onError: (error: any) => {
       toast({
