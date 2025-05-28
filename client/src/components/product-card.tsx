@@ -110,7 +110,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="order-1 md:order-2">
             <div className="grid grid-cols-2 gap-4">
               <img 
-                src="/images/voorkant-siroop.png" 
+                src={product.imageUrl || "/images/voorkant-siroop.png"} 
                 alt={`${product.name} voorkant`} 
                 className="w-full h-auto rounded-xl shadow-lg transform group-hover:scale-105 transition-transform duration-500" 
               />

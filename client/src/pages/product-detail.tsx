@@ -134,7 +134,7 @@ export default function ProductDetail() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
                   <img
-                    src="/images/voorkant-siroop.png"
+                    src={product.imageUrl || "/images/voorkant-siroop.png"}
                     alt={`${product.name} voorkant`}
                     className="w-full h-auto drop-shadow-2xl"
                   />
