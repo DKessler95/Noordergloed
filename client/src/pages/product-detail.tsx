@@ -77,7 +77,44 @@ export default function ProductDetail() {
       description: product.description,
       price: product.price,
       imageUrl: product.imageUrl,
+      // Extended content fields
+      story: product.story || getDefaultStory(product.name),
+      ingredients: product.ingredients || getDefaultIngredients(product.name),
+      nutrition: product.nutrition || getDefaultNutrition(),
+      usage: product.usage || getDefaultUsage(product.name),
     });
+  };
+
+  // Helper functions for default content
+  const getDefaultStory = (name: string) => {
+    if (name.includes("Vlierbloesem")) {
+      return "Onze vlierbloesemstroop wordt met liefde gemaakt van verse vlierbloesems uit onze eigen tuin. De bloesems worden vroeg in de ochtend geplukt wanneer de dauw nog op de bloemblaadjes ligt, voor de meest intense smaak.";
+    } else if (name.includes("Rozen")) {
+      return "Deze rozensiroop wordt gemaakt van delicate rozenblaadjes uit onze eigen tuin aan de Star Numanstraat. Een subtiele bloemensmaak die perfect past bij thee of prosecco.";
+    }
+    return "Een verhaal over dit bijzondere product...";
+  };
+
+  const getDefaultIngredients = (name: string) => {
+    if (name.includes("Vlierbloesem")) {
+      return "Verse vlierbloesems, rietsuiker, water, citroenzuur";
+    } else if (name.includes("Rozen")) {
+      return "Biologische rozenblaadjes, rietsuiker, water, citroenzuur";
+    }
+    return "Natuurlijke ingrediënten van hoge kwaliteit";
+  };
+
+  const getDefaultNutrition = () => {
+    return "Per 100ml: Energie 280kcal, Koolhydraten 70g, waarvan suikers 68g, Vet 0g, Eiwit 0g, Zout 0g";
+  };
+
+  const getDefaultUsage = (name: string) => {
+    if (name.includes("Vlierbloesem")) {
+      return "Perfect voor in thee, over ijs, in cocktails of als topping op desserts. Verdun met bruiswater voor een verfrissende limonade.";
+    } else if (name.includes("Rozen")) {
+      return "Heerlijk in thee, over yoghurt, in cocktails of als basis voor rozenlimonade. Ook perfect als topping voor taarten.";
+    }
+    return "Veelzijdig te gebruiken in dranken en desserts";
   };
 
   const handleSave = () => {
@@ -260,6 +297,40 @@ export default function ProductDetail() {
                         value={editData.imageUrl || ''}
                         onChange={(e) => setEditData({ ...editData, imageUrl: e.target.value })}
                         placeholder="/images/product.jpg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Verhaal</label>
+                      <Textarea
+                        value={editData.story || ''}
+                        onChange={(e) => setEditData({ ...editData, story: e.target.value })}
+                        rows={3}
+                        placeholder="Het verhaal achter dit product..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Ingrediënten</label>
+                      <Input
+                        value={editData.ingredients || ''}
+                        onChange={(e) => setEditData({ ...editData, ingredients: e.target.value })}
+                        placeholder="Ingrediëntenlijst"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Voedingswaarde</label>
+                      <Input
+                        value={editData.nutrition || ''}
+                        onChange={(e) => setEditData({ ...editData, nutrition: e.target.value })}
+                        placeholder="Voedingswaarde per 100ml"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Gebruik</label>
+                      <Textarea
+                        value={editData.usage || ''}
+                        onChange={(e) => setEditData({ ...editData, usage: e.target.value })}
+                        rows={2}
+                        placeholder="Hoe gebruik je dit product..."
                       />
                     </div>
                   </div>
