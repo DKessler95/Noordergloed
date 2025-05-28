@@ -32,6 +32,10 @@ export interface IStorage {
   // Contact Messages
   getContactMessages(): Promise<ContactMessage[]>;
   createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
+  
+  // Admin Authentication
+  getAdminByUsername(username: string): Promise<{ id: number; username: string; password: string; role: string } | undefined>;
+  createAdminUser(username: string, hashedPassword: string): Promise<{ id: number; username: string; role: string }>;
 }
 
 export class MemStorage implements IStorage {
@@ -39,23 +43,28 @@ export class MemStorage implements IStorage {
   private orders: Map<number, Order>;
   private ramenOrders: Map<number, RamenOrder>;
   private contactMessages: Map<number, ContactMessage>;
+  private adminUsers: Map<string, { id: number; username: string; password: string; role: string }>;
   private currentProductId: number;
   private currentOrderId: number;
   private currentRamenOrderId: number;
   private currentMessageId: number;
+  private currentAdminId: number;
 
   constructor() {
     this.products = new Map();
     this.orders = new Map();
     this.ramenOrders = new Map();
     this.contactMessages = new Map();
+    this.adminUsers = new Map();
     this.currentProductId = 1;
     this.currentOrderId = 1;
     this.currentRamenOrderId = 1;
     this.currentMessageId = 1;
+    this.currentAdminId = 1;
     
-    // Initialize with sample products
+    // Initialize with sample products and admin user
     this.initializeProducts();
+    this.initializeAdminUser();
   }
 
   private initializeProducts() {
