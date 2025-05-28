@@ -514,7 +514,7 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Ingredients & Nutrition */}
             <div>
-              {isEditing && isAdmin() ? (
+              {isEditing && isAdmin ? (
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">Sectie Titel - Ingrediënten</label>
@@ -563,7 +563,7 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
 
             {/* Story */}
             <div>
-              {isEditing && isAdmin() ? (
+              {isEditing && isAdmin ? (
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">Verhaal Titel</label>
