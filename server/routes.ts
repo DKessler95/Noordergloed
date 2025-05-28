@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema } from "@shared/schema";
+import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
 
 const ramenOrderRequestSchema = z.object({
