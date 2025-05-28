@@ -48,7 +48,7 @@ export async function sendBulkEmail(params: EmailParams): Promise<boolean> {
     console.log('Mailjet response body:', JSON.stringify(result.body, null, 2));
     
     // Check if email was actually accepted
-    if (result.body && result.body.Messages) {
+    if (result.body && result.body.Messages && result.body.Messages.length > 0) {
       const firstMessage = result.body.Messages[0];
       if (firstMessage && firstMessage.Status === 'success') {
         console.log('Email accepted by Mailjet for delivery');
@@ -57,6 +57,12 @@ export async function sendBulkEmail(params: EmailParams): Promise<boolean> {
         console.log('Email not accepted by Mailjet:', firstMessage);
         return false;
       }
+    }
+    
+    // If we got a successful response but no Messages array, consider it successful
+    if (result.response?.status === 200) {
+      console.log('Mailjet returned 200, considering email sent successfully');
+      return true;
     }
     
     return false;
