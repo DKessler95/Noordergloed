@@ -13,6 +13,7 @@ export const products = pgTable("products", {
   imageUrl: text("image_url"),
   featured: boolean("featured").default(false),
   limitedStock: boolean("limited_stock").default(false),
+  badges: text("badges").array().default([]), // ["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]
   createdAt: timestamp("created_at").defaultNow(),
 });
 

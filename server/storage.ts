@@ -15,6 +15,7 @@ export interface IStorage {
   getProduct(id: number): Promise<Product | undefined>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProductStock(id: number, stock: number): Promise<Product | undefined>;
+  deleteProduct(id: number): Promise<boolean>;
   
   // Orders
   getOrders(): Promise<Order[]>;
@@ -93,6 +94,7 @@ export class MemStorage implements IStorage {
       imageUrl: "/images/achterkant-siroop.png",
       featured: true,
       limitedStock: false,
+      badges: ["Seizoenspecialiteit"],
       createdAt: new Date(),
     };
 
@@ -154,6 +156,10 @@ export class MemStorage implements IStorage {
       return updatedProduct;
     }
     return undefined;
+  }
+
+  async deleteProduct(id: number): Promise<boolean> {
+    return this.products.delete(id);
   }
 
   // Orders
