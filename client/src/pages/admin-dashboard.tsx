@@ -610,7 +610,11 @@ export default function AdminDashboard() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => handleSendIndividualConfirmation(order)}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleSendIndividualConfirmation(order);
+                                  }}
                                   disabled={sendIndividualConfirmationMutation.isPending}
                                   title="Verstuur bevestigingsmail"
                                 >
@@ -619,7 +623,11 @@ export default function AdminDashboard() {
                                 <Button
                                   variant="destructive"
                                   size="sm"
-                                  onClick={() => handleDeleteRamenOrder(order.id)}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleDeleteRamenOrder(order.id);
+                                  }}
                                   disabled={deleteRamenOrderMutation.isPending}
                                 >
                                   <Trash2 className="h-4 w-4" />
