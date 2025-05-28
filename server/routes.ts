@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
-import { sendRamenInvitation, sendAdminNotification } from "./mailjet";
+import { sendRamenInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification } from "./mailjet";
 
 const ramenOrderRequestSchema = z.object({
   customerName: z.string().min(1),

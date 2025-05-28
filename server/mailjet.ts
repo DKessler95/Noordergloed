@@ -28,7 +28,7 @@ export async function sendBulkEmail(params: EmailParams): Promise<boolean> {
       .request({
         Messages: params.to.map(email => ({
           From: {
-            Email: params.fromEmail || "dc@damian.kessler.nl",
+            Email: params.fromEmail || "dckessler95@gmail.com",
             Name: params.fromName || "Pluk & Poot"
           },
           To: [
@@ -167,6 +167,137 @@ Je Pluk & Poot Website
     to: ["dckessler95@gmail.com"],
     subject,
     textContent,
-    htmlContent
+    htmlContent,
+    fromEmail: "dckessler95@gmail.com",
+    fromName: "Pluk & Poot Notificaties"
+  });
+}
+
+// Email template voor contact formulier berichten
+export async function sendContactNotification(contactData: any): Promise<boolean> {
+  const subject = "📬 Nieuw Contact Bericht - Pluk & Poot";
+  
+  const textContent = `
+Hallo Damian,
+
+Er is een nieuw contact bericht binnengekomen via je website!
+
+Naam: ${contactData.name}
+Email: ${contactData.email}
+Telefoon: ${contactData.phone || 'Niet opgegeven'}
+
+Bericht:
+${contactData.message}
+
+Verzonden op: ${new Date().toLocaleString('nl-NL')}
+
+Groet,
+Je Pluk & Poot Website
+  `;
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h1 style="color: #7c3aed;">📬 Nieuw Contact Bericht</h1>
+      
+      <p>Hallo Damian,</p>
+      
+      <p>Er is een nieuw contact bericht binnengekomen via je website!</p>
+      
+      <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3 style="color: #374151; margin-top: 0;">Contact Details:</h3>
+        <p><strong>Naam:</strong> ${contactData.name}</p>
+        <p><strong>Email:</strong> ${contactData.email}</p>
+        <p><strong>Telefoon:</strong> ${contactData.phone || 'Niet opgegeven'}</p>
+        
+        <h4 style="color: #374151; margin-bottom: 10px;">Bericht:</h4>
+        <div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #7c3aed;">
+          ${contactData.message.replace(/\n/g, '<br>')}
+        </div>
+      </div>
+      
+      <p><small>Verzonden op: ${new Date().toLocaleString('nl-NL')}</small></p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+        <p>Groet,<br>
+        <strong>Je Pluk & Poot Website</strong></p>
+      </div>
+    </div>
+  `;
+
+  return await sendBulkEmail({
+    to: ["dckessler95@gmail.com"],
+    subject,
+    textContent,
+    htmlContent,
+    fromEmail: "dckessler95@gmail.com",
+    fromName: "Pluk & Poot Contact"
+  });
+}
+
+// Email template voor syrup bestellingen
+export async function sendOrderNotification(orderData: any): Promise<boolean> {
+  const subject = "🛒 Nieuwe Siroop Bestelling - Pluk & Poot";
+  
+  const textContent = `
+Hallo Damian,
+
+Er is een nieuwe siroop bestelling binnengekomen!
+
+Klant: ${orderData.customerName}
+Email: ${orderData.customerEmail}
+Telefoon: ${orderData.customerPhone || 'Niet opgegeven'}
+Product: ${orderData.productName}
+Aantal: ${orderData.quantity}
+Totaal: €${orderData.totalAmount}
+
+Opmerkingen: ${orderData.notes || 'Geen opmerkingen'}
+
+Verzonden op: ${new Date().toLocaleString('nl-NL')}
+
+Groet,
+Je Pluk & Poot Website
+  `;
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h1 style="color: #7c3aed;">🛒 Nieuwe Siroop Bestelling</h1>
+      
+      <p>Hallo Damian,</p>
+      
+      <p>Er is een nieuwe siroop bestelling binnengekomen!</p>
+      
+      <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3 style="color: #374151; margin-top: 0;">Bestelling Details:</h3>
+        <p><strong>Klant:</strong> ${orderData.customerName}</p>
+        <p><strong>Email:</strong> ${orderData.customerEmail}</p>
+        <p><strong>Telefoon:</strong> ${orderData.customerPhone || 'Niet opgegeven'}</p>
+        <p><strong>Product:</strong> ${orderData.productName}</p>
+        <p><strong>Aantal:</strong> ${orderData.quantity}</p>
+        <p><strong>Totaal:</strong> €${orderData.totalAmount}</p>
+        
+        ${orderData.notes ? `
+        <h4 style="color: #374151; margin-bottom: 10px;">Opmerkingen:</h4>
+        <div style="background-color: white; padding: 15px; border-radius: 5px;">
+          ${orderData.notes}
+        </div>
+        ` : ''}
+      </div>
+      
+      <p><small>Verzonden op: ${new Date().toLocaleString('nl-NL')}</small></p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+        <p>Groet,<br>
+        <strong>Je Pluk & Poot Website</strong></p>
+      </div>
+    </div>
+  `;
+
+  return await sendBulkEmail({
+    to: ["dckessler95@gmail.com"],
+    subject,
+    textContent,
+    htmlContent,
+    fromEmail: "dckessler95@gmail.com",
+    fromName: "Pluk & Poot Bestellingen"
   });
 }
