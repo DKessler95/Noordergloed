@@ -28,7 +28,8 @@ export default function AdminDashboard() {
     maxStock: "",
     category: "syrup",
     imageUrl: "",
-    featured: false
+    featured: false,
+    limitedStock: false
   });
 
   // Fetch data
@@ -84,7 +85,8 @@ export default function AdminDashboard() {
         maxStock: "",
         category: "syrup",
         imageUrl: "",
-        featured: false
+        featured: false,
+        limitedStock: false
       });
       setSelectedImage(null);
     },

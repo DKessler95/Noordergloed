@@ -12,6 +12,7 @@ export const products = pgTable("products", {
   category: text("category").notNull(), // "syrup" | "ramen"
   imageUrl: text("image_url"),
   featured: boolean("featured").default(false),
+  limitedStock: boolean("limited_stock").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

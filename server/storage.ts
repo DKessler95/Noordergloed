@@ -78,6 +78,7 @@ export class MemStorage implements IStorage {
       category: "syrup",
       imageUrl: "/images/voorkant-siroop.png",
       featured: true,
+      limitedStock: false,
       createdAt: new Date(),
     };
 
@@ -91,6 +92,7 @@ export class MemStorage implements IStorage {
       category: "syrup",
       imageUrl: "/images/achterkant-siroop.png",
       featured: true,
+      limitedStock: false,
       createdAt: new Date(),
     };
 
@@ -104,6 +106,7 @@ export class MemStorage implements IStorage {
       category: "ramen",
       imageUrl: "/images/chicken-shoyu-ramen.jpg",
       featured: true,
+      limitedStock: false,
       createdAt: new Date(),
     };
 
