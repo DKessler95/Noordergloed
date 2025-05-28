@@ -226,10 +226,6 @@ export default function AdminDashboard() {
     createProductMutation.mutate(cleanData);
   };
 
-  const handleDeleteRamenOrder = (id: number) => {
-    deleteRamenOrderMutation.mutate(id);
-  };
-
   const testEmailMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest("POST", "/api/test-email", {});
@@ -249,6 +245,10 @@ export default function AdminDashboard() {
       });
     },
   });
+
+  const handleDeleteRamenOrder = (id: number) => {
+    deleteRamenOrderMutation.mutate(id);
+  };
 
   const handleTestEmail = () => {
     testEmailMutation.mutate();
