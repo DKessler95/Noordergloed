@@ -112,6 +112,17 @@ export class MemStorage implements IStorage {
     this.products.set(ramenSet.id, ramenSet);
   }
 
+  private initializeAdminUser() {
+    // Create default admin user: admin/admin
+    const defaultAdmin = {
+      id: this.currentAdminId++,
+      username: "admin",
+      password: "admin", // In production, this should be hashed
+      role: "admin"
+    };
+    this.adminUsers.set(defaultAdmin.username, defaultAdmin);
+  }
+
   // Products
   async getProducts(): Promise<Product[]> {
     return Array.from(this.products.values());
@@ -247,6 +258,22 @@ export class MemStorage implements IStorage {
     };
     this.contactMessages.set(id, message);
     return message;
+  }
+
+  // Admin Authentication
+  async getAdminByUsername(username: string): Promise<{ id: number; username: string; password: string; role: string } | undefined> {
+    return this.adminUsers.get(username);
+  }
+
+  async createAdminUser(username: string, hashedPassword: string): Promise<{ id: number; username: string; role: string }> {
+    const admin = {
+      id: this.currentAdminId++,
+      username,
+      password: hashedPassword,
+      role: "admin"
+    };
+    this.adminUsers.set(username, admin);
+    return { id: admin.id, username: admin.username, role: admin.role };
   }
 }
 

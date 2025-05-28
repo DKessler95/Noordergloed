@@ -169,6 +169,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin Authentication Routes
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        return res.status(400).json({ message: "Username and password required" });
+      }
+
+      const admin = await storage.getAdminByUsername(username);
+      
+      if (!admin || admin.password !== password) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      // Set admin session
+      (req as any).session.adminId = admin.id;
+      (req as any).session.adminUsername = admin.username;
+      
+      res.json({ message: "Login successful", admin: { id: admin.id, username: admin.username, role: admin.role } });
+    } catch (error: any) {
+      res.status(500).json({ message: "Login error: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/logout", (req, res) => {
+    (req as any).session.destroy((err: any) => {
+      if (err) {
+        return res.status(500).json({ message: "Logout error" });
+      }
+      res.json({ message: "Logout successful" });
+    });
+  });
+
+  // Admin middleware
+  const requireAdmin = (req: any, res: any, next: any) => {
+    if (!req.session?.adminId) {
+      return res.status(401).json({ message: "Admin authentication required" });
+    }
+    next();
+  };
+
+  // Admin Product Management Routes
+  app.post("/api/products", requireAdmin, async (req, res) => {
+    try {
+      const productData = insertProductSchema.parse(req.body);
+      const product = await storage.createProduct(productData);
+      res.json(product);
+    } catch (error: any) {
+      res.status(400).json({ message: "Error creating product: " + error.message });
+    }
+  });
+
+  app.patch("/api/products/:id/stock", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { stock } = req.body;
+      
+      if (isNaN(id) || typeof stock !== "number") {
+        return res.status(400).json({ message: "Invalid product ID or stock value" });
+      }
+
+      const product = await storage.updateProductStock(id, stock);
+      
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.json(product);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating stock: " + error.message });
+    }
+  });
+
+  app.patch("/api/ramen-orders/:id/status", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (isNaN(id) || !status) {
+        return res.status(400).json({ message: "Invalid order ID or status" });
+      }
+
+      const order = await storage.updateRamenOrderStatus(id, status);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.json(order);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating order status: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
