@@ -463,6 +463,110 @@ Status: ${ramenOrder.status}
     }
   });
 
+  // Siroop orders management (admin)
+  app.get("/api/orders", requireAdmin, async (req, res) => {
+    try {
+      const orders = await storage.getOrders();
+      res.json(orders);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching orders: " + error.message });
+    }
+  });
+
+  app.patch("/api/orders/:id/status", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (isNaN(id) || !status) {
+        return res.status(400).json({ message: "Invalid order ID or status" });
+      }
+
+      const order = await storage.updateOrderStatus(id, status);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.json(order);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating order status: " + error.message });
+    }
+  });
+
+  app.delete("/api/orders/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+
+      const success = await storage.deleteOrder(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.json({ message: "Order deleted successfully", id });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error deleting order: " + error.message });
+    }
+  });
+
+  app.post("/api/orders/:id/send-confirmation", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+
+      const orders = await storage.getOrders();
+      const order = orders.find(o => o.id === id);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      const products = await storage.getProducts();
+      const product = products.find(p => p.id === order.productId);
+      
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      try {
+        // Send confirmation email to customer
+        await sendOrderNotification({
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone,
+          productName: product.name,
+          quantity: order.quantity,
+          totalAmount: order.totalAmount,
+          notes: order.notes,
+          deliveryMethod: order.deliveryMethod,
+          streetAddress: order.streetAddress,
+          city: order.city,
+          postalCode: order.postalCode,
+          country: order.country
+        });
+        
+        res.json({ 
+          message: `Bevestigingsmail verzonden naar ${order.customerEmail}`,
+          email: order.customerEmail,
+          product: product.name
+        });
+      } catch (emailError) {
+        console.error("Failed to send order confirmation email:", emailError);
+        res.status(500).json({ message: "Failed to send confirmation email" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: "Error sending confirmation: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

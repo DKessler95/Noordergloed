@@ -283,6 +283,10 @@ export class MemStorage implements IStorage {
     return undefined;
   }
 
+  async deleteOrder(id: number): Promise<boolean> {
+    return this.orders.delete(id);
+  }
+
   // Ramen Orders
   async getRamenOrders(): Promise<RamenOrder[]> {
     const orders = Array.from(this.ramenOrders.values());

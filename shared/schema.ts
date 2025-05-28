@@ -28,6 +28,12 @@ export const orders = pgTable("orders", {
   orderType: text("order_type").notNull(), // "syrup" | "ramen"
   status: text("status").notNull().default("pending"), // "pending" | "confirmed" | "completed" | "cancelled"
   notes: text("notes"),
+  // Delivery address fields
+  streetAddress: text("street_address"),
+  city: text("city"),
+  postalCode: text("postal_code"),
+  country: text("country").default("Nederland"),
+  deliveryMethod: text("delivery_method").notNull().default("pickup"), // "pickup" | "delivery"
   createdAt: timestamp("created_at").defaultNow(),
 });
 

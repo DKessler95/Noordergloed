@@ -56,6 +56,10 @@ export default function AdminDashboard() {
     queryKey: ["/api/ramen-orders"],
   });
 
+  const { data: orders = [] } = useQuery({
+    queryKey: ["/api/orders"],
+  });
+
   // Mutations
   const updateStockMutation = useMutation({
     mutationFn: async ({ id, stock }: { id: number; stock: number }) => {
@@ -203,6 +207,47 @@ export default function AdminDashboard() {
         title: "Test email mislukt",
         description: error.message || "Er ging iets mis bij het verzenden van de test email.",
         variant: "destructive",
+      });
+    },
+  });
+
+  const updateOrderStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: string }) => {
+      const response = await apiRequest("PATCH", `/api/orders/${id}/status`, { status });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      toast({
+        title: "Status bijgewerkt",
+        description: "De bestelling status is succesvol aangepast.",
+      });
+    },
+  });
+
+  const deleteOrderMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("DELETE", `/api/orders/${id}`, {});
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      toast({
+        title: "Bestelling verwijderd",
+        description: "De bestelling is succesvol verwijderd.",
+      });
+    },
+  });
+
+  const sendOrderConfirmationMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("POST", `/api/orders/${id}/send-confirmation`, {});
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Bevestigingsmail verzonden",
+        description: "De bevestigingsmail is succesvol verzonden naar de klant.",
       });
     },
   });
