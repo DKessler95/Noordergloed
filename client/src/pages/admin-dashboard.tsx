@@ -35,6 +35,8 @@ export default function AdminDashboard() {
     limitedStock: false,
     badges: [] as string[]
   });
+  const [availableBadges, setAvailableBadges] = useState(["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]);
+  const [newBadge, setNewBadge] = useState("");
 
   // Check admin authentication
   const { data: adminStatus, isLoading: adminLoading } = useQuery({
@@ -109,6 +111,50 @@ export default function AdminDashboard() {
     },
   });
 
+  const confirmRamenOrderMutation = useMutation({
+    mutationFn: async (date: string) => {
+      const response = await apiRequest("POST", `/api/ramen-orders/confirm`, { date });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
+      toast({
+        title: "Ramen orders bevestigd",
+        description: "Alle ramen orders voor de geselecteerde datum zijn bevestigd en uitnodigingen zijn verzonden.",
+      });
+    },
+  });
+
+  const updateProductMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: number; updates: any }) => {
+      const response = await apiRequest("PATCH", `/api/products/${id}`, updates);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      setEditingProduct(null);
+      setEditProductData(null);
+      toast({
+        title: "Product bijgewerkt",
+        description: "Het product is succesvol aangepast.",
+      });
+    },
+  });
+
+  const deleteProductMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("DELETE", `/api/products/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      toast({
+        title: "Product verwijderd",
+        description: "Het product is succesvol verwijderd.",
+      });
+    },
+  });
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!adminLoading && adminStatus && !adminStatus.isAdmin) {
@@ -151,6 +197,62 @@ export default function AdminDashboard() {
   const handleDeleteRamenOrder = (id: number) => {
     deleteRamenOrderMutation.mutate(id);
   };
+
+  const handleConfirmRamenOrders = (date: Date) => {
+    confirmRamenOrderMutation.mutate(date.toISOString().split('T')[0]);
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product.id);
+    setEditProductData({ ...product });
+  };
+
+  const handleUpdateProduct = () => {
+    if (editingProduct && editProductData) {
+      updateProductMutation.mutate({ 
+        id: editingProduct, 
+        updates: {
+          ...editProductData,
+          stock: parseInt(editProductData.stock) || 0,
+          maxStock: parseInt(editProductData.maxStock) || 0,
+        }
+      });
+    }
+  };
+
+  const handleDeleteProduct = (id: number) => {
+    deleteProductMutation.mutate(id);
+  };
+
+  const addBadge = () => {
+    if (newBadge && !availableBadges.includes(newBadge)) {
+      setAvailableBadges([...availableBadges, newBadge]);
+      setNewBadge("");
+    }
+  };
+
+  const toggleBadgeForProduct = (badge: string) => {
+    const currentBadges = newProduct.badges || [];
+    if (currentBadges.includes(badge)) {
+      setNewProduct({
+        ...newProduct,
+        badges: currentBadges.filter(b => b !== badge)
+      });
+    } else {
+      setNewProduct({
+        ...newProduct,
+        badges: [...currentBadges, badge]
+      });
+    }
+  };
+
+  // Group ramen orders by date
+  const ramenOrdersByDate = (ramenOrders as RamenOrder[]).reduce((acc, order) => {
+    const dateKey = new Date(order.preferredDate).toISOString().split('T')[0];
+    if (!acc[dateKey]) acc[dateKey] = [];
+    acc[dateKey].push(order);
+    return acc;
+  }, {} as Record<string, RamenOrder[]>);
 
   const handleLogout = async () => {
     try {
@@ -283,6 +385,32 @@ export default function AdminDashboard() {
                   <Label htmlFor="featured">Uitgelicht product</Label>
                 </div>
 
+                <div className="space-y-2">
+                  <Label>Badges</Label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {availableBadges.map((badge) => (
+                      <Badge
+                        key={badge}
+                        variant={newProduct.badges.includes(badge) ? "default" : "outline"}
+                        className="cursor-pointer"
+                        onClick={() => toggleBadgeForProduct(badge)}
+                      >
+                        {badge}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex space-x-2">
+                    <Input
+                      value={newBadge}
+                      onChange={(e) => setNewBadge(e.target.value)}
+                      placeholder="Nieuwe badge"
+                    />
+                    <Button onClick={addBadge} variant="outline" size="sm">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
                 <Button 
                   onClick={handleCreateProduct} 
                   className="w-full"
@@ -328,7 +456,33 @@ export default function AdminDashboard() {
                             max={product.maxStock}
                           />
                         </div>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleEditProduct(product)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm" 
+                            onClick={() => handleDeleteProduct(product.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
+
+                      {product.badges && product.badges.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {product.badges.map((badge, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {badge}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -339,50 +493,196 @@ export default function AdminDashboard() {
           <TabsContent value="ramen-orders" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Ramen Orders</CardTitle>
-                <CardDescription>Bekijk en beheer ramen pre-orders</CardDescription>
+                <CardTitle>Ramen Orders per Datum</CardTitle>
+                <CardDescription>Bekijk en beheer ramen pre-orders gegroepeerd per datum</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {(ramenOrders as RamenOrder[]).map((order: RamenOrder) => (
-                    <div key={order.id} className="border rounded-lg p-4">
-                      <div className="flex justify-between items-start">
+                <div className="space-y-6">
+                  {Object.entries(ramenOrdersByDate).map(([date, orders]) => (
+                    <div key={date} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-center mb-4">
                         <div>
-                          <h3 className="font-semibold">{order.customerName}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{order.customerEmail}</p>
-                          {order.customerPhone && (
-                            <p className="text-sm text-gray-600 dark:text-gray-400">{order.customerPhone}</p>
-                          )}
-                          <div className="flex items-center mt-2 space-x-4">
-                            <span className="text-sm">
-                              <Calendar className="h-4 w-4 inline mr-1" />
-                              {new Date(order.preferredDate).toLocaleDateString('nl-NL')}
-                            </span>
-                            <span className="text-sm">Porties: {order.servings}</span>
-                            <Badge variant={order.status === 'confirmed' ? 'default' : 'secondary'}>
-                              {order.status}
+                          <h3 className="text-lg font-semibold">
+                            {new Date(date).toLocaleDateString('nl-NL', { 
+                              weekday: 'long', 
+                              year: 'numeric', 
+                              month: 'long', 
+                              day: 'numeric' 
+                            })}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {orders.length} orders • {orders.reduce((sum, order) => sum + order.servings, 0)} porties totaal
+                          </p>
+                          <div className="flex items-center mt-1">
+                            <Badge variant={orders.reduce((sum, order) => sum + order.servings, 0) >= 6 ? 'destructive' : 'default'}>
+                              {orders.reduce((sum, order) => sum + order.servings, 0) >= 6 ? 'VOL' : `${6 - orders.reduce((sum, order) => sum + order.servings, 0)} plekken beschikbaar`}
                             </Badge>
                           </div>
-                          {order.notes && (
-                            <p className="text-sm text-gray-500 mt-1">Notities: {order.notes}</p>
-                          )}
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDeleteRamenOrder(order.id)}
-                          disabled={deleteRamenOrderMutation.isPending}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex space-x-2">
+                          <Button
+                            onClick={() => handleConfirmRamenOrders(new Date(date))}
+                            disabled={confirmRamenOrderMutation.isPending || orders.every(order => order.status === 'confirmed')}
+                            variant={orders.some(order => order.status === 'pending') ? 'default' : 'outline'}
+                          >
+                            <Check className="h-4 w-4 mr-2" />
+                            {orders.every(order => order.status === 'confirmed') ? 'Bevestigd' : 'Bevestig Alle'}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        {orders.map((order: RamenOrder) => (
+                          <div key={order.id} className="bg-gray-50 dark:bg-gray-800 rounded p-3">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="font-medium">{order.customerName}</h4>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">{order.customerEmail}</p>
+                                {order.customerPhone && (
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">{order.customerPhone}</p>
+                                )}
+                                <div className="flex items-center mt-1 space-x-3">
+                                  <span className="text-sm">Porties: {order.servings}</span>
+                                  <Badge variant={order.status === 'confirmed' ? 'default' : 'secondary'} className="text-xs">
+                                    {order.status}
+                                  </Badge>
+                                </div>
+                                {order.notes && (
+                                  <p className="text-sm text-gray-500 mt-1">Notities: {order.notes}</p>
+                                )}
+                              </div>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleDeleteRamenOrder(order.id)}
+                                disabled={deleteRamenOrderMutation.isPending}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   ))}
+                  
+                  {Object.keys(ramenOrdersByDate).length === 0 && (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      Geen ramen orders gevonden
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Edit Product Dialog */}
+        {editingProduct && editProductData && (
+          <Dialog open={!!editingProduct} onOpenChange={() => setEditingProduct(null)}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Product Bewerken</DialogTitle>
+                <DialogDescription>
+                  Pas de productinformatie aan
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-name">Naam</Label>
+                    <Input
+                      id="edit-name"
+                      value={editProductData.name || ""}
+                      onChange={(e) => setEditProductData({ ...editProductData, name: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-price">Prijs</Label>
+                    <Input
+                      id="edit-price"
+                      value={editProductData.price || ""}
+                      onChange={(e) => setEditProductData({ ...editProductData, price: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="edit-description">Beschrijving</Label>
+                  <Textarea
+                    id="edit-description"
+                    value={editProductData.description || ""}
+                    onChange={(e) => setEditProductData({ ...editProductData, description: e.target.value })}
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="edit-stock">Voorraad</Label>
+                    <Input
+                      id="edit-stock"
+                      type="number"
+                      value={editProductData.stock || ""}
+                      onChange={(e) => setEditProductData({ ...editProductData, stock: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-maxStock">Max Voorraad</Label>
+                    <Input
+                      id="edit-maxStock"
+                      type="number"
+                      value={editProductData.maxStock || ""}
+                      onChange={(e) => setEditProductData({ ...editProductData, maxStock: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-category">Categorie</Label>
+                    <Select
+                      value={editProductData.category || "syrup"}
+                      onValueChange={(value) => setEditProductData({ ...editProductData, category: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="syrup">Siroop</SelectItem>
+                        <SelectItem value="ramen">Ramen</SelectItem>
+                        <SelectItem value="accessoires">Accessoires</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="edit-imageUrl">Afbeelding URL</Label>
+                  <Input
+                    id="edit-imageUrl"
+                    value={editProductData.imageUrl || ""}
+                    onChange={(e) => setEditProductData({ ...editProductData, imageUrl: e.target.value })}
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="edit-featured"
+                    checked={editProductData.featured || false}
+                    onCheckedChange={(checked) => setEditProductData({ ...editProductData, featured: checked })}
+                  />
+                  <Label htmlFor="edit-featured">Uitgelicht product</Label>
+                </div>
+
+                <div className="flex justify-end space-x-2">
+                  <Button variant="outline" onClick={() => setEditingProduct(null)}>
+                    Annuleren
+                  </Button>
+                  <Button onClick={handleUpdateProduct} disabled={updateProductMutation.isPending}>
+                    {updateProductMutation.isPending ? "Opslaan..." : "Opslaan"}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </div>
   );
