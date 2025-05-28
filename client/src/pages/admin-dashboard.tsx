@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Edit, Plus, LogOut, Check, X, Calendar } from "lucide-react";
+import { Trash2, Edit, Plus, LogOut, Check, X, Calendar, Mail } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { useLocation } from "wouter";
@@ -127,6 +127,37 @@ export default function AdminDashboard() {
     },
   });
 
+  const updateRamenOrderStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: string }) => {
+      const response = await apiRequest("PATCH", `/api/ramen-orders/${id}/status`, { status });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
+      toast({
+        title: "Status bijgewerkt",
+        description: "De order status is succesvol aangepast.",
+      });
+    },
+  });
+
+  const sendIndividualConfirmationMutation = useMutation({
+    mutationFn: async (order: RamenOrder) => {
+      const response = await apiRequest("POST", `/api/ramen-orders/${order.id}/send-confirmation`, {
+        email: order.customerEmail,
+        name: order.customerName,
+        date: order.preferredDate
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Bevestigingsmail verzonden",
+        description: "De bevestigingsmail is succesvol verzonden naar de klant.",
+      });
+    },
+  });
+
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: any }) => {
       const response = await apiRequest("PATCH", `/api/products/${id}`, updates);
@@ -202,6 +233,14 @@ export default function AdminDashboard() {
 
   const handleConfirmRamenOrders = (date: Date) => {
     confirmRamenOrderMutation.mutate(date);
+  };
+
+  const handleUpdateRamenOrderStatus = (id: number, status: string) => {
+    updateRamenOrderStatusMutation.mutate({ id, status });
+  };
+
+  const handleSendIndividualConfirmation = (order: RamenOrder) => {
+    sendIndividualConfirmationMutation.mutate(order);
   };
 
   const handleEditProduct = (product: Product) => {
@@ -537,7 +576,7 @@ export default function AdminDashboard() {
                         {orders.map((order: RamenOrder) => (
                           <div key={order.id} className="bg-gray-50 dark:bg-gray-800 rounded p-3">
                             <div className="flex justify-between items-start">
-                              <div>
+                              <div className="flex-1">
                                 <h4 className="font-medium">{order.customerName}</h4>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">{order.customerEmail}</p>
                                 {order.customerPhone && (
@@ -545,22 +584,44 @@ export default function AdminDashboard() {
                                 )}
                                 <div className="flex items-center mt-1 space-x-3">
                                   <span className="text-sm">Porties: {order.servings}</span>
-                                  <Badge variant={order.status === 'confirmed' ? 'default' : 'secondary'} className="text-xs">
-                                    {order.status}
-                                  </Badge>
                                 </div>
                                 {order.notes && (
                                   <p className="text-sm text-gray-500 mt-1">Notities: {order.notes}</p>
                                 )}
                               </div>
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleDeleteRamenOrder(order.id)}
-                                disabled={deleteRamenOrderMutation.isPending}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
+                              <div className="flex items-center space-x-2 ml-4">
+                                <Select
+                                  value={order.status}
+                                  onValueChange={(status) => handleUpdateRamenOrderStatus(order.id, status)}
+                                  disabled={updateRamenOrderStatusMutation.isPending}
+                                >
+                                  <SelectTrigger className="w-32">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="pending">Pending</SelectItem>
+                                    <SelectItem value="confirmed">Bevestigd</SelectItem>
+                                    <SelectItem value="cancelled">Geannuleerd</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleSendIndividualConfirmation(order)}
+                                  disabled={sendIndividualConfirmationMutation.isPending}
+                                  title="Verstuur bevestigingsmail"
+                                >
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={() => handleDeleteRamenOrder(order.id)}
+                                  disabled={deleteRamenOrderMutation.isPending}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         ))}
