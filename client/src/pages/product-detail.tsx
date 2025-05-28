@@ -1,9 +1,11 @@
 import { useParams, useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Star, Leaf, Heart, Package, Shield } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, Star, Leaf, Heart, Package, Shield, Edit, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { StockIndicator } from "@/components/stock-indicator";
@@ -11,11 +13,17 @@ import { ProductCard } from "@/components/product-card";
 import { AddToCartButton } from "@/components/shopping-cart";
 import { apiRequest } from "@/lib/queryClient";
 import { formatPrice } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 import type { Product } from "@shared/schema";
 
 export default function ProductDetail() {
   const params = useParams();
   const [, setLocation] = useLocation();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState<Partial<Product>>({});
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   // Convert slug to product ID
   const productSlugMap: Record<string, number> = {
