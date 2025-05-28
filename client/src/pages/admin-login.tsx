@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,7 +40,12 @@ export default function AdminLogin() {
         title: "Ingelogd",
         description: "Welkom in het admin dashboard!",
       });
-      setLocation("/admin/dashboard");
+      // Invalidate admin status query to refresh auth state
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/status'] });
+      // Small delay to ensure the query is refreshed
+      setTimeout(() => {
+        setLocation("/admin/dashboard");
+      }, 200);
     },
     onError: (error: any) => {
       toast({
