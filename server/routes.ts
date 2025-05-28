@@ -445,12 +445,39 @@ Pluk & Poot Team
       `;
 
       try {
-        await sendOrderNotification(`Bevestigingsmail verzonden naar klant:\n\n${customerEmailContent}`);
-        console.log(`Order confirmation sent for order ${orderId}`);
+        // Send email to admin (you) with full order details
+        const adminEmailContent = `
+Siroop Bestelling Bevestiging Verzonden!
+
+Klant: ${order.customerName}
+Email: ${order.customerEmail}
+Telefoon: ${order.customerPhone || 'Niet opgegeven'}
+Product: ${product?.name || 'Onbekend product'}
+Aantal: ${order.quantity}
+Totaal: €${order.totalAmount}
+Status: ${order.status}
+Bezorging: ${order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen'}
+${order.deliveryMethod === 'delivery' && order.streetAddress ? `
+Bezorgadres:
+${order.streetAddress}
+${order.postalCode} ${order.city}
+${order.country}` : ''}
+${order.notes ? `Opmerkingen: ${order.notes}` : ''}
+
+Status Update: ${order.status}
+Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
+
+--- Email naar klant ---
+${customerEmailContent}
+        `;
+
+        await sendOrderNotification(adminEmailContent);
+        console.log(`Order confirmation sent for order ${orderId} to admin`);
         
         res.json({ 
           message: `Bevestigingsmail verzonden naar ${order.customerEmail}`,
-          orderId: order.id
+          orderId: order.id,
+          status: order.status
         });
       } catch (emailError) {
         console.error("Failed to send order confirmation:", emailError);
