@@ -199,34 +199,154 @@ export function ShoppingCart() {
   };
 
   if (showCheckout) {
+    const deliveryCost = customerInfo.deliveryMethod === 'delivery' ? 1.00 : 0;
+    const finalTotal = totalPrice + deliveryCost;
+
     return (
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-2xl">
         <CardHeader>
-          <CardTitle>Afrekenen</CardTitle>
+          <CardTitle>Bestelling Afronden</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Naam</Label>
-            <Input id="name" placeholder="Je naam" />
+        <CardContent className="space-y-6">
+          {/* Order Summary */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">Bestelling overzicht</h3>
+            {items.map((item) => (
+              <div key={item.product.id} className="flex justify-between items-center">
+                <span>{item.product.name} x {item.quantity}</span>
+                <span>€{(parseFloat(item.product.price) * item.quantity).toFixed(2)}</span>
+              </div>
+            ))}
+            {customerInfo.deliveryMethod === 'delivery' && (
+              <div className="flex justify-between items-center text-sm">
+                <span>Fietskosten</span>
+                <span>€{deliveryCost.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="border-t pt-2">
+              <div className="flex justify-between font-semibold">
+                <span>Totaal:</span>
+                <span>€{finalTotal.toFixed(2)}</span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="je@email.com" />
+
+          {/* Customer Information */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">Contactgegevens</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="name">Naam *</Label>
+                <Input
+                  id="name"
+                  value={customerInfo.name}
+                  onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
+                  placeholder="Je volledige naam"
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={customerInfo.email}
+                  onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
+                  placeholder="je@email.com"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="phone">Telefoon</Label>
+              <Input
+                id="phone"
+                value={customerInfo.phone}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                placeholder="06-12345678"
+              />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Telefoon</Label>
-            <Input id="phone" placeholder="06-12345678" />
+
+          {/* Delivery Method */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">Bezorging</h3>
+            <Select
+              value={customerInfo.deliveryMethod}
+              onValueChange={(value) => setCustomerInfo({ ...customerInfo, deliveryMethod: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Kies bezorgmethode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pickup">Ophalen bij mijn adres (gratis)</SelectItem>
+                <SelectItem value="delivery">Bezorging (€1,00 fietskosten)</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Address fields for delivery */}
+            {customerInfo.deliveryMethod === 'delivery' && (
+              <div className="space-y-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
+                <h4 className="font-medium">Bezorgadres</h4>
+                <div>
+                  <Label htmlFor="streetAddress">Straat en huisnummer *</Label>
+                  <Input
+                    id="streetAddress"
+                    value={customerInfo.streetAddress}
+                    onChange={(e) => setCustomerInfo({ ...customerInfo, streetAddress: e.target.value })}
+                    placeholder="Hoofdstraat 123"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="postalCode">Postcode *</Label>
+                    <Input
+                      id="postalCode"
+                      value={customerInfo.postalCode}
+                      onChange={(e) => setCustomerInfo({ ...customerInfo, postalCode: e.target.value })}
+                      placeholder="1234 AB"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="city">Plaats *</Label>
+                    <Input
+                      id="city"
+                      value={customerInfo.city}
+                      onChange={(e) => setCustomerInfo({ ...customerInfo, city: e.target.value })}
+                      placeholder="Groningen"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="country">Land</Label>
+                  <Input
+                    id="country"
+                    value={customerInfo.country}
+                    onChange={(e) => setCustomerInfo({ ...customerInfo, country: e.target.value })}
+                    placeholder="Nederland"
+                  />
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Opmerkingen</Label>
-            <Textarea id="notes" placeholder="Bijzondere wensen..." />
+            <Label htmlFor="notes">Opmerkingen (optioneel)</Label>
+            <Textarea
+              id="notes"
+              value={customerInfo.notes}
+              onChange={(e) => setCustomerInfo({ ...customerInfo, notes: e.target.value })}
+              placeholder="Speciale instructies voor je bestelling..."
+              rows={3}
+            />
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setShowCheckout(false)} className="flex-1">
-              Terug
+
+          {/* Action buttons */}
+          <div className="flex gap-2 pt-4">
+            <Button onClick={() => setShowCheckout(false)} variant="outline" className="flex-1">
+              Terug naar winkelwagen
             </Button>
             <Button onClick={handleCheckout} className="flex-1">
-              Bestellen ({formatPrice(totalPrice.toFixed(2))})
+              Bestelling plaatsen (€{finalTotal.toFixed(2)})
             </Button>
           </div>
         </CardContent>
