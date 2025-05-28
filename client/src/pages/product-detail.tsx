@@ -160,18 +160,77 @@ export default function ProductDetail() {
 
             {/* Product Info */}
             <div className="order-2 lg:order-2 space-y-8">
-              <div>
-                <Badge className={theme.badge}>
-                  {product.category}
-                </Badge>
-                <h1 className="text-4xl lg:text-5xl font-display font-bold text-gray-900 dark:text-white mt-4">
-                  {product.name}
-                </h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300 mt-4 leading-relaxed">
-                  {product.description}
-                </p>
-                
+              {/* Edit Button */}
+              <div className="flex justify-end">
+                {!isEditing ? (
+                  <Button onClick={handleEdit} variant="outline" size="sm">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Bewerk Pagina
+                  </Button>
+                ) : (
+                  <div className="flex gap-2">
+                    <Button onClick={handleSave} disabled={updateProductMutation.isPending} size="sm">
+                      <Save className="w-4 h-4 mr-2" />
+                      Opslaan
+                    </Button>
+                    <Button onClick={handleCancel} variant="outline" size="sm">
+                      <X className="w-4 h-4 mr-2" />
+                      Annuleren
+                    </Button>
+                  </div>
+                )}
+              </div>
 
+              <div>
+                {isEditing ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Product Naam</label>
+                      <Input
+                        value={editData.name || ''}
+                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                        className="text-2xl font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Beschrijving</label>
+                      <Textarea
+                        value={editData.description || ''}
+                        onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                        rows={4}
+                        className="text-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Prijs</label>
+                      <Input
+                        value={editData.price || ''}
+                        onChange={(e) => setEditData({ ...editData, price: e.target.value })}
+                        placeholder="6.99"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Afbeelding URL</label>
+                      <Input
+                        value={editData.imageUrl || ''}
+                        onChange={(e) => setEditData({ ...editData, imageUrl: e.target.value })}
+                        placeholder="/images/product.jpg"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <Badge className={theme.badge}>
+                      {product.category}
+                    </Badge>
+                    <h1 className="text-4xl lg:text-5xl font-display font-bold text-gray-900 dark:text-white mt-4">
+                      {product.name}
+                    </h1>
+                    <p className="text-xl text-gray-600 dark:text-gray-300 mt-4 leading-relaxed">
+                      {product.description}
+                    </p>
+                  </>
+                )}
               </div>
 
               <div className="space-y-6">
