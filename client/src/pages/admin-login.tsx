@@ -18,7 +18,13 @@ export default function AdminLogin() {
   const loginMutation = useMutation({
     mutationFn: async (credentials: { username: string; password: string }) => {
       const response = await apiRequest("POST", "/api/admin/login", credentials);
-      return response.json();
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        return response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(`Server returned HTML instead of JSON: ${text.substring(0, 100)}...`);
+      }
     },
     onSuccess: () => {
       toast({
