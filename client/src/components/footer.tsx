@@ -18,7 +18,7 @@ export function Footer() {
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
                 <Leaf className="text-white text-xl w-6 h-6" />
               </div>
-              <span className="font-display font-bold text-2xl">Digimaatwerk Siroperij</span>
+              <span className="font-display font-bold text-2xl">Pluk & Poot</span>
             </div>
             
             <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
@@ -124,7 +124,7 @@ export function Footer() {
         
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Digimaatwerk Siroperij. Handgemaakt in Groningen, nabij de iconische Hamburgervijver.
+            © 2024 Pluk & Poot. Handgemaakt in Groningen, nabij de iconische Hamburgervijver.
           </p>
           <p className="text-gray-500 text-xs mt-4 md:mt-0 flex items-center">
             <Heart className="w-3 h-3 mr-1" />

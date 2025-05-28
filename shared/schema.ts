@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, decimal } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, decimal, varchar, jsonb, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -51,6 +51,26 @@ export const contactMessages = pgTable("contact_messages", {
   status: text("status").notNull().default("new"), // "new" | "read" | "replied"
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// Admin users table
+export const adminUsers = pgTable("admin_users", {
+  id: serial("id").primaryKey(),
+  username: varchar("username", { length: 255 }).notNull().unique(),
+  password: text("password").notNull(), // Will store hashed password
+  role: text("role").notNull().default("admin"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Session storage table for admin sessions
+export const adminSessions = pgTable(
+  "admin_sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_admin_session_expire").on(table.expire)],
+);
 
 // Insert schemas
 export const insertProductSchema = createInsertSchema(products).omit({

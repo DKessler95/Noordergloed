@@ -7,6 +7,12 @@ export function Header() {
   const { theme, toggleTheme } = useTheme();
 
   const scrollToSection = (sectionId: string) => {
+    // If not on home page, navigate to home first
+    if (window.location.pathname !== "/") {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+    
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
