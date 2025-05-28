@@ -164,7 +164,7 @@ export function ShoppingCart() {
           </div>
         ) : (
           <div className="space-y-4">
-            {items.map((item) => (
+            {items.filter(item => item.product && item.product.id).map((item) => (
               <div key={`cart-item-${item.product.id}`} className="flex items-center gap-4 p-4 border rounded-lg">
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
                   {item.product.imageUrl ? (
