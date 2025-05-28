@@ -386,6 +386,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete ramen order (admin)
+  app.delete("/api/ramen-orders/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+
+      const success = await storage.deleteRamenOrder(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.json({ message: "Ramen order deleted successfully", id });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error deleting order: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
