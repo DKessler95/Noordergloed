@@ -139,7 +139,11 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <Package className="w-8 h-8 text-purple-600" />
+              <img 
+                src="/attached_assets/ik_elfie.png" 
+                alt="Pluk & Poot Logo" 
+                className="w-8 h-8 rounded object-cover"
+              />
               <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
                 Pluk & Poot CMS
               </h1>
@@ -414,15 +418,30 @@ export default function AdminDashboard() {
                             </Button>
                           </div>
                         ) : (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setEditingProduct(product.id)}
-                            className="gap-2"
-                          >
-                            <Edit className="w-4 h-4" />
-                            Bewerk
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setEditingProduct(product.id)}
+                              className="gap-2"
+                            >
+                              <Edit className="w-4 h-4" />
+                              Bewerk
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => {
+                                if (confirm('Weet je zeker dat je dit product wilt verwijderen?')) {
+                                  deleteProductMutation.mutate(product.id);
+                                }
+                              }}
+                              className="gap-2"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Verwijder
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </div>

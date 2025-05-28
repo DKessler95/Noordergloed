@@ -80,6 +80,7 @@ export class MemStorage implements IStorage {
       imageUrl: "/images/voorkant-siroop.png",
       featured: true,
       limitedStock: false,
+      badges: ["Huistuin delicatesse"],
       createdAt: new Date(),
     };
 
@@ -109,6 +110,7 @@ export class MemStorage implements IStorage {
       imageUrl: "/images/chicken-shoyu-ramen.jpg",
       featured: true,
       limitedStock: false,
+      badges: ["Premium"],
       createdAt: new Date(),
     };
 

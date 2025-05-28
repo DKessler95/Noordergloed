@@ -23,6 +23,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete product
+  app.delete("/api/products/:id", async (req, res) => {
+    try {
+      const productId = parseInt(req.params.id);
+      const success = await storage.deleteProduct(productId);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      
+      res.json({ message: "Product deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete product" });
+    }
+  });
+
   // Get single product
   app.get("/api/products/:id", async (req, res) => {
     try {
