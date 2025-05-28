@@ -59,12 +59,18 @@ export default function AdminDashboard() {
   // Create product mutation
   const createProductMutation = useMutation({
     mutationFn: async (productData: any) => {
-      const response = await apiRequest("POST", "/api/products", {
-        ...productData,
-        price: parseFloat(productData.price),
-        stock: parseInt(productData.stock),
-        maxStock: parseInt(productData.maxStock),
-      });
+      const cleanData = {
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        stock: parseInt(productData.stock) || 0,
+        maxStock: parseInt(productData.maxStock) || 0,
+        category: productData.category,
+        imageUrl: productData.imageUrl || null,
+        featured: productData.featured || false
+      };
+      
+      const response = await apiRequest("POST", "/api/products", cleanData);
       return response.json();
     },
     onSuccess: () => {
@@ -80,9 +86,14 @@ export default function AdminDashboard() {
         imageUrl: "",
         featured: false
       });
+      setSelectedImage(null);
     },
-    onError: () => {
-      toast({ title: "Fout bij toevoegen product", variant: "destructive" });
+    onError: (error: any) => {
+      toast({ 
+        title: "Fout bij toevoegen product", 
+        description: error.message || "Controleer alle velden",
+        variant: "destructive" 
+      });
     },
   });
 
