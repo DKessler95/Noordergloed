@@ -41,7 +41,7 @@ export function RamenPreorder() {
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
-    form.setValue("preferredDate", date.toISOString().split('T')[0]);
+    form.setValue("preferredDate", date.toISOString());
   };
 
   const orderMutation = useMutation({

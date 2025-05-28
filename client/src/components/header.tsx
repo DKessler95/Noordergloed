@@ -23,16 +23,19 @@ export function Header() {
     <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/90 dark:bg-gray-900/90 border-b border-white/20">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-3">
+          <button 
+            onClick={() => window.location.href = "/"}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+          >
             <img 
-              src="/images/logo.png" 
-              alt="Ik & Elfie Logo" 
+              src="/attached_assets/ik_elfie.png" 
+              alt="Pluk & Poot Logo" 
               className="w-10 h-10 rounded-full object-cover"
             />
             <span className="font-display font-semibold text-xl text-purple-600 dark:text-purple-400">
               Pluk & Poot
             </span>
-          </div>
+          </button>
           
           <div className="hidden md:flex items-center space-x-8">
             <button

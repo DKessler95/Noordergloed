@@ -14,12 +14,17 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
-                <Leaf className="text-white text-xl w-6 h-6" />
-              </div>
+            <button 
+              onClick={() => window.location.href = "/"}
+              className="flex items-center space-x-3 mb-6 hover:opacity-80 transition-opacity"
+            >
+              <img 
+                src="/attached_assets/ik_elfie.png" 
+                alt="Pluk & Poot Logo" 
+                className="w-12 h-12 rounded-full object-cover"
+              />
               <span className="font-display font-bold text-2xl">Pluk & Poot</span>
-            </div>
+            </button>
             
             <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
               Handgemaakte ambachtelijke siroop uit het hart van Groningen. 
