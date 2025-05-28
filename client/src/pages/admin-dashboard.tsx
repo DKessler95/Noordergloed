@@ -305,6 +305,18 @@ export default function AdminDashboard() {
     confirmRamenOrderMutation.mutate(date);
   };
 
+  const handleUpdateOrderStatus = (id: number, status: string) => {
+    updateOrderStatusMutation.mutate({ id, status });
+  };
+
+  const handleDeleteOrder = (id: number) => {
+    deleteOrderMutation.mutate(id);
+  };
+
+  const handleSendOrderConfirmation = (id: number) => {
+    sendOrderConfirmationMutation.mutate(id);
+  };
+
   const handleUpdateRamenOrderStatus = (id: number, status: string) => {
     updateRamenOrderStatusMutation.mutate({ id, status });
   };
@@ -395,8 +407,9 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="products" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="products">Producten</TabsTrigger>
+            <TabsTrigger value="orders">Siroop Bestellingen</TabsTrigger>
             <TabsTrigger value="ramen-orders">Ramen Orders</TabsTrigger>
           </TabsList>
 
@@ -596,6 +609,98 @@ export default function AdminDashboard() {
                       )}
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="orders" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Siroop Bestellingen</CardTitle>
+                <CardDescription>Beheer alle siroop bestellingen en hun status</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {(orders as any[]).length === 0 ? (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      Geen siroop bestellingen gevonden
+                    </div>
+                  ) : (
+                    (orders as any[]).map((order: any) => {
+                      const product = (products as any[]).find((p: any) => p.id === order.productId);
+                      return (
+                        <div key={order.id} className="border rounded-lg p-4 space-y-3">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h4 className="font-medium">{order.customerName}</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">{order.customerEmail}</p>
+                              {order.customerPhone && (
+                                <p className="text-sm text-gray-600 dark:text-gray-400">{order.customerPhone}</p>
+                              )}
+                              <div className="mt-2 space-y-1">
+                                <p className="text-sm"><strong>Product:</strong> {product?.name || 'Onbekend product'}</p>
+                                <p className="text-sm"><strong>Aantal:</strong> {order.quantity}</p>
+                                <p className="text-sm"><strong>Totaal:</strong> €{order.totalAmount}</p>
+                                <p className="text-sm"><strong>Bezorging:</strong> {order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen'}</p>
+                                {order.deliveryMethod === 'delivery' && order.streetAddress && (
+                                  <div className="text-sm">
+                                    <strong>Adres:</strong> {order.streetAddress}, {order.postalCode} {order.city}, {order.country}
+                                  </div>
+                                )}
+                                {order.notes && (
+                                  <p className="text-sm text-gray-500 mt-1">Notities: {order.notes}</p>
+                                )}
+                                <p className="text-xs text-gray-400">Besteld op: {new Date(order.createdAt).toLocaleString('nl-NL')}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-2 ml-4">
+                              <Select
+                                value={order.status}
+                                onValueChange={(status) => handleUpdateOrderStatus(order.id, status)}
+                              >
+                                <SelectTrigger className="w-32">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="pending">Pending</SelectItem>
+                                  <SelectItem value="confirmed">Bevestigd</SelectItem>
+                                  <SelectItem value="preparing">Voorbereiden</SelectItem>
+                                  <SelectItem value="ready">Klaar</SelectItem>
+                                  <SelectItem value="completed">Voltooid</SelectItem>
+                                  <SelectItem value="cancelled">Geannuleerd</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleSendOrderConfirmation(order.id);
+                                }}
+                                disabled={sendOrderConfirmationMutation.isPending}
+                              >
+                                <Mail className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleDeleteOrder(order.id);
+                                }}
+                                disabled={deleteOrderMutation.isPending}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </CardContent>
             </Card>
