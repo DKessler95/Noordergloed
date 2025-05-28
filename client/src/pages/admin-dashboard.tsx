@@ -686,7 +686,7 @@ export default function AdminDashboard() {
                           {dateOrders.length} reserveringen ({dateOrders.reduce((sum, o) => sum + o.servings, 0)} personen)
                         </p>
                       </div>
-                      {dateOrders.filter(o => o.status === 'confirmed').length >= 6 && (
+                      {dateOrders.filter(o => o.status === 'confirmed').length >= 5 && (
                         <Button
                           onClick={async () => {
                             try {
