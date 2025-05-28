@@ -125,14 +125,18 @@ export default function AdminDashboard() {
   const deleteProductMutation = useMutation({
     mutationFn: async (id: number) => {
       const response = await apiRequest("DELETE", `/api/products/${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
-      toast({ title: "Product verwijderd!" });
+      toast({ title: "Product succesvol verwijderd!" });
     },
-    onError: () => {
-      toast({ title: "Fout bij verwijderen product", variant: "destructive" });
+    onError: (error) => {
+      console.error("Delete error:", error);
+      toast({ title: "Fout bij verwijderen product", description: "Probeer opnieuw", variant: "destructive" });
     },
   });
 
@@ -140,16 +144,20 @@ export default function AdminDashboard() {
   const updateProductMutation = useMutation({
     mutationFn: async (product: any) => {
       const response = await apiRequest("PATCH", `/api/products/${product.id}`, product);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
       setEditingProduct(null);
       setEditProductData(null);
-      toast({ title: "Product bijgewerkt!" });
+      toast({ title: "Product succesvol bijgewerkt!" });
     },
-    onError: () => {
-      toast({ title: "Fout bij bijwerken product", variant: "destructive" });
+    onError: (error) => {
+      console.error("Update error:", error);
+      toast({ title: "Fout bij bijwerken product", description: "Probeer opnieuw", variant: "destructive" });
     },
   });
 
