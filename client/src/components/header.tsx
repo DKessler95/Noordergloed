@@ -88,17 +88,7 @@ export function Header() {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
-            {isAdmin() && (
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="text-red-600 border-red-600 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-900/20"
-              >
-                <LogOut className="w-4 h-4 mr-1" />
-                Uitloggen
-              </Button>
-            )}
+
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
             </Button>
