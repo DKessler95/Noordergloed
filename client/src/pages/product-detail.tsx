@@ -110,7 +110,7 @@ export default function ProductDetail() {
   const theme = getProductTheme();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <Header />
       
       {/* Breadcrumb */}
@@ -133,22 +133,18 @@ export default function ProductDetail() {
             <div className="order-1 lg:order-1">
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-2xl">
-                    <img
-                      src="/images/voorkant-siroop.png"
-                      alt={`${product.name} voorkant`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <img
+                    src="/images/voorkant-siroop.png"
+                    alt={`${product.name} voorkant`}
+                    className="w-full h-auto drop-shadow-2xl"
+                  />
                 </div>
                 <div className="relative">
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-2xl">
-                    <img
-                      src="/images/achterkant-siroop.png"
-                      alt={`${product.name} achterkant`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <img
+                    src="/images/achterkant-siroop.png"
+                    alt={`${product.name} achterkant`}
+                    className="w-full h-auto drop-shadow-2xl"
+                  />
                 </div>
               </div>
             </div>
@@ -234,8 +230,11 @@ export default function ProductDetail() {
         </div>
       </div>
 
+      {/* Main Content */}
+      <div className="flex-1">
+      
       {/* Detailed Product Information */}
-      {isElderflower && (
+      {(isElderflower || isRose) && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Ingredients & Nutrition */}
@@ -333,6 +332,8 @@ export default function ProductDetail() {
           </div>
         </div>
       )}
+      
+      </div>
 
       <Footer />
     </div>
