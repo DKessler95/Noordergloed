@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Package, Plus, Users, ShoppingCart, LogOut, Edit, Save, X, Check, Upload, Trash2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import type { Product, RamenOrder } from "@shared/schema";
 
 export default function AdminDashboard() {
@@ -299,6 +300,22 @@ export default function AdminDashboard() {
                       rows={3}
                       required
                     />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="featured"
+                      checked={newProduct.featured}
+                      onCheckedChange={(checked) => setNewProduct({ ...newProduct, featured: checked })}
+                    />
+                    <Label htmlFor="featured">Uitgelicht product</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="limitedStock"
+                      checked={newProduct.limitedStock}
+                      onCheckedChange={(checked) => setNewProduct({ ...newProduct, limitedStock: checked })}
+                    />
+                    <Label htmlFor="limitedStock">Beperkte voorraad</Label>
                   </div>
                   <div className="md:col-span-2">
                     <Button type="submit" disabled={createProductMutation.isPending} className="gap-2">

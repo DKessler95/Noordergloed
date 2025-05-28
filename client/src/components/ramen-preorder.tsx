@@ -18,7 +18,10 @@ const ramenOrderSchema = z.object({
   customerName: z.string().min(1, "Naam is verplicht"),
   customerEmail: z.string().email("Ongeldig email adres"),
   customerPhone: z.string().min(1, "Telefoon is verplicht"),
-  preferredDate: z.string().min(1, "Selecteer een datum"),
+  preferredDate: z.string().min(1, "Selecteer een datum").refine((dateStr) => {
+    const date = new Date(dateStr);
+    return date.getDay() === 5; // 5 = Friday
+  }, "Ramen afhaling is alleen mogelijk op vrijdag"),
   notes: z.string().optional(),
 });
 
