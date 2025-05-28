@@ -181,7 +181,7 @@ export function ShoppingCart() {
                   <h3 className="font-semibold text-gray-900 dark:text-white">{item.product.name}</h3>
                   <p className="text-gray-600 dark:text-gray-400">€{item.product.price}</p>
                   <Badge variant="secondary" className="mt-1">
-                    Qty: {item.quantity}
+                    Aantal: {item.quantity}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2">

@@ -652,6 +652,12 @@ export default function AdminDashboard() {
                 <CardTitle>Ramen Reserveringen per Datum</CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Debug info */}
+                <div className="mb-4 p-2 bg-gray-100 dark:bg-gray-700 rounded text-sm">
+                  <p>Debug: {(ramenOrders as RamenOrder[] || []).length} ramen orders loaded</p>
+                  <p>Raw data: {JSON.stringify((ramenOrders as RamenOrder[] || []).slice(0, 2))}</p>
+                </div>
+                
                 {/* Group orders by date */}
                 {Object.entries(
                   (ramenOrders as RamenOrder[] || []).reduce((acc, order) => {
