@@ -292,8 +292,29 @@ export function AddToCartButton({ product }: { product: Product }) {
 export function CartButton() {
   const { items } = useShoppingCart();
   const [isOpen, setIsOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+
+  // Check admin status on component mount and when localStorage changes
+  useEffect(() => {
+    const checkAdminStatus = () => {
+      const token = localStorage.getItem('adminToken');
+      setIsAdmin(!!token);
+    };
+    
+    checkAdminStatus();
+    
+    // Listen for storage changes
+    window.addEventListener('storage', checkAdminStatus);
+    return () => window.removeEventListener('storage', checkAdminStatus);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    setIsAdmin(false);
+    window.location.href = '/';
+  };
   
   return (
     <>
@@ -310,6 +331,18 @@ export function CartButton() {
           </span>
         )}
       </Button>
+      
+      {isAdmin && (
+        <Button
+          onClick={handleLogout}
+          variant="outline"
+          size="sm"
+          className="ml-2 text-red-600 border-red-600 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-900/20"
+        >
+          <LogOut className="w-4 h-4 mr-1" />
+          Uitloggen
+        </Button>
+      )}
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">

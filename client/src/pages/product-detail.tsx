@@ -22,13 +22,23 @@ export default function ProductDetail() {
   const [, setLocation] = useLocation();
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState<Partial<Product>>({});
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Check if user is admin
-  const isAdmin = () => {
-    return localStorage.getItem('adminToken') !== null;
-  };
+  // Check admin status on component mount and when localStorage changes
+  useEffect(() => {
+    const checkAdminStatus = () => {
+      const token = localStorage.getItem('adminToken');
+      setIsAdmin(!!token);
+    };
+    
+    checkAdminStatus();
+    
+    // Listen for storage changes
+    window.addEventListener('storage', checkAdminStatus);
+    return () => window.removeEventListener('storage', checkAdminStatus);
+  }, []);
   
   // Convert slug to product ID
   const productSlugMap: Record<string, number> = {
@@ -490,7 +500,7 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
       {/* Detailed Product Information - Always show */}
       {product && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {isEditing && isAdmin() && (
+          {isEditing && isAdmin && (
             <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
               <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
                 Bewerk Mode Actief
