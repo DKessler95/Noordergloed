@@ -405,6 +405,62 @@ Status: ${ramenOrder.status}
     }
   });
 
+  // Send individual confirmation email for a syrup order (admin)
+  app.post("/api/admin/send-order-confirmation", requireAdmin, async (req, res) => {
+    try {
+      const { orderId, orderType } = req.body;
+      
+      if (!orderId || orderType !== "syrup") {
+        return res.status(400).json({ message: "Invalid request data" });
+      }
+
+      // Get the order from storage
+      const orders = await storage.getOrders();
+      const order = orders.find(o => o.id === orderId);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      // Get product details
+      const product = await storage.getProduct(order.productId!);
+      
+      // Send detailed email to customer
+      const customerEmailContent = `
+Beste ${order.customerName},
+
+Bedankt voor je bestelling bij Pluk & Poot!
+
+Bestelling Details:
+• Product: ${product?.name || 'Onbekend product'}
+• Aantal: ${order.quantity}
+• Totaal: €${order.totalAmount}
+• Status: ${order.status}
+• Bezorging: ${order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen'}
+${order.deliveryMethod === 'delivery' && order.streetAddress ? `
+• Bezorgadres: ${order.streetAddress}, ${order.postalCode} ${order.city}` : ''}
+
+Met vriendelijke groet,
+Pluk & Poot Team
+      `;
+
+      try {
+        await sendOrderNotification(`Bevestigingsmail verzonden naar klant:\n\n${customerEmailContent}`);
+        console.log(`Order confirmation sent for order ${orderId}`);
+        
+        res.json({ 
+          message: `Bevestigingsmail verzonden naar ${order.customerEmail}`,
+          orderId: order.id
+        });
+      } catch (emailError) {
+        console.error("Failed to send order confirmation:", emailError);
+        res.status(500).json({ message: "Failed to send confirmation email" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: "Error sending confirmation: " + error.message });
+    }
+  });
+
   // Send individual confirmation email for a ramen order (admin)
   app.post("/api/ramen-orders/:id/send-confirmation", requireAdmin, async (req, res) => {
     try {
