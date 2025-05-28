@@ -1,10 +1,20 @@
 import { useTheme } from "./theme-provider";
-import { Moon, Sun, Menu, Leaf } from "lucide-react";
+import { Moon, Sun, Menu, Leaf, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartButton } from "./shopping-cart";
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
+
+  // Check if user is admin
+  const isAdmin = () => {
+    return localStorage.getItem('adminToken') !== null;
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    window.location.href = '/';
+  };
 
   const scrollToSection = (sectionId: string) => {
     // If not on home page, navigate to home first
@@ -78,6 +88,17 @@ export function Header() {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
+            {isAdmin() && (
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="text-red-600 border-red-600 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-900/20"
+              >
+                <LogOut className="w-4 h-4 mr-1" />
+                Uitloggen
+              </Button>
+            )}
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
             </Button>
