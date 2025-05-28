@@ -28,7 +28,7 @@ export async function sendBulkEmail(params: EmailParams): Promise<boolean> {
       .request({
         Messages: params.to.map(email => ({
           From: {
-            Email: params.fromEmail || "dckessler95@gmail.com",
+            Email: params.fromEmail || "dc@damian.kessler.nl",
             Name: params.fromName || "Pluk & Poot"
           },
           To: [
@@ -168,7 +168,7 @@ Je Pluk & Poot Website
     subject,
     textContent,
     htmlContent,
-    fromEmail: "dckessler95@gmail.com",
+    fromEmail: "dc@damian.kessler.nl",
     fromName: "Pluk & Poot Notificaties"
   });
 }
@@ -229,7 +229,7 @@ Je Pluk & Poot Website
     subject,
     textContent,
     htmlContent,
-    fromEmail: "dckessler95@gmail.com",
+    fromEmail: "dc@damian.kessler.nl",
     fromName: "Pluk & Poot Contact"
   });
 }
@@ -297,7 +297,7 @@ Je Pluk & Poot Website
     subject,
     textContent,
     htmlContent,
-    fromEmail: "dckessler95@gmail.com",
+    fromEmail: "dc@damian.kessler.nl",
     fromName: "Pluk & Poot Bestellingen"
   });
 }
