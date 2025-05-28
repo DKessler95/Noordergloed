@@ -22,11 +22,27 @@ export const cartService = {
   listeners: [] as (() => void)[],
 
   addItem: (product: Product) => {
-    const existingItem = cartService.items.find(item => item.product.id === product.id);
-    if (existingItem) {
-      return false; // Max 1 per product
+    console.log("CART DEBUG: Adding product:", product);
+    
+    if (!product) {
+      console.error("CART ERROR: Product is null/undefined");
+      return false;
     }
+    
+    if (!product.id) {
+      console.error("CART ERROR: Product missing ID:", product);
+      return false;
+    }
+    
+    const existingItem = cartService.items.find(item => item.product?.id === product.id);
+    if (existingItem) {
+      cartService.updateQuantity(product.id, existingItem.quantity + 1);
+      console.log("CART DEBUG: Updated existing item");
+      return true;
+    }
+    
     cartService.items.push({ product, quantity: 1 });
+    console.log("CART DEBUG: Added new item, cart now has:", cartService.items.length, "items");
     cartService.notifyListeners();
     return true;
   },

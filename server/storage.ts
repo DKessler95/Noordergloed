@@ -65,37 +65,76 @@ export class MemStorage implements IStorage {
     this.currentMessageId = 1;
     this.currentAdminId = 1;
     
-    // Initialize with sample products and admin user
     this.initializeProducts();
     this.initializeAdminUser();
-    // Add test ramen orders manually
+    this.initializeRamenOrders();
+  }
+
+  private initializeRamenOrders() {
     const testDate = new Date('2025-06-06');
+    
     this.ramenOrders.set(1, {
-      id: 1, customerName: "Emma de Vries", customerEmail: "emma.devries@email.com",
-      customerPhone: "06-12345678", preferredDate: testDate, servings: 1,
-      notes: null, status: "pending", createdAt: new Date()
-    } as RamenOrder);
+      id: 1,
+      customerName: "Emma de Vries",
+      customerEmail: "emma.devries@email.com",
+      customerPhone: "06-12345678",
+      preferredDate: testDate,
+      servings: 1,
+      notes: null,
+      status: "pending",
+      createdAt: new Date()
+    });
+    
     this.ramenOrders.set(2, {
-      id: 2, customerName: "Pieter Jansen", customerEmail: "pieter.jansen@email.com",
-      customerPhone: "06-87654321", preferredDate: testDate, servings: 1,
-      notes: "Vegetarisch graag", status: "pending", createdAt: new Date()
-    } as RamenOrder);
+      id: 2,
+      customerName: "Pieter Jansen",
+      customerEmail: "pieter.jansen@email.com",
+      customerPhone: "06-87654321",
+      preferredDate: testDate,
+      servings: 1,
+      notes: "Vegetarisch graag",
+      status: "pending",
+      createdAt: new Date()
+    });
+    
     this.ramenOrders.set(3, {
-      id: 3, customerName: "Sofia Rodriguez", customerEmail: "sofia.rodriguez@email.com",
-      customerPhone: "06-11223344", preferredDate: testDate, servings: 1,
-      notes: null, status: "pending", createdAt: new Date()
-    } as RamenOrder);
+      id: 3,
+      customerName: "Sofia Rodriguez",
+      customerEmail: "sofia.rodriguez@email.com",
+      customerPhone: "06-11223344",
+      preferredDate: testDate,
+      servings: 1,
+      notes: null,
+      status: "pending",
+      createdAt: new Date()
+    });
+    
     this.ramenOrders.set(4, {
-      id: 4, customerName: "Lars van der Berg", customerEmail: "lars.vandenberg@email.com",
-      customerPhone: "06-55667788", preferredDate: testDate, servings: 1,
-      notes: null, status: "pending", createdAt: new Date()
-    } as RamenOrder);
+      id: 4,
+      customerName: "Lars van der Berg",
+      customerEmail: "lars.vandenberg@email.com",
+      customerPhone: "06-55667788",
+      preferredDate: testDate,
+      servings: 1,
+      notes: null,
+      status: "pending",
+      createdAt: new Date()
+    });
+    
     this.ramenOrders.set(5, {
-      id: 5, customerName: "Aisha Osman", customerEmail: "aisha.osman@email.com",
-      customerPhone: "06-99887766", preferredDate: testDate, servings: 1,
-      notes: "Extra pittig", status: "pending", createdAt: new Date()
-    } as RamenOrder);
+      id: 5,
+      customerName: "Aisha Osman",
+      customerEmail: "aisha.osman@email.com",
+      customerPhone: "06-99887766",
+      preferredDate: testDate,
+      servings: 1,
+      notes: "Extra pittig",
+      status: "pending",
+      createdAt: new Date()
+    });
+    
     this.currentRamenOrderId = 6;
+    console.log("STORAGE: Initialized ramen orders, total:", this.ramenOrders.size);
   }
 
   private initializeProducts() {
