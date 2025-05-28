@@ -62,7 +62,7 @@ export class MemStorage implements IStorage {
     const elderflowerSyrup: Product = {
       id: this.currentProductId++,
       name: "Vlierbloesem Siroop",
-      description: "Bloemige vlierbloesem geplukt rondom de Hamburgervijver aan de Star Numanstraat. Een sterke maar licht zoete vliersmaak die heerlijk verfrist op een warme zomer dag of als Gin tonic.",
+      description: "Handgeplukt bij de Hamburgervijver. 30 verse schermen per liter voor die authentieke zomersmaak. Perfect voor limonade of cocktails.",
       price: "6.99",
       stock: 8,
       maxStock: 15,

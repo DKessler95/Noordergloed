@@ -165,15 +165,18 @@ export default function ProductDetail() {
 
               </div>
 
-              <div className="space-y-4">
-                <span className={`text-4xl font-display font-bold ${theme.accent}`}>
-                  {formatPrice(product.price)}
-                </span>
-                <StockIndicator 
-                  current={product.stock} 
-                  max={product.maxStock} 
-                  productName={product.name}
-                />
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <span className={`text-4xl font-display font-bold ${theme.accent}`}>
+                    {formatPrice(product.price)}
+                  </span>
+                  <div className="text-right">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Voorraad</span>
+                    <div className={`text-lg font-semibold ${theme.accent}`}>
+                      {product.stock}/{product.maxStock} beschikbaar
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Features */}
@@ -229,7 +232,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Detailed Product Information */}
-              {product.name === "Vlierbloesem Siroop" && (
+              {product.id === 1 && (
                 <div className="mt-8 space-y-8">
                   <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800">
                     <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
