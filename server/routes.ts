@@ -218,8 +218,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Set admin session
         (req as any).session.adminId = admin.id;
         (req as any).session.adminUsername = admin.username;
-      
-      res.json({ message: "Login successful", admin: { id: admin.id, username: admin.username, role: admin.role } });
+        
+        res.json({ message: "Login successful", admin: { id: admin.id, username: admin.username, role: admin.role } });
+      } else {
+        res.status(401).json({ message: "Invalid credentials" });
+      }
     } catch (error: any) {
       res.status(500).json({ message: "Login error: " + error.message });
     }
