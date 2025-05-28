@@ -237,6 +237,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Admin status check route
+  app.get("/api/admin/status", (req, res) => {
+    const isAdmin = !!(req as any).session?.adminId;
+    res.json({ isAdmin });
+  });
+
   // Admin middleware
   const requireAdmin = (req: any, res: any, next: any) => {
     if (!req.session?.adminId) {
