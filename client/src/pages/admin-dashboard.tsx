@@ -24,14 +24,20 @@ export default function AdminDashboard() {
   const { data: adminStatus, isLoading: adminLoading } = useQuery({
     queryKey: ['/api/admin/status'],
     retry: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0, // Always fetch fresh data
   });
 
   // Redirect if not authenticated
   useEffect(() => {
-    if (!adminLoading && !adminStatus?.isAdmin) {
+    if (!adminLoading && adminStatus && !adminStatus.isAdmin) {
+      console.log('Not admin, redirecting to login');
       setLocation('/admin/login');
     }
   }, [adminStatus, adminLoading, setLocation]);
+
+  console.log('Dashboard admin check:', { adminStatus, adminLoading });
 
   // Show loading while checking authentication
   if (adminLoading) {
