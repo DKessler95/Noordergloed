@@ -35,6 +35,8 @@ export default function ProductDetail() {
   useEffect(() => {
     setIsAdmin(adminStatus?.isAdmin || false);
   }, [adminStatus]);
+
+  console.log('ProductDetail admin status:', { adminStatus, isAdmin });
   
   // Convert slug to product ID
   const productSlugMap: Record<string, number> = {

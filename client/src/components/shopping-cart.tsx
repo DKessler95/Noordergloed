@@ -308,6 +308,8 @@ export function CartButton() {
     setIsAdmin(adminStatus?.isAdmin || false);
   }, [adminStatus]);
 
+  console.log('CartButton admin status:', { adminStatus, isAdmin });
+
   const handleLogout = async () => {
     try {
       await apiRequest('POST', '/api/admin/logout');
