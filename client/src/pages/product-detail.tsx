@@ -311,26 +311,28 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
 
             {/* Product Info */}
             <div className="order-2 lg:order-2 space-y-8">
-              {/* Edit Button */}
-              <div className="flex justify-end">
-                {!isEditing ? (
-                  <Button onClick={handleEdit} variant="outline" size="sm">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Bewerk Pagina
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    <Button onClick={handleSave} disabled={updateProductMutation.isPending} size="sm">
-                      <Save className="w-4 h-4 mr-2" />
-                      Opslaan
+              {/* Edit Button - Only for admins */}
+              {isAdmin && (
+                <div className="flex justify-end">
+                  {!isEditing ? (
+                    <Button onClick={handleEdit} variant="outline" size="sm">
+                      <Edit className="w-4 h-4 mr-2" />
+                      Bewerk Pagina
                     </Button>
-                    <Button onClick={handleCancel} variant="outline" size="sm">
-                      <X className="w-4 h-4 mr-2" />
-                      Annuleren
-                    </Button>
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Button onClick={handleSave} disabled={updateProductMutation.isPending} size="sm">
+                        <Save className="w-4 h-4 mr-2" />
+                        Opslaan
+                      </Button>
+                      <Button onClick={handleCancel} variant="outline" size="sm">
+                        <X className="w-4 h-4 mr-2" />
+                        Annuleren
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div>
                 {isEditing ? (
