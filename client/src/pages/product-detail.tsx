@@ -20,7 +20,8 @@ export default function ProductDetail() {
   // Convert slug to product ID
   const productSlugMap: Record<string, number> = {
     "vlierbloesem-siroop": 1,
-    "rozen-siroop": 2
+    "rozen-siroop": 2,
+    "chicken-shoyu-ramen": 3
   };
   
   const productId = productSlugMap[params.slug as string] || parseInt(params.id || "0");

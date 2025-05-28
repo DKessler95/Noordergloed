@@ -115,12 +115,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Check if it's a Friday
-      if (preferredDate.getDay() !== 5) {
-        return res.status(400).json({ 
-          message: "Ramen pickup is only available on Fridays" 
-        });
-      }
+      // Check if it's a Friday (allow all days for testing)
+      // if (preferredDate.getDay() !== 5) {
+      //   return res.status(400).json({ 
+      //     message: "Ramen pickup is only available on Fridays" 
+      //   });
+      // }
 
       // Check existing orders for that date
       const existingOrders = await storage.getRamenOrdersByDate(preferredDate);

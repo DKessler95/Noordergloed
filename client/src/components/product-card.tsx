@@ -97,11 +97,17 @@ export function ProductCard({ product }: ProductCardProps) {
                   €{product.price}
                 </span>
                 <Button
-                  onClick={() => window.location.href = `/producten/${product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" : "rozen-siroop"}`}
+                  onClick={() => {
+                    const slug = product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" 
+                      : product.name === "Rozen Siroop" ? "rozen-siroop"
+                      : product.name === "Chicken Shoyu Ramen" ? "chicken-shoyu-ramen"
+                      : "product-detail";
+                    window.location.href = `/producten/${slug}`;
+                  }}
                   disabled={product.stock === 0}
                   className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
                 >
-                  {product.stock === 0 ? "Uitverkocht" : "Bekijk Product"}
+                  {product.stock === 0 ? "Uitverkocht" : product.category === "ramen" ? "Meer Details" : "Bekijk Product"}
                 </Button>
               </div>
             </div>
