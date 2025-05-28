@@ -68,6 +68,7 @@ export class MemStorage implements IStorage {
     // Initialize with sample products and admin user
     this.initializeProducts();
     this.initializeAdminUser();
+    this.initializeTestRamenOrders();
   }
 
   private initializeProducts() {

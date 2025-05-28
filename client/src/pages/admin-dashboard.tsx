@@ -681,7 +681,7 @@ export default function AdminDashboard() {
                                 title: "Uitnodigingen Verstuurd!",
                                 description: result.message,
                               });
-                              refetchRamenOrders();
+                              // refetchRamenOrders();
                             } catch (error) {
                               toast({
                                 title: "Fout",
