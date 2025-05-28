@@ -424,10 +424,15 @@ Status: ${ramenOrder.status}
   // Test email functionality (admin)
   app.post("/api/test-email", requireAdmin, async (req, res) => {
     try {
-      const testEmail = await sendAdminNotification("Test email: Als je dit ontvangt werkt de email functionaliteit correct!");
+      const testEmail = await sendEmail({
+        to: ["dckessler95@gmail.com"],
+        subject: "Test Email - Pluk & Poot Gmail SMTP",
+        textContent: "Dit is een test email via Gmail SMTP. Als je dit ontvangt werkt de email functionaliteit correct!",
+        htmlContent: "<h1>Test Email via Gmail SMTP</h1><p>Dit is een test email via Gmail SMTP.</p><p><strong>Als je dit ontvangt werkt de email functionaliteit correct!</strong></p><p>Verzonden op: " + new Date().toLocaleString('nl-NL') + "</p>",
+      });
       
       if (testEmail) {
-        res.json({ message: "Test email verzonden naar dckessler95@gmail.com" });
+        res.json({ message: "Test email verzonden naar dckessler95@gmail.com via Gmail SMTP" });
       } else {
         res.status(500).json({ message: "Test email kon niet worden verzonden" });
       }
