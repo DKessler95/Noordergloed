@@ -398,8 +398,13 @@ Status: ${ramenOrder.status}
       });
       
       try {
+        // Send email to customer
         await sendRamenInvitation([order.customerEmail], dateStr);
         console.log(`Individual confirmation email sent to ${order.customerEmail} for ${dateStr}`);
+        
+        // Also send a copy to you for testing
+        await sendAdminNotification(`Test: Bevestigingsmail verzonden naar ${order.customerEmail} voor ${dateStr}`);
+        console.log(`Copy sent to admin for verification`);
         
         res.json({ 
           message: `Bevestigingsmail verzonden naar ${order.customerEmail}`,
@@ -413,6 +418,22 @@ Status: ${ramenOrder.status}
     } catch (error: any) {
       console.error("Error sending individual confirmation:", error);
       res.status(500).json({ message: "Error sending confirmation: " + error.message });
+    }
+  });
+
+  // Test email functionality (admin)
+  app.post("/api/test-email", requireAdmin, async (req, res) => {
+    try {
+      const testEmail = await sendAdminNotification("Test email: Als je dit ontvangt werkt de email functionaliteit correct!");
+      
+      if (testEmail) {
+        res.json({ message: "Test email verzonden naar dckessler95@gmail.com" });
+      } else {
+        res.status(500).json({ message: "Test email kon niet worden verzonden" });
+      }
+    } catch (error: any) {
+      console.error("Test email error:", error);
+      res.status(500).json({ message: "Error sending test email: " + error.message });
     }
   });
 

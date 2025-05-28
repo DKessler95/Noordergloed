@@ -230,6 +230,30 @@ export default function AdminDashboard() {
     deleteRamenOrderMutation.mutate(id);
   };
 
+  const testEmailMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/test-email", {});
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Test email verzonden",
+        description: "Controleer je inbox op dckessler95@gmail.com",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Test email mislukt",
+        description: error.message || "Er ging iets mis bij het verzenden van de test email.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleTestEmail = () => {
+    testEmailMutation.mutate();
+  };
+
   const handleConfirmRamenOrders = (date: Date) => {
     confirmRamenOrderMutation.mutate(date);
   };
@@ -532,9 +556,20 @@ export default function AdminDashboard() {
 
           <TabsContent value="ramen-orders" className="space-y-6">
             <Card>
-              <CardHeader>
-                <CardTitle>Ramen Orders per Datum</CardTitle>
-                <CardDescription>Bekijk en beheer ramen pre-orders gegroepeerd per datum</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Ramen Orders per Datum</CardTitle>
+                  <CardDescription>Bekijk en beheer ramen pre-orders gegroepeerd per datum</CardDescription>
+                </div>
+                <Button
+                  onClick={handleTestEmail}
+                  disabled={testEmailMutation.isPending}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Mail className="h-4 w-4" />
+                  {testEmailMutation.isPending ? "Bezig..." : "Test Email"}
+                </Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
