@@ -646,8 +646,78 @@ export default function AdminDashboard() {
 
           {/* Ramen Orders Tab */}
           <TabsContent value="orders" className="space-y-4">
+            {/* Date Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Ramen Reserveringen per Datum</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* Group orders by date */}
+                {Object.entries(
+                  (ramenOrders as RamenOrder[] || []).reduce((acc, order) => {
+                    const date = new Date(order.preferredDate).toLocaleDateString('nl-NL');
+                    if (!acc[date]) acc[date] = [];
+                    acc[date].push(order);
+                    return acc;
+                  }, {} as Record<string, RamenOrder[]>)
+                ).map(([date, dateOrders]) => (
+                  <div key={date} className="mb-6 p-4 border rounded-lg">
+                    <div className="flex justify-between items-center mb-3">
+                      <div>
+                        <h3 className="font-semibold text-lg">{date}</h3>
+                        <p className="text-sm text-gray-600">
+                          {dateOrders.length} reserveringen ({dateOrders.reduce((sum, o) => sum + o.servings, 0)} personen)
+                        </p>
+                      </div>
+                      {dateOrders.length >= 6 && (
+                        <Button
+                          onClick={async () => {
+                            try {
+                              const response = await apiRequest('POST', '/api/ramen-orders/send-invitations', {
+                                date: dateOrders[0].preferredDate
+                              });
+                              const result = await response.json();
+                              toast({
+                                title: "Uitnodigingen Verstuurd!",
+                                description: result.message,
+                              });
+                              refetchRamenOrders();
+                            } catch (error) {
+                              toast({
+                                title: "Fout",
+                                description: "Kon uitnodigingen niet versturen",
+                                variant: "destructive",
+                              });
+                            }
+                          }}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          📧 Uitnodigingen Versturen
+                        </Button>
+                      )}
+                    </div>
+                    
+                    <div className="space-y-2">
+                      {dateOrders.map((order) => (
+                        <div key={order.id} className="grid grid-cols-4 gap-4 text-sm p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                          <div>{order.customerName}</div>
+                          <div>{order.customerEmail}</div>
+                          <div>{order.servings} personen</div>
+                          <div>
+                            <Badge variant={order.status === "pending" ? "secondary" : order.status === "confirmed" ? "default" : "destructive"}>
+                              {order.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+            
             <div className="grid gap-4">
-              {ramenOrders.map((order: RamenOrder) => (
+              {(ramenOrders as RamenOrder[] || []).map((order: RamenOrder) => (
                 <Card key={order.id}>
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
