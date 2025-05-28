@@ -26,26 +26,15 @@ export default function ProductDetail() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Check admin status on component mount and when localStorage changes
+  // Check admin status from server
+  const { data: adminStatus } = useQuery({
+    queryKey: ['/api/admin/status'],
+    retry: false,
+  });
+
   useEffect(() => {
-    const checkAdminStatus = () => {
-      const token = localStorage.getItem('adminToken');
-      setIsAdmin(!!token);
-    };
-    
-    checkAdminStatus();
-    
-    // Listen for storage changes across tabs
-    window.addEventListener('storage', checkAdminStatus);
-    
-    // Also check periodically for same-tab changes
-    const interval = setInterval(checkAdminStatus, 1000);
-    
-    return () => {
-      window.removeEventListener('storage', checkAdminStatus);
-      clearInterval(interval);
-    };
-  }, []);
+    setIsAdmin(adminStatus?.isAdmin || false);
+  }, [adminStatus]);
   
   // Convert slug to product ID
   const productSlugMap: Record<string, number> = {

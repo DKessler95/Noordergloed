@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ShoppingCart as ShoppingCartIcon, X, Plus, Minus, Trash2 } from "lucide-react";
+import { ShoppingCart as ShoppingCartIcon, X, Plus, Minus, Trash2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -296,38 +296,24 @@ export function CartButton() {
   
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
-  // Check admin status on component mount and when localStorage changes
-  useEffect(() => {
-    const checkAdminStatus = () => {
-      const token = localStorage.getItem('adminToken');
-      setIsAdmin(!!token);
-    };
-    
-    checkAdminStatus();
-    
-    // Listen for storage changes across tabs
-    window.addEventListener('storage', checkAdminStatus);
-    
-    // Also check periodically for same-tab changes
-    const interval = setInterval(checkAdminStatus, 1000);
-    
-    return () => {
-      window.removeEventListener('storage', checkAdminStatus);
-      clearInterval(interval);
-    };
-  }, []);
+  // Check admin status from server
+  const { data: adminStatus } = useQuery({
+    queryKey: ['/api/admin/status'],
+    retry: false,
+  });
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    setIsAdmin(false);
-    // Trigger storage event for other tabs
-    window.dispatchEvent(new StorageEvent('storage', {
-      key: 'adminToken',
-      oldValue: 'token',
-      newValue: null,
-      storageArea: localStorage
-    }));
-    window.location.href = '/';
+  useEffect(() => {
+    setIsAdmin(adminStatus?.isAdmin || false);
+  }, [adminStatus]);
+
+  const handleLogout = async () => {
+    try {
+      await apiRequest('POST', '/api/admin/logout');
+      setIsAdmin(false);
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
   
   return (
