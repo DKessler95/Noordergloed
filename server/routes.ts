@@ -213,8 +213,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      // For demo purposes, just check if password matches "admin123"
-      if (password === "admin123") {
+      // For demo purposes, just check if password matches "admin"
+      if (password === "admin") {
         // Set admin session
         (req as any).session.adminId = admin.id;
         (req as any).session.adminUsername = admin.username;

@@ -23,6 +23,7 @@ export const cartService = {
 
   addItem: (product: Product) => {
     console.log("CART DEBUG: Adding product:", product);
+    console.log("CART DEBUG: Current cart items:", cartService.items.length);
     
     if (!product) {
       console.error("CART ERROR: Product is null/undefined");
@@ -36,8 +37,9 @@ export const cartService = {
     
     const existingItem = cartService.items.find(item => item.product?.id === product.id);
     if (existingItem) {
-      console.log("CART DEBUG: Product already in cart, not adding again");
-      return false; // Don't add duplicate items
+      console.log("CART DEBUG: Product already in cart, increasing quantity");
+      cartService.updateQuantity(product.id, existingItem.quantity + 1);
+      return true;
     }
     
     cartService.items.push({ product, quantity: 1 });
