@@ -19,6 +19,28 @@ import type { Product, RamenOrder } from "@shared/schema";
 export default function AdminDashboard() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  
+  // All hooks must be at the top before any conditional logic
+  const [editingProduct, setEditingProduct] = useState<number | null>(null);
+  const [editProductData, setEditProductData] = useState<any>(null);
+  const [categories, setCategories] = useState(["syrup", "ramen", "accessoires"]);
+  const [newCategory, setNewCategory] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [newBadge, setNewBadge] = useState("");
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    maxStock: "",
+    category: "syrup",
+    imageUrl: "",
+    featured: false,
+    limitedStock: false,
+    badges: [] as string[]
+  });
+
+  const [availableBadges, setAvailableBadges] = useState(["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]);
 
   // Check admin authentication
   const { data: adminStatus, isLoading: adminLoading } = useQuery({
@@ -52,26 +74,6 @@ export default function AdminDashboard() {
   if (adminStatus && !adminStatus.isAdmin) {
     return null;
   }
-  const [editingProduct, setEditingProduct] = useState<number | null>(null);
-  const [editProductData, setEditProductData] = useState<any>(null);
-  const [categories, setCategories] = useState(["syrup", "ramen", "accessoires"]);
-  const [newCategory, setNewCategory] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [newBadge, setNewBadge] = useState("");
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    stock: "",
-    maxStock: "",
-    category: "syrup",
-    imageUrl: "",
-    featured: false,
-    limitedStock: false,
-    badges: [] as string[]
-  });
-
-  const [availableBadges, setAvailableBadges] = useState(["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]);
 
   // Fetch data
   const { data: products = [] } = useQuery({
