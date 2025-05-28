@@ -146,11 +146,7 @@ export default function AdminDashboard() {
 
   const sendIndividualConfirmationMutation = useMutation({
     mutationFn: async (order: RamenOrder) => {
-      const response = await apiRequest("POST", `/api/ramen-orders/${order.id}/send-confirmation`, {
-        email: order.customerEmail,
-        name: order.customerName,
-        date: order.preferredDate
-      });
+      const response = await apiRequest("POST", `/api/ramen-orders/${order.id}/send-confirmation`, {});
       return response.json();
     },
     onSuccess: () => {

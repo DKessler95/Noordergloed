@@ -107,3 +107,49 @@ Het Pluk & Poot Team
     htmlContent
   });
 }
+
+export async function sendAdminNotification(orderDetails: string): Promise<boolean> {
+  const subject = "🔔 Nieuwe Ramen Bestelling - Pluk & Poot";
+  
+  const textContent = `
+Hallo Damian,
+
+Er is een nieuwe ramen bestelling binnengekomen op je website!
+
+${orderDetails}
+
+Log in op je admin dashboard om de bestelling te bekijken en te beheren.
+
+Groet,
+Je Pluk & Poot Website
+  `;
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h1 style="color: #7c3aed;">🔔 Nieuwe Ramen Bestelling</h1>
+      
+      <p>Hallo Damian,</p>
+      
+      <p>Er is een nieuwe ramen bestelling binnengekomen op je website!</p>
+      
+      <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3 style="color: #374151; margin-top: 0;">Bestelling Details:</h3>
+        <pre style="white-space: pre-wrap; font-family: monospace;">${orderDetails}</pre>
+      </div>
+      
+      <p>Log in op je admin dashboard om de bestelling te bekijken en te beheren.</p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+        <p>Groet,<br>
+        <strong>Je Pluk & Poot Website</strong></p>
+      </div>
+    </div>
+  `;
+
+  return await sendBulkEmail({
+    to: ["dckessler95@gmail.com"],
+    subject,
+    textContent,
+    htmlContent
+  });
+}

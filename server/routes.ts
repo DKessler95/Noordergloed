@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
-import { sendRamenInvitation } from "./mailjet";
+import { sendRamenInvitation, sendAdminNotification } from "./mailjet";
 
 const ramenOrderRequestSchema = z.object({
   customerName: z.string().min(1),
@@ -125,6 +125,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: "pending",
         notes: requestData.notes,
       });
+
+      // Send notification email to admin
+      const orderDetails = `
+Klant: ${ramenOrder.customerName}
+Email: ${ramenOrder.customerEmail}
+Telefoon: ${ramenOrder.customerPhone || 'Niet opgegeven'}
+Gewenste Datum: ${ramenOrder.preferredDate.toLocaleDateString('nl-NL', { 
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+})}
+Aantal Porties: ${ramenOrder.servings}
+Opmerkingen: ${ramenOrder.notes || 'Geen opmerkingen'}
+Status: ${ramenOrder.status}
+      `;
+      
+      try {
+        await sendAdminNotification(orderDetails);
+        console.log('Admin notification sent for new ramen order');
+      } catch (emailError) {
+        console.error('Failed to send admin notification:', emailError);
+        // Continue even if notification fails
+      }
 
       // Check if this booking completed the group of 6
       const updatedOrders = await storage.getRamenOrdersByDate(preferredDate);
@@ -353,14 +377,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/ramen-orders/:id/send-confirmation", requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { email, name, date } = req.body;
       
-      if (isNaN(id) || !email || !name || !date) {
-        return res.status(400).json({ message: "Missing required fields" });
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
       }
 
-      const targetDate = new Date(date);
-      const dateStr = targetDate.toLocaleDateString('nl-NL', { 
+      // Get the order from storage to get the correct data
+      const orders = await storage.getRamenOrders();
+      const order = orders.find(o => o.id === id);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      const dateStr = order.preferredDate.toLocaleDateString('nl-NL', { 
         weekday: 'long', 
         year: 'numeric', 
         month: 'long', 
@@ -368,12 +398,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       try {
-        await sendRamenInvitation([email], dateStr);
-        console.log(`Individual confirmation email sent to ${email} for ${dateStr}`);
+        await sendRamenInvitation([order.customerEmail], dateStr);
+        console.log(`Individual confirmation email sent to ${order.customerEmail} for ${dateStr}`);
         
         res.json({ 
-          message: `Bevestigingsmail verzonden naar ${email}`,
-          email: email,
+          message: `Bevestigingsmail verzonden naar ${order.customerEmail}`,
+          email: order.customerEmail,
           date: dateStr
         });
       } catch (emailError) {
