@@ -165,7 +165,7 @@ export default function ProductDetail() {
 
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="space-y-4">
                 <span className={`text-4xl font-display font-bold ${theme.accent}`}>
                   {formatPrice(product.price)}
                 </span>
@@ -229,7 +229,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Detailed Product Information */}
-              {isElderflower && (
+              {product.name === "Vlierbloesem Siroop" && (
                 <div className="mt-8 space-y-8">
                   <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800">
                     <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
