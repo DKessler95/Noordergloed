@@ -14,7 +14,7 @@ import { AddToCartButton } from "@/components/shopping-cart";
 import { apiRequest } from "@/lib/queryClient";
 import { formatPrice } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Product } from "@shared/schema";
 
 export default function ProductDetail() {
