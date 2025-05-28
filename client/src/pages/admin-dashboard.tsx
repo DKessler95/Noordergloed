@@ -731,7 +731,7 @@ export default function AdminDashboard() {
                         <h3 className="font-semibold text-lg">{order.customerName}</h3>
                         <p className="text-gray-600 dark:text-gray-400">{order.customerEmail}</p>
                         <p className="text-sm text-gray-500">
-                          {new Date(order.selectedDate).toLocaleDateString('nl-NL')} - {order.quantity} porties
+                          {new Date(order.preferredDate).toLocaleDateString('nl-NL')} - {order.servings} porties
                         </p>
                         {order.notes && (
                           <p className="text-sm text-gray-600 mt-1">Opmerking: {order.notes}</p>
