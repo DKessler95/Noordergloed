@@ -211,7 +211,7 @@ export default function AdminDashboard() {
     },
   });
 
-  const updateOrderStatusMutation = useMutation({
+  const updateSyrupOrderStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
       const response = await apiRequest("PATCH", `/api/orders/${id}/status`, { status });
       return response.json();
@@ -225,7 +225,7 @@ export default function AdminDashboard() {
     },
   });
 
-  const deleteOrderMutation = useMutation({
+  const deleteSyrupOrderMutation = useMutation({
     mutationFn: async (id: number) => {
       const response = await apiRequest("DELETE", `/api/orders/${id}`, {});
       return response.json();
@@ -239,18 +239,22 @@ export default function AdminDashboard() {
     },
   });
 
-  const sendOrderConfirmationMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const response = await apiRequest("POST", `/api/orders/${id}/send-confirmation`, {});
-      return response.json();
+  const sendSyrupOrderConfirmationMutation = useMutation({
+    mutationFn: async (orderId: number) => {
+      return apiRequest("POST", "/api/admin/send-order-confirmation", {
+        orderId,
+        orderType: "syrup"
+      });
     },
     onSuccess: () => {
       toast({
-        title: "Bevestigingsmail verzonden",
-        description: "De bevestigingsmail is succesvol verzonden naar de klant.",
+        title: "Bevestiging verzonden",
+        description: "De bevestigingsmail is verzonden naar de klant.",
       });
     },
   });
+
+
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -324,6 +328,8 @@ export default function AdminDashboard() {
   const handleSendIndividualConfirmation = (order: RamenOrder) => {
     sendIndividualConfirmationMutation.mutate(order);
   };
+
+
 
   const handleEditProduct = (product: Product) => {
     setEditingProduct(product.id);
@@ -657,7 +663,7 @@ export default function AdminDashboard() {
                             <div className="flex items-center space-x-2 ml-4">
                               <Select
                                 value={order.status}
-                                onValueChange={(status) => handleUpdateOrderStatus(order.id, status)}
+                                onValueChange={(status) => updateSyrupOrderStatusMutation.mutate({ id: order.id, status })}
                               >
                                 <SelectTrigger className="w-32">
                                   <SelectValue />
