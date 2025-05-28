@@ -98,16 +98,24 @@ export function ProductCard({ product }: ProductCardProps) {
                 </span>
                 <Button
                   onClick={() => {
-                    const slug = product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" 
-                      : product.name === "Rozen Siroop" ? "rozen-siroop"
-                      : product.name === "Chicken Shoyu Ramen" ? "chicken-shoyu-ramen"
-                      : product.id.toString();
-                    window.location.href = `/producten/${slug}`;
+                    if (product.category === "ramen") {
+                      // Voor ramen: scroll naar booking sectie
+                      const ramenSection = document.getElementById('ramen');
+                      if (ramenSection) {
+                        ramenSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    } else {
+                      // Voor siroopproducten: ga naar detail pagina
+                      const slug = product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" 
+                        : product.name === "Rozen Siroop" ? "rozen-siroop"
+                        : product.id.toString();
+                      window.location.href = `/producten/${slug}`;
+                    }
                   }}
                   disabled={product.stock === 0}
                   className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
                 >
-                  {product.stock === 0 ? "Uitverkocht" : product.category === "ramen" ? "Meer Details" : "Bekijk Product"}
+                  {product.stock === 0 ? "Uitverkocht" : product.category === "ramen" ? "Boek Nu" : "Bekijk Product"}
                 </Button>
               </div>
             </div>
