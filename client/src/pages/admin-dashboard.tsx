@@ -226,11 +226,11 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Producten Beheer</h2>
               <Button
-                onClick={() => window.open('/', '_blank')}
+                onClick={() => window.open('/products', '_blank')}
                 variant="outline"
                 className="gap-2"
               >
-                📄 Bekijk Product Pagina's
+                📄 Beheer Product Pagina's
               </Button>
             </div>
             

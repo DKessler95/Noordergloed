@@ -71,6 +71,9 @@ export class MemStorage implements IStorage {
   }
 
   private initializeRamenOrders() {
+    // Clear existing orders
+    this.ramenOrders.clear();
+    
     const testDate = new Date('2025-06-06');
     
     this.ramenOrders.set(1, {
@@ -134,7 +137,7 @@ export class MemStorage implements IStorage {
     });
     
     this.currentRamenOrderId = 6;
-    console.log("STORAGE: Initialized ramen orders, total:", this.ramenOrders.size);
+    console.log("STORAGE: Initialized fresh ramen orders, total:", this.ramenOrders.size);
   }
 
   private initializeProducts() {
