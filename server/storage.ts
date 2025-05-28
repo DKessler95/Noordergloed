@@ -244,8 +244,10 @@ export class MemStorage implements IStorage {
   // Ramen Orders
   async getRamenOrders(): Promise<RamenOrder[]> {
     const orders = Array.from(this.ramenOrders.values());
+    console.log("Storage: ramenOrders Map size:", this.ramenOrders.size);
     console.log("Storage: getRamenOrders returning", orders.length, "orders");
     console.log("Storage: First few orders:", orders.slice(0, 2));
+    console.log("Storage: All ramen order IDs:", Array.from(this.ramenOrders.keys()));
     return orders;
   }
 
