@@ -162,16 +162,7 @@ export default function ProductDetail() {
                   {product.description}
                 </p>
                 
-                {isElderflower && (
-                  <div className="mt-8 p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                      Vlierbloesemsiroop uit Groningen
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                      Geplukt bij de iconische Hamburgervijver. Natuurlijke ingrediënten: vlierbloeseminfusie, suiker, citroensap en citroenzuur. 100% natuurlijk, glutenvrij en veganistisch. Een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.
-                    </p>
-                  </div>
-                )}
+
               </div>
 
               <div className="flex items-center gap-4">
@@ -236,6 +227,99 @@ export default function ProductDetail() {
               <div className="pt-4">
                 <AddToCartButton product={product} />
               </div>
+
+              {/* Detailed Product Information */}
+              {isElderflower && (
+                <div className="mt-8 space-y-8">
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800">
+                    <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
+                      Vlierbloesemsiroop uit Groningen
+                    </h3>
+                    
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                          Ingrediënten per 100 ml verdunde siroop (1:7 verhouding):
+                        </h4>
+                        <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                          <li>• Vlierbloeseminfusie (water, verse vlierbloesemschermen)</li>
+                          <li>• Suiker (33 g per 100 ml siroop)</li>
+                          <li>• Citroensap (vers geperst)</li>
+                          <li>• Citroenzuur (natuurlijk conserveermiddel)</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                          Voedingswaarden per 100 ml verdund met water:
+                        </h4>
+                        <div className="grid grid-cols-3 gap-4 bg-white dark:bg-gray-700 rounded-lg p-4">
+                          <div className="text-center">
+                            <div className="font-semibold text-gray-900 dark:text-white">Energie</div>
+                            <div className="text-gray-600 dark:text-gray-300">138 kJ</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="font-semibold text-gray-900 dark:text-white">Koolhydraten</div>
+                            <div className="text-gray-600 dark:text-gray-300">8,3 g</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="font-semibold text-gray-900 dark:text-white">Waarvan suikers</div>
+                            <div className="text-gray-600 dark:text-gray-300">8,3 g</div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-3 italic">
+                          Bevat geen kunstmatige kleur-, geur- of smaakstoffen. Gegarandeerd glutenvrij en veganistisch.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 border border-green-200 dark:border-green-800">
+                    <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
+                      Verhaal: De Hamburgervijver en de Ziel van de Siroop
+                    </h3>
+                    
+                    <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+                      <p>
+                        Midden in de levendige Groningse wijk <strong>Korreweg</strong>, verscholen tussen karakteristieke jaren-30-woningen en moderne flatgebouwen, ligt de <strong>Hamburgervijver</strong> – een oase van rust waar jouw vlierbloesemsiroop zijn roots vindt. Deze iconische vijver, onderdeel van het <strong>Molukkenplantsoen</strong>, werd in de jaren 30 aangelegd als onderdeel van Berlage's visie voor een groene gordel rond de stad.
+                      </p>
+
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Historische Verbinding</h4>
+                        <p>
+                          De naam "Hamburgervijver" verwijst naar de <strong>Hamburgerstraat</strong>, die al in 1503 werd vermeld als <em>Curreweg</em>. In de jaren 50 fietsten arbeiders hier dagelijks langs naar de nabijgelegen fabrieken aan het Boterdiep. Vandaag vangen karpervissers er nog steeds karpers tot 5 pond, omringd door treurwilgen en het gelach van kinderen die over het slingerpad rennen.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Natuur in de Stad</h4>
+                        <p>
+                          Het water reflecteert de seizoenen: in de lente bloeien dotterbloemen langs de oevers, in de zomer weerspiegelen de vlierbloesemschermen zich in het oppervlak. Juist deze bloesems, geplukt in de straten rondom <strong>Star Numanstraat</strong>, vormen het hart van je siroop. De combinatie van stadse dynamiek en wildpluktraditionele geeft elk flesje een uniek karakter – een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Van Vijver naar Fles</h4>
+                        <p>De siroop draagt de ziel van de wijk:</p>
+                        <ul className="list-disc list-inside space-y-1 mt-2">
+                          <li><strong>25-35 verse schermen per liter</strong>: Geplukt bij zonsopgang, wanneer de pollen van de bloesems het sterkst zijn.</li>
+                          <li><strong>Lokale suiker</strong>: Verwerkt in een 1:2-verhouding (water:suiker) voor een balans tussen zoetheid en bloemige aroma's.</li>
+                          <li><strong>Citroenzuur uit de stad</strong>: Voegt frisheid toe, net als de wind die over de vijver waait.</li>
+                        </ul>
+                      </div>
+
+                      <div className="text-center mt-6 p-4 bg-yellow-100 dark:bg-yellow-800/30 rounded-lg">
+                        <p className="font-semibold text-lg text-gray-900 dark:text-white">
+                          🌸 Proef de zomer van Groningen 🍋
+                        </p>
+                        <p className="text-sm mt-2">
+                          Een slok siroop is een reis door eeuwen stadsgeschiedenis, van de middeleeuwse Curreweg tot de hedendaagse creativiteit van de Korrewegwijk.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -85,23 +85,25 @@ export function ProductCard({ product }: ProductCardProps) {
               {product.description}
             </p>
             
-            <StockIndicator 
-              current={product.stock} 
-              max={product.maxStock}
-              productName={product.name}
-            />
+            <div className="space-y-4">
+              <StockIndicator 
+                current={product.stock} 
+                max={product.maxStock}
+                productName={product.name}
+              />
 
-            <div className="flex items-center justify-between mt-6">
-              <span className={`font-display text-3xl font-bold ${priceClass}`}>
-                €{product.price}
-              </span>
-              <Button
-                onClick={() => window.location.href = `/producten/${product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" : "rozen-siroop"}`}
-                disabled={product.stock === 0}
-                className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
-              >
-                {product.stock === 0 ? "Uitverkocht" : "Bekijk Product"}
-              </Button>
+              <div className="flex items-center justify-between">
+                <span className={`font-display text-3xl font-bold ${priceClass}`}>
+                  €{product.price}
+                </span>
+                <Button
+                  onClick={() => window.location.href = `/producten/${product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" : "rozen-siroop"}`}
+                  disabled={product.stock === 0}
+                  className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
+                >
+                  {product.stock === 0 ? "Uitverkocht" : "Bekijk Product"}
+                </Button>
+              </div>
             </div>
           </div>
           
