@@ -112,8 +112,10 @@ export default function AdminDashboard() {
   });
 
   const confirmRamenOrderMutation = useMutation({
-    mutationFn: async (date: string) => {
-      const response = await apiRequest("POST", `/api/ramen-orders/confirm`, { date });
+    mutationFn: async (date: Date) => {
+      const response = await apiRequest("POST", `/api/ramen-orders/confirm`, { 
+        date: date.toISOString() 
+      });
       return response.json();
     },
     onSuccess: () => {
@@ -199,7 +201,7 @@ export default function AdminDashboard() {
   };
 
   const handleConfirmRamenOrders = (date: Date) => {
-    confirmRamenOrderMutation.mutate(date.toISOString().split('T')[0]);
+    confirmRamenOrderMutation.mutate(date);
   };
 
   const handleEditProduct = (product: Product) => {

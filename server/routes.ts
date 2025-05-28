@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
+import { sendRamenInvitation } from "./mailjet";
 
 const ramenOrderRequestSchema = z.object({
   customerName: z.string().min(1),
@@ -280,6 +281,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(product);
     } catch (error: any) {
       res.status(500).json({ message: "Error updating stock: " + error.message });
+    }
+  });
+
+  // Confirm all ramen orders for a specific date (admin)
+  app.post("/api/ramen-orders/confirm", requireAdmin, async (req, res) => {
+    try {
+      const { date } = req.body;
+      
+      if (!date) {
+        return res.status(400).json({ message: "Date is required" });
+      }
+
+      const targetDate = new Date(date);
+      const confirmedOrders = await storage.confirmRamenOrdersForDate(targetDate);
+      
+      if (confirmedOrders.length === 0) {
+        return res.status(400).json({ message: "No pending orders found for this date" });
+      }
+
+      // Send confirmation emails to all confirmed orders
+      const emails = confirmedOrders.map(order => order.customerEmail);
+      const dateStr = targetDate.toLocaleDateString('nl-NL', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      try {
+        await sendRamenInvitation(emails, dateStr);
+        console.log(`Confirmation emails sent to ${emails.length} customers for ${dateStr}`);
+      } catch (emailError) {
+        console.error("Failed to send confirmation emails:", emailError);
+        // Continue even if email fails
+      }
+
+      res.json({ 
+        message: `${confirmedOrders.length} orders confirmed for ${dateStr}`,
+        confirmedOrders,
+        emailsSent: emails.length
+      });
+    } catch (error: any) {
+      console.error("Error confirming ramen orders:", error);
+      res.status(500).json({ message: "Error confirming orders: " + error.message });
     }
   });
 
