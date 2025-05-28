@@ -165,7 +165,14 @@ export class MemStorage implements IStorage {
   async updateProduct(id: number, updates: Partial<Product>): Promise<Product | undefined> {
     const product = this.products.get(id);
     if (product) {
-      const updatedProduct = { ...product, ...updates };
+      // Ensure required fields are present
+      const updatedProduct = { 
+        ...product, 
+        ...updates,
+        stock: updates.stock ?? product.stock,
+        maxStock: updates.maxStock ?? product.maxStock,
+        badges: updates.badges ?? product.badges ?? []
+      };
       this.products.set(id, updatedProduct);
       return updatedProduct;
     }
@@ -257,6 +264,10 @@ export class MemStorage implements IStorage {
     }
     
     return confirmedOrders;
+  }
+
+  async deleteRamenOrder(id: number): Promise<boolean> {
+    return this.ramenOrders.delete(id);
   }
 
   async getRamenOrdersByDate(date: Date): Promise<RamenOrder[]> {
