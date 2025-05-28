@@ -107,29 +107,16 @@ export default function ProductsPage() {
 
                 <div className="flex gap-2 pt-4">
                   <Button asChild className="flex-1" variant="outline">
-                    <Link href={`/products/${product.id}`}>
+                    <Link href={`/producten/${product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
                       <Eye className="w-4 h-4 mr-2" />
                       Bekijk
                     </Link>
                   </Button>
-                  <Button 
-                    className="flex-1"
-                    onClick={() => {
-                      const newDescription = prompt(`Bewerk beschrijving voor ${product.name}:`, product.description);
-                      if (newDescription !== null) {
-                        // Update product description via API
-                        fetch(`/api/products/${product.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ description: newDescription })
-                        }).then(() => {
-                          window.location.reload();
-                        });
-                      }
-                    }}
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Bewerken
+                  <Button asChild className="flex-1">
+                    <Link href={`/producten/${product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Bewerken
+                    </Link>
                   </Button>
                 </div>
               </CardContent>
