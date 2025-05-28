@@ -305,14 +305,28 @@ export function CartButton() {
     
     checkAdminStatus();
     
-    // Listen for storage changes
+    // Listen for storage changes across tabs
     window.addEventListener('storage', checkAdminStatus);
-    return () => window.removeEventListener('storage', checkAdminStatus);
+    
+    // Also check periodically for same-tab changes
+    const interval = setInterval(checkAdminStatus, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', checkAdminStatus);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     setIsAdmin(false);
+    // Trigger storage event for other tabs
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'adminToken',
+      oldValue: 'token',
+      newValue: null,
+      storageArea: localStorage
+    }));
     window.location.href = '/';
   };
   

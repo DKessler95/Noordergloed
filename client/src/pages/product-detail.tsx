@@ -35,9 +35,16 @@ export default function ProductDetail() {
     
     checkAdminStatus();
     
-    // Listen for storage changes
+    // Listen for storage changes across tabs
     window.addEventListener('storage', checkAdminStatus);
-    return () => window.removeEventListener('storage', checkAdminStatus);
+    
+    // Also check periodically for same-tab changes
+    const interval = setInterval(checkAdminStatus, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', checkAdminStatus);
+      clearInterval(interval);
+    };
   }, []);
   
   // Convert slug to product ID
