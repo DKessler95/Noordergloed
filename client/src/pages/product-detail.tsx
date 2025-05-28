@@ -129,21 +129,26 @@ export default function ProductDetail() {
       <div className={`bg-gradient-to-br ${theme.gradient} py-16`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Product Image */}
+            {/* Product Images */}
             <div className="order-1 lg:order-1">
-              <div className="relative">
-                <div className="aspect-square rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-2xl">
-                  {product.imageUrl ? (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <div className="aspect-square rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-2xl">
                     <img
-                      src={product.imageUrl}
-                      alt={product.name}
+                      src="/images/voorkant-siroop.png"
+                      alt={`${product.name} voorkant`}
                       className="w-full h-full object-cover"
                     />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
-                      <Package className="w-24 h-24 text-gray-400 dark:text-gray-500" />
-                    </div>
-                  )}
+                  </div>
+                </div>
+                <div className="relative">
+                  <div className="aspect-square rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-2xl">
+                    <img
+                      src="/images/achterkant-siroop.png"
+                      alt={`${product.name} achterkant`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -229,7 +234,89 @@ export default function ProductDetail() {
         </div>
       </div>
 
+      {/* Detailed Product Information */}
+      {isElderflower && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid lg:grid-cols-2 gap-16">
+            {/* Ingredients & Nutrition */}
+            <div>
+              <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8">
+                Ingrediënten & Voedingswaarden
+              </h2>
+              
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Ingrediënten per 100 ml verdunde siroop (1:7 verhouding):
+                  </h3>
+                  <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                    <li>• Vlierbloeseminfusie (water, verse vlierbloesemschermen)</li>
+                    <li>• Suiker (33 g per 100 ml siroop)</li>
+                    <li>• Citroensap (vers geperst)</li>
+                    <li>• Citroenzuur (natuurlijk conserveermiddel)</li>
+                  </ul>
+                </div>
 
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Voedingswaarden per 100 ml verdund met water:
+                  </h3>
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <div className="font-semibold text-gray-900 dark:text-white">Energie</div>
+                        <div className="text-gray-600 dark:text-gray-300">138 kJ</div>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 dark:text-white">Koolhydraten</div>
+                        <div className="text-gray-600 dark:text-gray-300">8,3 g</div>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 dark:text-white">Waarvan suikers</div>
+                        <div className="text-gray-600 dark:text-gray-300">8,3 g</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-4">
+                    Bevat geen kunstmatige kleur-, geur- of smaakstoffen. Gegarandeerd glutenvrij en veganistisch.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Story */}
+            <div>
+              <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8">
+                Verhaal: De Hamburgervijver en de Ziel van de Siroop
+              </h2>
+              
+              <div className="space-y-6 text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p>
+                  Midden in de levendige Groningse wijk Korreweg, verscholen tussen karakteristieke jaren-30-woningen en moderne flatgebouwen, ligt de Hamburgervijver – een oase van rust waar jouw vlierbloesemsiroop zijn roots vindt. Deze iconische vijver, onderdeel van het Molukkenplantsoen, werd in de jaren 30 aangelegd als onderdeel van Berlage's visie voor een groene gordel rond de stad.
+                </p>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                    Historische Verbinding
+                  </h3>
+                  <p>
+                    De naam "Hamburgervijver" verwijst naar de Hamburgerstraat, die al in 1503 werd vermeld als Curreweg. In de jaren 50 fietsten arbeiders hier dagelijks langs naar de nabijgelegen fabrieken aan het Boterdiep. Vandaag vangen karpervissers er nog steeds karpers tot 5 pond, omringd door treurwilgen en het gelach van kinderen die over het slingerpad rennen.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                    Natuur in de Stad
+                  </h3>
+                  <p>
+                    Het water reflecteert de seizoenen: in de lente bloeien dotterbloemen langs de oevers, in de zomer weerspiegelen de vlierbloesemschermen zich in het oppervlak. Juist deze bloesems, geplukt in de straten rondom Star Numanstraat, vormen het hart van je siroop. De combinatie van stadse dynamiek en wildpluktraditionele geeft elk flesje een uniek karakter – een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Related Products */}
       {otherProducts.length > 0 && (
