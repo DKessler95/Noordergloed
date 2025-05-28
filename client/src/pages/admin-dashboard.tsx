@@ -30,8 +30,11 @@ export default function AdminDashboard() {
     category: "syrup",
     imageUrl: "",
     featured: false,
-    limitedStock: false
+    limitedStock: false,
+    badges: [] as string[]
   });
+
+  const [availableBadges] = useState(["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]);
 
   // Fetch data
   const { data: products = [] } = useQuery({
@@ -87,7 +90,8 @@ export default function AdminDashboard() {
         category: "syrup",
         imageUrl: "",
         featured: false,
-        limitedStock: false
+        limitedStock: false,
+        badges: []
       });
       setSelectedImage(null);
     },
@@ -316,6 +320,44 @@ export default function AdminDashboard() {
                       onCheckedChange={(checked) => setNewProduct({ ...newProduct, limitedStock: checked })}
                     />
                     <Label htmlFor="limitedStock">Beperkte voorraad</Label>
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label>Badges</Label>
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap gap-2">
+                        {availableBadges.map((badge) => (
+                          <div
+                            key={badge}
+                            onClick={() => {
+                              const isSelected = newProduct.badges.includes(badge);
+                              if (isSelected) {
+                                setNewProduct({
+                                  ...newProduct,
+                                  badges: newProduct.badges.filter(b => b !== badge)
+                                });
+                              } else {
+                                setNewProduct({
+                                  ...newProduct,
+                                  badges: [...newProduct.badges, badge]
+                                });
+                              }
+                            }}
+                            className={`cursor-pointer px-3 py-1 rounded-full text-sm transition-colors ${
+                              newProduct.badges.includes(badge)
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                            }`}
+                          >
+                            {badge}
+                          </div>
+                        ))}
+                      </div>
+                      {newProduct.badges.length > 0 && (
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Geselecteerd: {newProduct.badges.join(', ')}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="md:col-span-2">
                     <Button type="submit" disabled={createProductMutation.isPending} className="gap-2">
