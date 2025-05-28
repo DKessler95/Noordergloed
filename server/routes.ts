@@ -406,7 +406,7 @@ Status: ${ramenOrder.status}
   });
 
   // Send individual confirmation email for a syrup order (admin)
-  app.post("/api/admin/send-order-confirmation", requireAdmin, async (req, res) => {
+  app.post("/api/admin/send-order-confirmation", async (req, res) => {
     try {
       const { orderId, orderType } = req.body;
       
