@@ -11,12 +11,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Package, Plus, Users, ShoppingCart, LogOut, Edit, Save, X } from "lucide-react";
+import { Package, Plus, Users, ShoppingCart, LogOut, Edit, Save, X, Check, Upload, Trash2 } from "lucide-react";
 import type { Product, RamenOrder } from "@shared/schema";
 
 export default function AdminDashboard() {
   const { toast } = useToast();
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
+  const [categories, setCategories] = useState(["syrup", "ramen", "accessoires"]);
+  const [newCategory, setNewCategory] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -193,23 +196,86 @@ export default function AdminDashboard() {
                   </div>
                   <div>
                     <Label htmlFor="category">Categorie</Label>
-                    <Select value={newProduct.category} onValueChange={(value) => setNewProduct({ ...newProduct, category: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="syrup">Siroop</SelectItem>
-                        <SelectItem value="ramen">Ramen</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="space-y-2">
+                      <Select value={newProduct.category} onValueChange={(value) => setNewProduct({ ...newProduct, category: value })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Nieuwe categorie"
+                          value={newCategory}
+                          onChange={(e) => setNewCategory(e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => {
+                            if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+                              setCategories([...categories, newCategory.trim()]);
+                              setNewCategory("");
+                            }
+                          }}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {categories.map((cat) => (
+                          <div key={cat} className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">
+                            {cat}
+                            {categories.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => setCategories(categories.filter(c => c !== cat))}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <div>
-                    <Label htmlFor="imageUrl">Afbeelding URL</Label>
-                    <Input
-                      id="imageUrl"
-                      value={newProduct.imageUrl}
-                      onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-                    />
+                    <Label htmlFor="imageUpload">Afbeelding</Label>
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <Input
+                          id="imageUpload"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setSelectedImage(file);
+                              const imageUrl = `/images/${file.name}`;
+                              setNewProduct({ ...newProduct, imageUrl });
+                            }
+                          }}
+                          className="flex-1"
+                        />
+                        <Button type="button" size="sm" variant="outline">
+                          <Upload className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <Input
+                        placeholder="Of voer URL in"
+                        value={newProduct.imageUrl}
+                        onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
+                      />
+                      {selectedImage && (
+                        <p className="text-sm text-gray-600">Geselecteerd: {selectedImage.name}</p>
+                      )}
+                    </div>
                   </div>
                   <div className="md:col-span-2">
                     <Label htmlFor="description">Beschrijving</Label>
@@ -253,13 +319,20 @@ export default function AdminDashboard() {
                               type="number"
                               defaultValue={product.stock}
                               className="w-20"
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  const newStock = parseInt((e.target as HTMLInputElement).value);
-                                  handleStockUpdate(product.id, newStock);
-                                }
-                              }}
+                              id={`stock-${product.id}`}
                             />
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                const input = document.getElementById(`stock-${product.id}`) as HTMLInputElement;
+                                const newStock = parseInt(input.value);
+                                handleStockUpdate(product.id, newStock);
+                              }}
+                              className="gap-2"
+                            >
+                              <Check className="w-4 h-4" />
+                              Opslaan
+                            </Button>
                             <Button
                               size="sm"
                               variant="outline"
