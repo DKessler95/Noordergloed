@@ -121,6 +121,38 @@ export default function AdminDashboard() {
     },
   });
 
+  // Delete product mutation
+  const deleteProductMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("DELETE", `/api/products/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      toast({ title: "Product verwijderd!" });
+    },
+    onError: () => {
+      toast({ title: "Fout bij verwijderen product", variant: "destructive" });
+    },
+  });
+
+  // Update product mutation
+  const updateProductMutation = useMutation({
+    mutationFn: async (product: any) => {
+      const response = await apiRequest("PATCH", `/api/products/${product.id}`, product);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      setEditingProduct(null);
+      setEditProductData(null);
+      toast({ title: "Product bijgewerkt!" });
+    },
+    onError: () => {
+      toast({ title: "Fout bij bijwerken product", variant: "destructive" });
+    },
+  });
+
   // Delete ramen order mutation
   const deleteRamenOrderMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -449,6 +481,35 @@ export default function AdminDashboard() {
                                 onChange={(e) => setEditProductData({...editProductData, description: e.target.value})}
                                 rows={2}
                               />
+                            </div>
+                            <div>
+                              <Label>Afbeelding</Label>
+                              <div className="space-y-2">
+                                <Input
+                                  value={editProductData?.imageUrl || product.imageUrl || ""}
+                                  onChange={(e) => setEditProductData({...editProductData, imageUrl: e.target.value})}
+                                  placeholder="Afbeelding URL"
+                                />
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = (e) => {
+                                          const result = e.target?.result as string;
+                                          setEditProductData({...editProductData, imageUrl: result});
+                                        };
+                                        reader.readAsDataURL(file);
+                                      }
+                                    }}
+                                    className="flex-1"
+                                  />
+                                  <span className="text-sm text-gray-500">of</span>
+                                </div>
+                              </div>
                             </div>
                             <div>
                               <Label>Badges</Label>

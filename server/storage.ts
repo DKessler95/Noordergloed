@@ -29,6 +29,7 @@ export interface IStorage {
   createRamenOrder(ramenOrder: InsertRamenOrder): Promise<RamenOrder>;
   getRamenOrdersByDate(date: Date): Promise<RamenOrder[]>;
   updateRamenOrderStatus(id: number, status: string): Promise<RamenOrder | undefined>;
+  deleteRamenOrder(id: number): Promise<boolean>;
   confirmRamenOrdersForDate(date: Date): Promise<RamenOrder[]>;
   
   // Contact Messages
