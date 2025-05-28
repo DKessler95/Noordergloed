@@ -102,25 +102,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const requestData = ramenOrderRequestSchema.parse(req.body);
       
-      // Check if date is at least 4 days in the future
+      // Parse and validate date
       const preferredDate = new Date(requestData.preferredDate);
-      preferredDate.setHours(0, 0, 0, 0);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const daysDifference = Math.ceil((preferredDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-      
-      if (daysDifference <= 4) {
-        return res.status(400).json({ 
-          message: "Ramen orders must be placed at least 4 days in advance" 
-        });
-      }
-
-      // Check if it's a Friday (allow all days for testing)
-      // if (preferredDate.getDay() !== 5) {
-      //   return res.status(400).json({ 
-      //     message: "Ramen pickup is only available on Fridays" 
-      //   });
-      // }
+      console.log("Ramen order for date:", preferredDate);
 
       // Check existing orders for that date
       const existingOrders = await storage.getRamenOrdersByDate(preferredDate);
