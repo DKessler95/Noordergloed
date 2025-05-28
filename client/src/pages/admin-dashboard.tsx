@@ -683,9 +683,9 @@ export default function AdminDashboard() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  handleSendOrderConfirmation(order.id);
+                                  sendSyrupOrderConfirmationMutation.mutate(order.id);
                                 }}
-                                disabled={sendOrderConfirmationMutation.isPending}
+                                disabled={sendSyrupOrderConfirmationMutation.isPending}
                               >
                                 <Mail className="h-4 w-4" />
                               </Button>
@@ -695,9 +695,9 @@ export default function AdminDashboard() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  handleDeleteOrder(order.id);
+                                  deleteSyrupOrderMutation.mutate(order.id);
                                 }}
-                                disabled={deleteOrderMutation.isPending}
+                                disabled={deleteSyrupOrderMutation.isPending}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
