@@ -161,6 +161,17 @@ export default function ProductDetail() {
                 <p className="text-xl text-gray-600 dark:text-gray-300 mt-4 leading-relaxed">
                   {product.description}
                 </p>
+                
+                {isElderflower && (
+                  <div className="mt-8 p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                      Vlierbloesemsiroop uit Groningen
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                      Geplukt bij de iconische Hamburgervijver. Natuurlijke ingrediënten: vlierbloeseminfusie, suiker, citroensap en citroenzuur. 100% natuurlijk, glutenvrij en veganistisch. Een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-4">

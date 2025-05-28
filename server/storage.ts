@@ -62,7 +62,7 @@ export class MemStorage implements IStorage {
     const elderflowerSyrup: Product = {
       id: this.currentProductId++,
       name: "Vlierbloesem Siroop",
-      description: "Vlierbloesemsiroop uit Groningen - Geplukt bij de iconische Hamburgervijver. Natuurlijke ingrediënten: vlierbloeseminfusie, suiker, citroensap en citroenzuur. 100% natuurlijk, glutenvrij en veganistisch. Een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.",
+      description: "Handgeplukt bij de Hamburgervijver. 30 verse schermen per liter voor die authentieke zomersmaak. Perfect voor limonade of cocktails.",
       price: "6.99",
       stock: 8,
       maxStock: 15,
