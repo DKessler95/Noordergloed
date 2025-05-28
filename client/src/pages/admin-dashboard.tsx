@@ -104,6 +104,7 @@ export default function AdminDashboard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
+      queryClient.refetchQueries({ queryKey: ["/api/ramen-orders"] });
       toast({
         title: "Ramen order verwijderd",
         description: "De ramen order is succesvol verwijderd.",
@@ -120,6 +121,7 @@ export default function AdminDashboard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
+      queryClient.refetchQueries({ queryKey: ["/api/ramen-orders"] });
       toast({
         title: "Ramen orders bevestigd",
         description: "Alle ramen orders voor de geselecteerde datum zijn bevestigd en uitnodigingen zijn verzonden.",
@@ -134,6 +136,7 @@ export default function AdminDashboard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
+      queryClient.refetchQueries({ queryKey: ["/api/ramen-orders"] });
       toast({
         title: "Status bijgewerkt",
         description: "De order status is succesvol aangepast.",
