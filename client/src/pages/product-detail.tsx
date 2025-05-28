@@ -234,7 +234,7 @@ export default function ProductDetail() {
 
               {/* Detailed Product Information - Show for specific products */}
               <div className="mt-8 space-y-8">
-                {product.name.includes("Vlierbloesem") && (
+                {product.name && product.name.includes("Vlierbloesem") && (
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800">
                   <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
                     Vlierbloesemsiroop uit Groningen
@@ -279,7 +279,7 @@ export default function ProductDetail() {
                 </div>
                 )}
 
-                {product.name.includes("Vlierbloesem") && (
+                {product.name && product.name.includes("Vlierbloesem") && (
                 <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 border border-green-200 dark:border-green-800">
                   <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
                     Verhaal: De Hamburgervijver en de Ziel van de Siroop

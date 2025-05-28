@@ -101,7 +101,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     const slug = product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" 
                       : product.name === "Rozen Siroop" ? "rozen-siroop"
                       : product.name === "Chicken Shoyu Ramen" ? "chicken-shoyu-ramen"
-                      : "product-detail";
+                      : product.id.toString();
                     window.location.href = `/producten/${slug}`;
                   }}
                   disabled={product.stock === 0}
