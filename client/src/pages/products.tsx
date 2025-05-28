@@ -45,7 +45,7 @@ export default function ProductsPage() {
             </h1>
           </div>
           <Button variant="outline" asChild>
-            <Link href="/admin">
+            <Link href="/admin/dashboard">
               <Edit3 className="w-4 h-4 mr-2" />
               Admin Panel
             </Link>
@@ -112,11 +112,24 @@ export default function ProductsPage() {
                       Bekijk
                     </Link>
                   </Button>
-                  <Button asChild className="flex-1">
-                    <Link href={`/admin#edit-${product.id}`}>
-                      <Edit3 className="w-4 h-4 mr-2" />
-                      Bewerken
-                    </Link>
+                  <Button 
+                    className="flex-1"
+                    onClick={() => {
+                      const newDescription = prompt(`Bewerk beschrijving voor ${product.name}:`, product.description);
+                      if (newDescription !== null) {
+                        // Update product description via API
+                        fetch(`/api/products/${product.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ description: newDescription })
+                        }).then(() => {
+                          window.location.reload();
+                        });
+                      }
+                    }}
+                  >
+                    <Edit3 className="w-4 h-4 mr-2" />
+                    Bewerken
                   </Button>
                 </div>
               </CardContent>

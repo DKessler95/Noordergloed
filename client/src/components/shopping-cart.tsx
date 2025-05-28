@@ -36,9 +36,8 @@ export const cartService = {
     
     const existingItem = cartService.items.find(item => item.product?.id === product.id);
     if (existingItem) {
-      cartService.updateQuantity(product.id, existingItem.quantity + 1);
-      console.log("CART DEBUG: Updated existing item");
-      return true;
+      console.log("CART DEBUG: Product already in cart, not adding again");
+      return false; // Don't add duplicate items
     }
     
     cartService.items.push({ product, quantity: 1 });
