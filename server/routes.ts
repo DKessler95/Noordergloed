@@ -187,6 +187,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all ramen orders
+  app.get("/api/ramen-orders", async (req, res) => {
+    try {
+      const orders = await storage.getRamenOrders();
+      console.log("API: Returning ramen orders:", orders.length);
+      res.json(orders);
+    } catch (error) {
+      console.error("Error fetching ramen orders:", error);
+      res.status(500).json({ message: "Failed to fetch ramen orders" });
+    }
+  });
+
   // Admin Authentication Routes
   app.post("/api/admin/login", async (req, res) => {
     try {

@@ -243,7 +243,10 @@ export class MemStorage implements IStorage {
 
   // Ramen Orders
   async getRamenOrders(): Promise<RamenOrder[]> {
-    return Array.from(this.ramenOrders.values());
+    const orders = Array.from(this.ramenOrders.values());
+    console.log("Storage: getRamenOrders returning", orders.length, "orders");
+    console.log("Storage: First few orders:", orders.slice(0, 2));
+    return orders;
   }
 
   async createRamenOrder(insertRamenOrder: InsertRamenOrder): Promise<RamenOrder> {
