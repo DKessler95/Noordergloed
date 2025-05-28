@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -119,16 +120,82 @@ export function useShoppingCart() {
 export function ShoppingCart() {
   const { items, removeItem, updateQuantity, totalPrice, clear } = useShoppingCart();
   const [showCheckout, setShowCheckout] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    deliveryMethod: 'pickup',
+    streetAddress: '',
+    postalCode: '',
+    city: '',
+    country: 'Nederland',
+    notes: ''
+  });
   const { toast } = useToast();
 
-  const handleCheckout = () => {
-    // Simulate checkout
-    clear();
-    setShowCheckout(false);
-    toast({
-      title: "Bestelling geplaatst!",
-      description: "Je bestelling is succesvol geplaatst.",
-    });
+  const handleCheckout = async () => {
+    if (!customerInfo.name || !customerInfo.email) {
+      toast({
+        title: "Ontbrekende gegevens",
+        description: "Vul je naam en email in.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (customerInfo.deliveryMethod === 'delivery' && (!customerInfo.streetAddress || !customerInfo.postalCode || !customerInfo.city)) {
+      toast({
+        title: "Ontbrekende adresgegevens",
+        description: "Vul alle adresgegevens in voor bezorging.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      for (const item of items) {
+        await apiRequest("POST", "/api/orders", {
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          customerPhone: customerInfo.phone,
+          productId: item.product.id,
+          quantity: item.quantity,
+          totalAmount: (parseFloat(item.product.price) * item.quantity).toFixed(2),
+          orderType: "syrup",
+          deliveryMethod: customerInfo.deliveryMethod,
+          streetAddress: customerInfo.streetAddress,
+          postalCode: customerInfo.postalCode,
+          city: customerInfo.city,
+          country: customerInfo.country,
+          notes: customerInfo.notes
+        });
+      }
+      
+      clear();
+      setShowCheckout(false);
+      setCustomerInfo({
+        name: '',
+        email: '',
+        phone: '',
+        deliveryMethod: 'pickup',
+        streetAddress: '',
+        postalCode: '',
+        city: '',
+        country: 'Nederland',
+        notes: ''
+      });
+      
+      toast({
+        title: "Bestelling geplaatst!",
+        description: "Je bestelling is succesvol geplaatst. Je ontvangt een bevestiging per email.",
+      });
+    } catch (error) {
+      toast({
+        title: "Fout bij bestellen",
+        description: "Er ging iets mis. Probeer het opnieuw.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (showCheckout) {

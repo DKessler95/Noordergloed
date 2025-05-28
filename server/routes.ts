@@ -71,7 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Create syrup order
-  app.post("/api/orders/syrup", async (req, res) => {
+  app.post("/api/orders", async (req, res) => {
     try {
       const orderData = insertOrderSchema.parse({
         ...req.body,
@@ -87,6 +87,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (product && product.stock > 0) {
           await storage.updateProductStock(order.productId, product.stock - order.quantity);
         }
+      }
+
+      // Get product details for email
+      const product = await storage.getProduct(orderData.productId!);
+      
+      // Send notification email to admin
+      const orderDetails = `
+Nieuwe Siroop Bestelling!
+
+Klant: ${order.customerName}
+Email: ${order.customerEmail}
+Telefoon: ${order.customerPhone || 'Niet opgegeven'}
+Product: ${product?.name || 'Onbekend product'}
+Aantal: ${order.quantity}
+Totaal: €${order.totalAmount}
+Bezorging: ${order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen'}
+${order.deliveryMethod === 'delivery' && order.streetAddress ? `
+Bezorgadres:
+${order.streetAddress}
+${order.postalCode} ${order.city}
+${order.country}` : ''}
+Opmerkingen: ${order.notes || 'Geen opmerkingen'}
+Status: ${order.status}
+Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
+      `;
+      
+      try {
+        await sendOrderNotification(orderDetails);
+        console.log('Admin notification sent for new syrup order');
+      } catch (emailError) {
+        console.error('Failed to send admin notification:', emailError);
+        // Continue even if notification fails
       }
 
       res.json(order);
