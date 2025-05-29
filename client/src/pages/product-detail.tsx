@@ -296,7 +296,7 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
                   <img
-                    src={product.imageUrl || "/images/voorkant-siroop.png"}
+                    src={isElderflower ? "/images/normaal_voorkant.png" : isRose ? "/images/rozen_voorkant.png" : "/images/voorkant-siroop.png"}
                     alt={`${product.name} voorkant`}
                     className="w-full h-auto drop-shadow-2xl"
                   />
