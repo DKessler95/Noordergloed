@@ -471,7 +471,25 @@ Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
 ${customerEmailContent}
         `;
 
-        await sendOrderNotification(adminEmailContent);
+        // Create proper data object for the email function
+        const orderNotificationData = {
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone || 'Niet opgegeven',
+          productName: product?.name || 'Onbekend product',
+          quantity: order.quantity,
+          totalAmount: order.totalAmount,
+          status: order.status,
+          deliveryMethod: order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen',
+          notes: order.notes || 'Geen opmerkingen',
+          createdAt: order.createdAt?.toLocaleString('nl-NL'),
+          streetAddress: order.streetAddress,
+          postalCode: order.postalCode,
+          city: order.city,
+          country: order.country
+        };
+
+        await sendOrderNotification(orderNotificationData);
         console.log(`Order confirmation sent for order ${orderId} to admin`);
         
         res.json({ 
