@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Product } from "@shared/schema";
 
+
 interface ProductCardProps {
   product: Product;
 }
@@ -124,12 +125,12 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="order-1 md:order-2">
             <div className="grid grid-cols-2 gap-4">
               <img 
-                src={product.imageUrl || "/images/voorkant-siroop.png"} 
+                src={isElderflower ? "/images/normaal_voorkant.png" : isRose ? "/images/rozen_voorkant.png" : "/images/voorkant-siroop.png"} 
                 alt={`${product.name} voorkant`} 
                 className="w-full h-auto rounded-xl shadow-lg transform group-hover:scale-105 transition-transform duration-500" 
               />
               <img 
-                src={isElderflower ? "/assets/normaal_achterkant.png" : isRose ? "/assets/rozen_achterkant.png" : "/images/achterkant-siroop.png"} 
+                src={isElderflower ? "/images/normaal_achterkant.png" : isRose ? "/images/rozen_achterkant.png" : "/images/achterkant-siroop.png"} 
                 alt={`${product.name} achterkant`} 
                 className="w-full h-auto rounded-xl shadow-lg transform group-hover:scale-105 transition-transform duration-500" 
               />
