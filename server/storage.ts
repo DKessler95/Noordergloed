@@ -86,7 +86,7 @@ export class MemStorage implements IStorage {
       stock: 8,
       maxStock: 15,
       category: "syrup",
-      imageUrl: "/images/normaal_voorkant.jpg",
+      imageUrl: "/images/normaal_voorkant.png",
       featured: true,
       limitedStock: false,
       badges: ["Huistuin delicatesse"],
