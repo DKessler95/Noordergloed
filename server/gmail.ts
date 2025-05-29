@@ -152,15 +152,16 @@ Je Pluk & Poot Website
 
 export async function sendContactNotification(contactData: any): Promise<boolean> {
   const subject = "📬 Nieuw Contact Bericht - Pluk & Poot";
+  const fullName = `${contactData.firstName} ${contactData.lastName}`;
   
   const textContent = `
 Hallo Damian,
 
 Er is een nieuw contact bericht binnengekomen via je website!
 
-Naam: ${contactData.name}
+Naam: ${fullName}
 Email: ${contactData.email}
-Telefoon: ${contactData.phone || 'Niet opgegeven'}
+Onderwerp: ${contactData.subject}
 
 Bericht:
 ${contactData.message}
@@ -181,9 +182,9 @@ Je Pluk & Poot Website
       
       <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
         <h3 style="color: #374151; margin-top: 0;">Contact Details:</h3>
-        <p><strong>Naam:</strong> ${contactData.name}</p>
+        <p><strong>Naam:</strong> ${fullName}</p>
         <p><strong>Email:</strong> ${contactData.email}</p>
-        <p><strong>Telefoon:</strong> ${contactData.phone || 'Niet opgegeven'}</p>
+        <p><strong>Onderwerp:</strong> ${contactData.subject}</p>
         
         <h4 style="color: #374151; margin-bottom: 10px;">Bericht:</h4>
         <div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #7c3aed;">
