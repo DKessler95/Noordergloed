@@ -670,11 +670,10 @@ export default function AdminDashboard() {
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="pending">Pending</SelectItem>
-                                  <SelectItem value="confirmed">Bevestigd</SelectItem>
-                                  <SelectItem value="preparing">Voorbereiden</SelectItem>
-                                  <SelectItem value="ready">Klaar</SelectItem>
-                                  <SelectItem value="completed">Voltooid</SelectItem>
-                                  <SelectItem value="cancelled">Geannuleerd</SelectItem>
+                                  <SelectItem value="bevestigd">Bevestigd</SelectItem>
+                                  <SelectItem value="klaar">Klaar</SelectItem>
+                                  <SelectItem value="voltooid">Voltooid</SelectItem>
+                                  <SelectItem value="geannuleerd">Geannuleerd</SelectItem>
                                 </SelectContent>
                               </Select>
                               <Button

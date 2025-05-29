@@ -205,12 +205,48 @@ Je Pluk & Poot Website
 export async function sendOrderNotification(orderData: any): Promise<boolean> {
   console.log('sendOrderNotification called with data:', JSON.stringify(orderData, null, 2));
   
-  const subject = "🛒 Nieuwe Siroop Bestelling - Pluk & Poot";
+  // Different email templates based on status
+  const getEmailContent = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return {
+          subject: "🛒 Nieuwe Siroop Bestelling - Pluk & Poot",
+          message: "Er is een nieuwe siroop bestelling binnengekomen!"
+        };
+      case 'bevestigd':
+        return {
+          subject: "✅ Bestelling Bevestigd - Pluk & Poot",
+          message: "Een siroop bestelling is bevestigd en gaat in behandeling!"
+        };
+      case 'klaar':
+        return {
+          subject: "📦 Bestelling Klaar voor Ophalen/Bezorging - Pluk & Poot",
+          message: "Een siroop bestelling is klaar voor ophalen of bezorging!"
+        };
+      case 'voltooid':
+        return {
+          subject: "🎉 Bestelling Voltooid - Pluk & Poot",
+          message: "Een siroop bestelling is succesvol voltooid!"
+        };
+      case 'geannuleerd':
+        return {
+          subject: "❌ Bestelling Geannuleerd - Pluk & Poot",
+          message: "Een siroop bestelling is geannuleerd."
+        };
+      default:
+        return {
+          subject: "📋 Siroop Bestelling Update - Pluk & Poot",
+          message: "Er is een update voor een siroop bestelling."
+        };
+    }
+  };
+
+  const emailContent = getEmailContent(orderData.status);
   
   const textContent = `
 Hallo Damian,
 
-Er is een nieuwe siroop bestelling binnengekomen!
+${emailContent.message}
 
 Klant: ${orderData.customerName}
 Email: ${orderData.customerEmail}
@@ -218,6 +254,7 @@ Telefoon: ${orderData.customerPhone || 'Niet opgegeven'}
 Product: ${orderData.productName}
 Aantal: ${orderData.quantity}
 Totaal: €${orderData.totalAmount}
+Status: ${orderData.status}
 
 Opmerkingen: ${orderData.notes || 'Geen opmerkingen'}
 
@@ -229,11 +266,11 @@ Je Pluk & Poot Website
 
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h1 style="color: #7c3aed;">🛒 Nieuwe Siroop Bestelling</h1>
+      <h1 style="color: #7c3aed;">${emailContent.subject}</h1>
       
       <p>Hallo Damian,</p>
       
-      <p>Er is een nieuwe siroop bestelling binnengekomen!</p>
+      <p>${emailContent.message}</p>
       
       <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
         <h3 style="color: #374151; margin-top: 0;">Bestelling Details:</h3>
@@ -243,6 +280,7 @@ Je Pluk & Poot Website
         <p><strong>Product:</strong> ${orderData.productName}</p>
         <p><strong>Aantal:</strong> ${orderData.quantity}</p>
         <p><strong>Totaal:</strong> €${orderData.totalAmount}</p>
+        <p><strong>Status:</strong> <span style="background-color: #7c3aed; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${orderData.status.toUpperCase()}</span></p>
         
         ${orderData.notes ? `
         <h4 style="color: #374151; margin-bottom: 10px;">Opmerkingen:</h4>
