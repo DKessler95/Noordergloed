@@ -2,6 +2,8 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Clock, ChefHat, Calendar, Mail, MapPin, Truck, Users } from "lucide-react";
+import bereidingImage1 from "@assets/IMG20250123160935.jpg";
+import bereidingImage2 from "@assets/IMG20250123170544.jpg";
 
 export default function RamenDetails() {
   return (
@@ -24,13 +26,34 @@ export default function RamenDetails() {
           </p>
         </div>
 
-        {/* Hero Image Section */}
+        {/* Bereidingsproces Foto's */}
         <Card className="mb-8 overflow-hidden">
-          <div className="h-64 bg-gradient-to-r from-orange-400 to-red-500 flex items-center justify-center">
-            <div className="text-center text-white">
-              <ChefHat className="w-16 h-16 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold">Authentieke Japanse Ramen</h2>
-              <p className="text-orange-100">Met liefde bereid volgens traditionele methoden</p>
+          <div className="grid md:grid-cols-2 gap-0">
+            <div className="relative h-64">
+              <img 
+                src={bereidingImage1} 
+                alt="Voorbereiding van verse kip voor de ramen bouillon" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end">
+                <div className="p-4 text-white">
+                  <h3 className="font-semibold text-lg">Verse ingrediënten</h3>
+                  <p className="text-sm opacity-90">Voorbereiding van verse kip</p>
+                </div>
+              </div>
+            </div>
+            <div className="relative h-64">
+              <img 
+                src={bereidingImage2} 
+                alt="Het kookproces van de ramen bouillon in de keuken" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end">
+                <div className="p-4 text-white">
+                  <h3 className="font-semibold text-lg">Traditionele bereiding</h3>
+                  <p className="text-sm opacity-90">Uren lang sudderen voor rijke smaak</p>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
