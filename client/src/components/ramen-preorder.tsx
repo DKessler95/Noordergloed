@@ -182,18 +182,16 @@ export function RamenPreorder() {
                       </span>
                       <span className="text-gray-500 ml-2">per persoon</span>
                     </div>
-                    <button
-                      className="inline-flex items-center px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-50 transition-colors text-sm font-medium cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('Button clicked!'); // Debug log
-                        window.location.href = '/ramen-details';
-                      }}
+                  </div>
+                  
+                  <div className="mt-4">
+                    <a 
+                      href="/ramen-details" 
+                      className="inline-flex items-center px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-50 transition-colors text-sm font-medium"
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       Meer details
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
