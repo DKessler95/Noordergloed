@@ -683,7 +683,7 @@ export default function AdminDashboard() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  sendSyrupOrderConfirmationMutation.mutate(order.id);
+                                  sendSyrupOrderConfirmationMutation.mutate(order);
                                 }}
                                 disabled={sendSyrupOrderConfirmationMutation.isPending}
                               >

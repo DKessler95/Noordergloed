@@ -114,7 +114,17 @@ Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
       `;
       
       try {
-        await sendOrderNotification(orderDetails);
+        await sendOrderNotification({
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone || 'Niet opgegeven',
+          productName: product?.name || 'Onbekend product',
+          quantity: order.quantity,
+          totalAmount: order.totalAmount,
+          status: order.status,
+          deliveryMethod: order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen',
+          notes: order.notes || 'Geen opmerkingen'
+        });
         console.log('Admin notification sent for new syrup order');
       } catch (emailError) {
         console.error('Failed to send admin notification:', emailError);
