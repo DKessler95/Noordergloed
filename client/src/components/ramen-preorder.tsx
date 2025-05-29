@@ -181,15 +181,14 @@ export function RamenPreorder() {
                       </span>
                       <span className="text-gray-500 ml-2">per persoon</span>
                     </div>
-                    <Link href="/ramen-details">
-                      <Button
-                        variant="outline"
-                        className="text-purple-600 border-purple-600 hover:bg-purple-50"
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Meer details
-                      </Button>
-                    </Link>
+                    <Button
+                      variant="outline"
+                      className="text-purple-600 border-purple-600 hover:bg-purple-50"
+                      onClick={() => window.location.href = '/ramen-details'}
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Meer details
+                    </Button>
                   </div>
                 </div>
               </div>
