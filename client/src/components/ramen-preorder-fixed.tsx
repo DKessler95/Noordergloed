@@ -79,7 +79,7 @@ export function RamenPreorderFixed() {
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Authentieke Japanse ramen bereid met verse lokale ingrediënten. 
-            Alleen op vrijdag, maximaal 6 personen per avond.
+            Alleen op vrijdag, minimaal 6 personen per avond.
           </p>
         </div>
 
@@ -104,7 +104,7 @@ export function RamenPreorderFixed() {
                 <Users className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="font-display text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                Maximaal 6 Personen
+                Minimaal 6 Personen
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
                 Intieme setting voor de beste kwaliteit. Elk kom wordt met zorg bereid.
@@ -158,7 +158,7 @@ export function RamenPreorderFixed() {
                     </div>
                     <div className="flex items-center text-gray-600 dark:text-gray-400">
                       <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                      Verse toppings: ajitsuke tamago, nori, lente-ui
+                      Verse toppings: ajitsuke tamago, nori, lente-ui en meer
                     </div>
                     <div className="flex items-center text-gray-600 dark:text-gray-400">
                       <CheckCircle className="w-5 h-5 text-green-500 mr-3" />

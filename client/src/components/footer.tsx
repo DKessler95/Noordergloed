@@ -19,7 +19,7 @@ export function Footer() {
               className="flex items-center space-x-3 mb-6 hover:opacity-80 transition-opacity"
             >
               <img 
-                src="/attached_assets/ik_elfie.png" 
+                src="/images/logo.png" 
                 alt="Pluk & Poot Logo" 
                 className="w-12 h-12 rounded-full object-cover"
               />
@@ -123,11 +123,11 @@ export function Footer() {
         
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Pluk & Poot. Handgemaakt in Groningen, nabij de iconische Hamburgervijver.
+            © 2025 Pluk & Poot onderdeel van Digimaatwerk. Handgemaakt in Groningen, nabij de iconische Hamburgervijver.
           </p>
           <p className="text-gray-500 text-xs mt-4 md:mt-0 flex items-center">
             <Heart className="w-3 h-3 mr-1" />
-            Met trots gemaakt door Team Elfie
+            Met trots gemaakt door Team Digimaatwerk
           </p>
         </div>
       </div>

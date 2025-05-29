@@ -71,9 +71,9 @@ export default function RamenDetails() {
                   Dag 1: Bouillon maken
                 </h3>
                 <p className="text-blue-800 dark:text-blue-200 text-sm">
-                  We beginnen 's ochtends vroeg met het maken van de bouillon. Kippenbotten, 
-                  ui, gember en knoflook worden 12+ uur zachtjes gekookt voor die diepe, 
-                  rijke smaak die ramen zo bijzonder maakt. Dit is het hart van onze ramen.
+                  We beginnen de avond van te voren met het maken van de bouillon. Kippenbotten, vlees, vel, poten, 
+                  ui, gember en knoflook worden 24+ uur zachtjes gekookt voor die diepe, 
+                  en collageen rijke smaak die onze ramen zo bijzonder maakt.
                 </p>
               </div>
               
@@ -84,7 +84,7 @@ export default function RamenDetails() {
                 </h3>
                 <p className="text-green-800 dark:text-green-200 text-sm">
                   Op de dag van levering bereiden we alle toppings vers: gemarineerde eieren 
-                  die 24 uur in onze speciale marinade hebben gelegen, geroosterde kip, 
+                  die 24 uur in onze speciale marinade hebben gelegen, gepaneerde kip, 
                   verse noedels en alle garnituren. Elke kom wordt op bestelling samengesteld.
                 </p>
               </div>
@@ -96,7 +96,7 @@ export default function RamenDetails() {
               </h3>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <ul className="space-y-2 text-purple-800 dark:text-purple-200">
-                  <li>• <strong>12+ uur gekookte bouillon</strong> voor diepe smaak</li>
+                  <li>• <strong>24+ uur gekookte bouillon</strong> voor diepe en stevige smaak</li>
                   <li>• <strong>Authentieke ingrediënten</strong> direct uit Japan</li>
                   <li>• <strong>Verse noedels</strong> - niet uit een pakje</li>
                   <li>• <strong>24h gemarineerde eieren</strong> - perfecte textuur</li>
@@ -128,13 +128,13 @@ export default function RamenDetails() {
                   <li className="flex items-start">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <div>
-                      <strong>Verse ramen noedels</strong> - Speciaal geïmporteerd uit Japan, perfecte textuur
+                      <strong>Verse ramen noedels</strong> - Gemaakt door Damian bij hand.
                     </div>
                   </li>
                   <li className="flex items-start">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <div>
-                      <strong>Rijke chicken shoyu bouillon</strong> - 12+ uur getrokken, vol van smaak
+                      <strong>Rijke chicken shoyu bouillon</strong> - 24+ uur getrokken, vol van smaak
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -146,7 +146,7 @@ export default function RamenDetails() {
                   <li className="flex items-start">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <div>
-                      <strong>Geroosterde kip</strong> - Mals, sappig en vol van smaak
+                      <strong>Gepaneerde kip</strong> - Mals, sappig en vol van smaak
                     </div>
                   </li>
                 </ul>
@@ -172,7 +172,7 @@ export default function RamenDetails() {
                   <li className="flex items-start">
                     <div className="w-2 h-2 bg-pink-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <div>
-                      <strong>Menma bamboe</strong> - Traditionele knapperige topping
+                      <strong>Menma bamboe & andere groenten</strong> - Traditionele knapperige toppings
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -201,7 +201,7 @@ export default function RamenDetails() {
                 </div>
                 <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-3">1. Reserveren</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Kies een vrijdag en bestel minimaal 2 dagen van tevoren via onze website. 
+                  Kies een vrijdag en bestel minimaal 4 dagen van tevoren via onze website. (mits nog beschikbaar) 
                   We hebben beperkte plekken per sessie.
                 </p>
               </div>
@@ -233,11 +233,10 @@ export default function RamenDetails() {
               <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg">
                 <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-3 flex items-center">
                   <Truck className="w-5 h-5 mr-2" />
-                  Bezorging mogelijk
+                  Bezorging helaas nog niet mogelijk
                 </h3>
                 <p className="text-yellow-800 dark:text-yellow-200 text-sm">
-                  Binnen Groningen bezorgen we ook met de fiets voor slechts €1 extra. 
-                  We zorgen ervoor dat je ramen nog steeds warm aankomt!
+                  Wij bezorgen helaas niet, wij willen ervoor zorgen dat je ramen ervaring authentiek blijft. En het mensenlijk contact behouden.
                 </p>
               </div>
               
