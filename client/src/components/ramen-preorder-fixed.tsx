@@ -166,20 +166,13 @@ export function RamenPreorderFixed() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center">
                     <div>
                       <span className="text-3xl font-display font-bold text-purple-600 dark:text-purple-400">
                         €12,50
                       </span>
                       <span className="text-gray-500 ml-2">per persoon</span>
                     </div>
-                    <a 
-                      href="/ramen-details" 
-                      className="inline-flex items-center px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-50 transition-colors text-sm font-medium"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Meer details
-                    </a>
                   </div>
                 </div>
               </div>
