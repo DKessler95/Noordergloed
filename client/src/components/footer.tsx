@@ -1,4 +1,4 @@
-import { Leaf, Instagram, Facebook, Mail, Heart } from "lucide-react";
+import { Leaf, Instagram, Mail, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Footer() {
@@ -39,13 +39,7 @@ export function Footer() {
               >
                 <Instagram className="w-4 h-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-10 h-10 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
-              >
-                <Facebook className="w-4 h-4" />
-              </Button>
+
               <Button
                 variant="ghost"
                 size="icon"

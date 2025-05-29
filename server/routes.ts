@@ -279,6 +279,17 @@ Status: ${ramenOrder.status}
     try {
       const messageData = insertContactMessageSchema.parse(req.body);
       const message = await storage.createContactMessage(messageData);
+      
+      // Send contact notification email to admin
+      const { sendContactNotification } = await import('./gmail');
+      await sendContactNotification({
+        firstName: messageData.firstName,
+        lastName: messageData.lastName,
+        email: messageData.email,
+        subject: messageData.subject,
+        message: messageData.message
+      });
+      
       res.json(message);
     } catch (error) {
       if (error instanceof z.ZodError) {

@@ -253,14 +253,7 @@ export function ContactSection() {
               </CardContent>
             </Card>
             
-            {/* Map placeholder */}
-            <div className="mt-8 bg-gray-300 dark:bg-gray-700 rounded-xl h-64 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="mx-auto text-4xl text-gray-500 dark:text-gray-400 mb-2 w-12 h-12" />
-                <p className="text-gray-600 dark:text-gray-400">Star Numanstraat, Groningen</p>
-                <p className="text-sm text-gray-500 dark:text-gray-500">Google Maps integratie</p>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
