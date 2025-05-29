@@ -2,9 +2,12 @@ import { useTheme } from "./theme-provider";
 import { Moon, Sun, Menu, Leaf, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CartButton } from "./shopping-cart";
+import { LanguageSwitcher } from "./language-switcher";
+import { useTranslation } from "@/lib/i18n";
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
 
   // Check if user is admin
   const isAdmin = () => {
@@ -52,29 +55,30 @@ export function Header() {
               onClick={() => scrollToSection("verhaal")}
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             >
-              Ons Verhaal
+              {t('story')}
             </button>
             <button
               onClick={() => scrollToSection("producten")}
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             >
-              Producten
+              {t('products')}
             </button>
             <button
               onClick={() => scrollToSection("ramen")}
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             >
-              Ramen Pre-order
+              {t('ramenPreorder')}
             </button>
             <button
               onClick={() => scrollToSection("contact")}
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             >
-              Contact
+              {t('contact')}
             </button>
           </div>
 
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
             <CartButton />
             <Button
               variant="ghost"
