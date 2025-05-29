@@ -576,13 +576,9 @@ Status: ${ramenOrder.status}
       });
       
       try {
-        // Send email to customer
+        // Send email ONLY to the specific customer
         await sendRamenInvitation([order.customerEmail], dateStr);
         console.log(`Individual confirmation email sent to ${order.customerEmail} for ${dateStr}`);
-        
-        // Also send a copy to you for testing
-        await sendAdminNotification(`Test: Bevestigingsmail verzonden naar ${order.customerEmail} voor ${dateStr}`);
-        console.log(`Copy sent to admin for verification`);
         
         res.json({ 
           message: `Bevestigingsmail verzonden naar ${order.customerEmail}`,

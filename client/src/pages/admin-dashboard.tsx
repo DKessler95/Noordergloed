@@ -310,11 +310,11 @@ export default function AdminDashboard() {
   };
 
   const handleUpdateOrderStatus = (id: number, status: string) => {
-    updateOrderStatusMutation.mutate({ id, status });
+    updateSyrupOrderStatusMutation.mutate({ id, status });
   };
 
   const handleDeleteOrder = (id: number) => {
-    deleteOrderMutation.mutate(id);
+    deleteSyrupOrderMutation.mutate(id);
   };
 
   const handleSendOrderConfirmation = (order: any) => {
