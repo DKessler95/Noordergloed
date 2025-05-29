@@ -301,7 +301,7 @@ Je Pluk & Poot Website
 
   return await sendEmail({
     to: ["dckessler95@gmail.com"],
-    subject,
+    subject: emailContent.subject,
     textContent,
     htmlContent
   });
