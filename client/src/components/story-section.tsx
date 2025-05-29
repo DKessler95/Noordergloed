@@ -1,4 +1,4 @@
-import { MapPin, Heart } from "lucide-react";
+import { MapPin, Heart, Trees, Flower } from "lucide-react";
 
 export function StorySection() {
   return (
@@ -32,10 +32,16 @@ export function StorySection() {
             
             <div className="mt-8 grid grid-cols-2 gap-6">
               <div className="text-center">
+                <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Trees className="w-6 h-6 text-green-600 dark:text-green-400" />
+                </div>
                 <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">100%</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">Natuurlijk</div>
               </div>
               <div className="text-center">
+                <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Flower className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+                </div>
                 <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">30+</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">Schermen per liter</div>
               </div>
