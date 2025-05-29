@@ -133,7 +133,7 @@ export function RamenPreorderFixed() {
               <div className="grid lg:grid-cols-2">
                 <div className="relative h-64 lg:h-auto">
                   <img
-                    src="/images/IMG_20250527_233628.jpg"
+                    src="/images/chicken-shoyu-ramen.jpg"
                     alt="Chicken Shoyu Ramen"
                     className="w-full h-full object-cover"
                   />
