@@ -129,7 +129,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 className="w-full h-auto rounded-xl shadow-lg transform group-hover:scale-105 transition-transform duration-500" 
               />
               <img 
-                src="/images/achterkant-siroop.png" 
+                src={isElderflower ? "/assets/normaal_achterkant.png" : isRose ? "/assets/rozen_achterkant.png" : "/images/achterkant-siroop.png"} 
                 alt={`${product.name} achterkant`} 
                 className="w-full h-auto rounded-xl shadow-lg transform group-hover:scale-105 transition-transform duration-500" 
               />
