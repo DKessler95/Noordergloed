@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Calendar, Clock, Users, CheckCircle, MapPin, ExternalLink } from "lucide-react";
+import { Link } from "wouter";
 import { RamenCalendar } from "./ramen-calendar";
 import ramenImage from "@assets/IMG_20250527_233628.jpg";
 
@@ -180,13 +181,15 @@ export function RamenPreorder() {
                       </span>
                       <span className="text-gray-500 ml-2">per persoon</span>
                     </div>
-                    <Button
-                      variant="outline"
-                      className="text-purple-600 border-purple-600 hover:bg-purple-50"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Meer details
-                    </Button>
+                    <Link href="/chicken-shoyu-ramen">
+                      <Button
+                        variant="outline"
+                        className="text-purple-600 border-purple-600 hover:bg-purple-50"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Meer details
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
