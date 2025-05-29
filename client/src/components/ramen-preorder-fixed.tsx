@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Calendar, Clock, Users, CheckCircle, Info, MapPin, ExternalLink } from "lucide-react";
 import { RamenCalendar } from "./ramen-calendar";
-import ramenImage from "@assets/IMG_20250527_233628.jpg";
+
 
 const ramenOrderSchema = z.object({
   customerName: z.string().min(1, "Naam is verplicht"),

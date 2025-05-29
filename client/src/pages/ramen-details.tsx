@@ -2,8 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Clock, ChefHat, Calendar, Mail, MapPin, Truck, Users } from "lucide-react";
-import bereidingImage1 from "@assets/IMG20250123160935.jpg";
-import bereidingImage2 from "@assets/IMG20250123170544.jpg";
+
 
 export default function RamenDetails() {
   return (
@@ -31,7 +30,7 @@ export default function RamenDetails() {
           <div className="grid md:grid-cols-2 gap-0">
             <div className="relative h-64">
               <img 
-                src={bereidingImage1} 
+                src="/images/IMG20250123160935.jpg" 
                 alt="Voorbereiding van verse kip voor de ramen bouillon" 
                 className="w-full h-full object-cover"
               />
@@ -44,7 +43,7 @@ export default function RamenDetails() {
             </div>
             <div className="relative h-64">
               <img 
-                src={bereidingImage2} 
+                src="/images/IMG20250123170544.jpg" 
                 alt="Het kookproces van de ramen bouillon in de keuken" 
                 className="w-full h-full object-cover"
               />

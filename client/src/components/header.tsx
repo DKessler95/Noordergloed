@@ -38,7 +38,7 @@ export function Header() {
             className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
           >
             <img 
-              src="/images/ik_elfie.png" 
+              src="/images/logo.png" 
               alt="Pluk & Poot Logo" 
               className="w-10 h-10 rounded-full object-cover"
             />
