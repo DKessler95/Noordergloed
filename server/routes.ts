@@ -207,6 +207,34 @@ Opmerkingen: ${ramenOrder.notes || 'Geen opmerkingen'}
 Status: ${ramenOrder.status}
       `;
       
+      // Send customer confirmation email
+      try {
+        await sendCustomerOrderConfirmation({
+          customerName: ramenOrder.customerName,
+          customerEmail: ramenOrder.customerEmail,
+          customerPhone: ramenOrder.customerPhone || 'Niet opgegeven',
+          productName: 'Ramen Avond',
+          quantity: ramenOrder.servings,
+          totalAmount: '€0 (gratis)',
+          status: ramenOrder.status,
+          deliveryMethod: 'Locatie wordt nog bekend gemaakt',
+          streetAddress: '',
+          postalCode: '',
+          city: '',
+          country: '',
+          notes: ramenOrder.notes,
+          preferredDate: ramenOrder.preferredDate.toLocaleDateString('nl-NL', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })
+        });
+        console.log('Customer confirmation email sent for ramen order');
+      } catch (emailError) {
+        console.error('Failed to send customer confirmation:', emailError);
+      }
+
       try {
         await sendAdminNotification(orderDetails);
         console.log('Admin notification sent for new ramen order');
@@ -430,6 +458,35 @@ Status: ${ramenOrder.status}
       
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
+      }
+
+      // Send status update email to customer
+      try {
+        await sendCustomerStatusUpdate({
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone || 'Niet opgegeven',
+          productName: 'Ramen Avond',
+          quantity: order.servings,
+          totalAmount: '€0 (gratis)',
+          status: order.status,
+          deliveryMethod: 'Locatie wordt nog bekend gemaakt',
+          streetAddress: '',
+          postalCode: '',
+          city: '',
+          country: '',
+          notes: order.notes,
+          preferredDate: order.preferredDate.toLocaleDateString('nl-NL', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })
+        });
+        console.log(`Status update email sent to ${order.customerEmail} for ramen order ${id}`);
+      } catch (emailError) {
+        console.error('Failed to send status update email:', emailError);
+        // Continue even if email fails
       }
 
       res.json(order);
