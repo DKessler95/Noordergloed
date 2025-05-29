@@ -173,13 +173,13 @@ export function RamenPreorderFixed() {
                       </span>
                       <span className="text-gray-500 ml-2">per persoon</span>
                     </div>
-                    <Button
-                      variant="outline"
-                      className="text-purple-600 border-purple-600 hover:bg-purple-50"
+                    <a 
+                      href="/ramen-details" 
+                      className="inline-flex items-center px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-50 transition-colors text-sm font-medium"
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       Meer details
-                    </Button>
+                    </a>
                   </div>
                 </div>
               </div>
