@@ -209,19 +209,12 @@ Status: ${ramenOrder.status}
       
       // Send customer confirmation email
       try {
-        await sendCustomerOrderConfirmation({
+        const { sendRamenOrderConfirmation } = await import('./gmail-ramen');
+        await sendRamenOrderConfirmation({
           customerName: ramenOrder.customerName,
           customerEmail: ramenOrder.customerEmail,
           customerPhone: ramenOrder.customerPhone || 'Niet opgegeven',
-          productName: 'Ramen Avond',
-          quantity: ramenOrder.servings,
-          totalAmount: '€0 (gratis)',
-          status: ramenOrder.status,
-          deliveryMethod: 'Locatie wordt nog bekend gemaakt',
-          streetAddress: '',
-          postalCode: '',
-          city: '',
-          country: '',
+          servings: ramenOrder.servings,
           notes: ramenOrder.notes,
           preferredDate: ramenOrder.preferredDate.toLocaleDateString('nl-NL', { 
             weekday: 'long', 
