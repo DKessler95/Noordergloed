@@ -436,7 +436,9 @@ Email: ${orderData.customerEmail}
 Telefoon: ${orderData.customerPhone || 'Niet opgegeven'}
 Product: ${orderData.productName}
 Aantal: ${orderData.quantity}
+${orderData.deliveryMethod === 'Bezorgen' ? 'Bezorgkosten: €1.00' : ''}
 Totaal: €${orderData.totalAmount}
+Bezorging: ${orderData.deliveryMethod}
 Status: ${orderData.status}
 
 Opmerkingen: ${orderData.notes || 'Geen opmerkingen'}
@@ -462,7 +464,9 @@ Je Pluk & Poot Website
         <p><strong>Telefoon:</strong> ${orderData.customerPhone || 'Niet opgegeven'}</p>
         <p><strong>Product:</strong> ${orderData.productName}</p>
         <p><strong>Aantal:</strong> ${orderData.quantity}</p>
+        ${orderData.deliveryMethod === 'Bezorgen' ? '<p><strong>Bezorgkosten:</strong> €1.00</p>' : ''}
         <p><strong>Totaal:</strong> €${orderData.totalAmount}</p>
+        <p><strong>Bezorging:</strong> ${orderData.deliveryMethod}</p>
         <p><strong>Status:</strong> <span style="background-color: #7c3aed; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${orderData.status.toUpperCase()}</span></p>
         
         ${orderData.notes ? `
