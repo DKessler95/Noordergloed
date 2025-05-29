@@ -161,6 +161,19 @@ export default function AdminDashboard() {
     },
   });
 
+  const sendSyrupOrderConfirmationMutation = useMutation({
+    mutationFn: async (order: any) => {
+      const response = await apiRequest("POST", `/api/orders/${order.id}/send-confirmation`, {});
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Bevestigingsmail verzonden",
+        description: "De bevestigingsmail is succesvol verzonden naar de klant.",
+      });
+    },
+  });
+
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: any }) => {
       const response = await apiRequest("PATCH", `/api/products/${id}`, updates);
@@ -239,20 +252,7 @@ export default function AdminDashboard() {
     },
   });
 
-  const sendSyrupOrderConfirmationMutation = useMutation({
-    mutationFn: async (orderId: number) => {
-      return apiRequest("POST", "/api/admin/send-order-confirmation", {
-        orderId,
-        orderType: "syrup"
-      });
-    },
-    onSuccess: () => {
-      toast({
-        title: "Bevestiging verzonden",
-        description: "De bevestigingsmail is verzonden naar de klant.",
-      });
-    },
-  });
+
 
 
 
@@ -317,8 +317,8 @@ export default function AdminDashboard() {
     deleteOrderMutation.mutate(id);
   };
 
-  const handleSendOrderConfirmation = (id: number) => {
-    sendOrderConfirmationMutation.mutate(id);
+  const handleSendOrderConfirmation = (order: Order) => {
+    sendSyrupOrderConfirmationMutation.mutate(order);
   };
 
   const handleUpdateRamenOrderStatus = (id: number, status: string) => {

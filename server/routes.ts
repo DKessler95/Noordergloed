@@ -406,20 +406,17 @@ Status: ${ramenOrder.status}
   });
 
   // Send individual confirmation email for a syrup order (admin)
-  app.post("/api/admin/send-order-confirmation", async (req, res) => {
-    console.log('Email confirmation route called with body:', req.body);
+  app.post("/api/orders/:id/send-confirmation", async (req, res) => {
     try {
-      const { orderId, orderType } = req.body;
-      console.log('Extracted orderId:', orderId, 'orderType:', orderType);
+      const id = parseInt(req.params.id);
       
-      if (!orderId || orderType !== "syrup") {
-        console.log('Invalid request data - orderId:', orderId, 'orderType:', orderType);
-        return res.status(400).json({ message: "Invalid request data" });
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
       }
 
-      // Get the order from storage
+      // Get the order from storage to get the correct data
       const orders = await storage.getOrders();
-      const order = orders.find(o => o.id === orderId);
+      const order = orders.find(o => o.id === id);
       
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
@@ -428,54 +425,19 @@ Status: ${ramenOrder.status}
       // Get product details
       const product = await storage.getProduct(order.productId!);
       
-      // Send detailed email to customer
-      const customerEmailContent = `
-Beste ${order.customerName},
-
-Bedankt voor je bestelling bij Pluk & Poot!
-
-Bestelling Details:
-• Product: ${product?.name || 'Onbekend product'}
-• Aantal: ${order.quantity}
-• Totaal: €${order.totalAmount}
-• Status: ${order.status}
-• Bezorging: ${order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen'}
-${order.deliveryMethod === 'delivery' && order.streetAddress ? `
-• Bezorgadres: ${order.streetAddress}, ${order.postalCode} ${order.city}` : ''}
-
-Met vriendelijke groet,
-Pluk & Poot Team
-      `;
-
       try {
-        // Send email to admin (you) with full order details
-        const adminEmailContent = `
-Siroop Bestelling Bevestiging Verzonden!
+        // Send simple email notification to admin (copying ramen email approach)
+        const emailContent = `Siroop Bestelling ${id} bevestiging verzonden!
 
 Klant: ${order.customerName}
 Email: ${order.customerEmail}
-Telefoon: ${order.customerPhone || 'Niet opgegeven'}
 Product: ${product?.name || 'Onbekend product'}
 Aantal: ${order.quantity}
 Totaal: €${order.totalAmount}
 Status: ${order.status}
-Bezorging: ${order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen'}
-${order.deliveryMethod === 'delivery' && order.streetAddress ? `
-Bezorgadres:
-${order.streetAddress}
-${order.postalCode} ${order.city}
-${order.country}` : ''}
-${order.notes ? `Opmerkingen: ${order.notes}` : ''}
+Verzonden op: ${new Date().toLocaleString('nl-NL')}`;
 
-Status Update: ${order.status}
-Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
-
---- Email naar klant ---
-${customerEmailContent}
-        `;
-
-        // Create proper data object for the email function
-        const orderNotificationData = {
+        await sendOrderNotification({
           customerName: order.customerName,
           customerEmail: order.customerEmail,
           customerPhone: order.customerPhone || 'Niet opgegeven',
@@ -484,24 +446,17 @@ ${customerEmailContent}
           totalAmount: order.totalAmount,
           status: order.status,
           deliveryMethod: order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen',
-          notes: order.notes || 'Geen opmerkingen',
-          createdAt: order.createdAt?.toLocaleString('nl-NL'),
-          streetAddress: order.streetAddress,
-          postalCode: order.postalCode,
-          city: order.city,
-          country: order.country
-        };
+          notes: order.notes || 'Geen opmerkingen'
+        });
 
-        await sendOrderNotification(orderNotificationData);
-        console.log(`Order confirmation sent for order ${orderId} to admin`);
+        console.log(`Siroop order confirmation email sent to admin for order ${id}`);
         
         res.json({ 
-          message: `Bevestigingsmail verzonden naar ${order.customerEmail}`,
-          orderId: order.id,
-          status: order.status
+          message: `Bevestigingsmail verzonden voor bestelling ${id}`,
+          orderId: order.id
         });
       } catch (emailError) {
-        console.error("Failed to send order confirmation:", emailError);
+        console.error("Failed to send siroop order confirmation:", emailError);
         res.status(500).json({ message: "Failed to send confirmation email" });
       }
     } catch (error: any) {
