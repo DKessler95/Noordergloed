@@ -33,7 +33,7 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
     const result = await transporter.sendMail(mailOptions);
     console.log('Gmail email sent successfully:', result.messageId);
     
-    // REMOVED AUTOMATIC ADMIN COPY to prevent duplicate emails
+    // DO NOT SEND ADMIN COPY - this was causing duplicate emails
     return true;
   } catch (error) {
     console.error('Gmail email error:', error);
