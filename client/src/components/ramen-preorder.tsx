@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Calendar, Clock, Users, CheckCircle, MapPin, ExternalLink } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { RamenCalendar } from "./ramen-calendar";
 import ramenImage from "@assets/IMG_20250527_233628.jpg";
 
@@ -30,6 +30,7 @@ type RamenOrderForm = z.infer<typeof ramenOrderSchema>;
 
 export function RamenPreorder() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
 
   const form = useForm<RamenOrderForm>({
@@ -181,13 +182,14 @@ export function RamenPreorder() {
                       </span>
                       <span className="text-gray-500 ml-2">per persoon</span>
                     </div>
-                    <a 
-                      href="/ramen-details"
-                      className="inline-flex items-center px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-50 transition-colors text-sm font-medium"
+                    <Button
+                      variant="outline"
+                      className="text-purple-600 border-purple-600 hover:bg-purple-50"
+                      onClick={() => setLocation('/ramen-details')}
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       Meer details
-                    </a>
+                    </Button>
                   </div>
                 </div>
               </div>
