@@ -187,6 +187,25 @@ export function RamenPreorderFixed() {
           </Card>
         </div>
 
+        {/* Meer Details Sectie */}
+        <div className="max-w-4xl mx-auto text-center my-8">
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 p-6 rounded-lg border border-purple-200">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              🍜 Meer weten over ons ramen proces?
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              Ontdek hoe we bereiden, wat je krijgt en hoe het ophalen werkt.
+            </p>
+            <a 
+              href="/ramen-details" 
+              className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+            >
+              <ExternalLink className="w-5 h-5 mr-2" />
+              Bekijk alle details
+            </a>
+          </div>
+        </div>
+
         <Card className="bg-white dark:bg-gray-800 shadow-xl">
           <CardContent className="p-8">
             <div className="grid md:grid-cols-2 gap-8">
