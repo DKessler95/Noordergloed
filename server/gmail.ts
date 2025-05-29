@@ -203,6 +203,8 @@ Je Pluk & Poot Website
 }
 
 export async function sendOrderNotification(orderData: any): Promise<boolean> {
+  console.log('sendOrderNotification called with data:', JSON.stringify(orderData, null, 2));
+  
   const subject = "🛒 Nieuwe Siroop Bestelling - Pluk & Poot";
   
   const textContent = `
