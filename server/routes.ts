@@ -407,10 +407,13 @@ Status: ${ramenOrder.status}
 
   // Send individual confirmation email for a syrup order (admin)
   app.post("/api/admin/send-order-confirmation", async (req, res) => {
+    console.log('Email confirmation route called with body:', req.body);
     try {
       const { orderId, orderType } = req.body;
+      console.log('Extracted orderId:', orderId, 'orderType:', orderType);
       
       if (!orderId || orderType !== "syrup") {
+        console.log('Invalid request data - orderId:', orderId, 'orderType:', orderType);
         return res.status(400).json({ message: "Invalid request data" });
       }
 
