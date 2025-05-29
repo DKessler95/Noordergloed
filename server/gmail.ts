@@ -202,6 +202,101 @@ Je Pluk & Poot Website
   });
 }
 
+export async function sendCustomerStatusUpdate(orderData: any): Promise<boolean> {
+  console.log('sendCustomerStatusUpdate called with data:', JSON.stringify(orderData, null, 2));
+  
+  // Different messages based on status
+  const getStatusMessage = (status: string) => {
+    switch (status) {
+      case 'bevestigd':
+        return {
+          subject: "✅ Je bestelling is bevestigd - Pluk & Poot",
+          message: "Goed nieuws! Je bestelling is bevestigd en gaat in behandeling."
+        };
+      case 'klaar':
+        return {
+          subject: "📦 Je bestelling is klaar - Pluk & Poot",
+          message: "Je bestelling is klaar! " + (orderData.deliveryMethod === 'pickup' ? 'Je kunt hem ophalen.' : 'We bezorgen hem binnenkort.')
+        };
+      case 'voltooid':
+        return {
+          subject: "🎉 Bestelling voltooid - Pluk & Poot",
+          message: "Je bestelling is succesvol voltooid! Bedankt voor je aankoop bij Pluk & Poot."
+        };
+      case 'geannuleerd':
+        return {
+          subject: "❌ Bestelling geannuleerd - Pluk & Poot",
+          message: "Je bestelling is geannuleerd. Neem contact met ons op als je vragen hebt."
+        };
+      default:
+        return {
+          subject: "📋 Status update - Pluk & Poot",
+          message: "Er is een update voor je bestelling."
+        };
+    }
+  };
+
+  const statusInfo = getStatusMessage(orderData.status);
+  
+  const textContent = `
+Hallo ${orderData.customerName},
+
+${statusInfo.message}
+
+Je bestelling:
+Product: ${orderData.productName}
+Aantal: ${orderData.quantity}
+Totaal: €${orderData.totalAmount}
+Status: ${orderData.status}
+
+${orderData.notes ? `Opmerkingen: ${orderData.notes}` : ''}
+
+Bij vragen kun je altijd contact met ons opnemen!
+
+Met vriendelijke groet,
+Damian van Pluk & Poot
+  `;
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h1 style="color: #7c3aed;">${statusInfo.subject}</h1>
+      
+      <p>Hallo ${orderData.customerName},</p>
+      
+      <p>${statusInfo.message}</p>
+      
+      <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3 style="color: #374151; margin-top: 0;">Je Bestelling:</h3>
+        <p><strong>Product:</strong> ${orderData.productName}</p>
+        <p><strong>Aantal:</strong> ${orderData.quantity}</p>
+        <p><strong>Totaal:</strong> €${orderData.totalAmount}</p>
+        <p><strong>Status:</strong> <span style="background-color: #7c3aed; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${orderData.status.toUpperCase()}</span></p>
+        
+        ${orderData.notes ? `
+        <h4 style="color: #374151; margin-bottom: 10px;">Opmerkingen:</h4>
+        <div style="background-color: white; padding: 15px; border-radius: 5px;">
+          ${orderData.notes}
+        </div>
+        ` : ''}
+      </div>
+      
+      <p>Bij vragen kun je altijd contact met ons opnemen!</p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+        <p>Met vriendelijke groet,<br>
+        <strong>Damian van Pluk & Poot</strong></p>
+      </div>
+    </div>
+  `;
+
+  return await sendEmail({
+    to: [orderData.customerEmail],
+    subject: statusInfo.subject,
+    textContent,
+    htmlContent
+  });
+}
+
 export async function sendCustomerOrderConfirmation(orderData: any): Promise<boolean> {
   console.log('sendCustomerOrderConfirmation called with data:', JSON.stringify(orderData, null, 2));
   

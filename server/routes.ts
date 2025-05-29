@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
-import { sendRamenInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendEmail } from "./gmail";
+import { sendRamenInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendCustomerStatusUpdate, sendEmail } from "./gmail";
 
 const ramenOrderRequestSchema = z.object({
   customerName: z.string().min(1),
@@ -459,17 +459,21 @@ Status: ${ramenOrder.status}
       const product = await storage.getProduct(order.productId!);
       
       try {
-        // Send simple email notification to admin (copying ramen email approach)
-        const emailContent = `Siroop Bestelling ${id} bevestiging verzonden!
+        // Send status update email to customer
+        await sendCustomerStatusUpdate({
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone || 'Niet opgegeven',
+          productName: product?.name || 'Onbekend product',
+          quantity: order.quantity,
+          totalAmount: order.totalAmount,
+          status: order.status,
+          deliveryMethod: order.deliveryMethod,
+          notes: order.notes
+        });
+        console.log(`Customer status update email sent to ${order.customerEmail} for order ${id}`);
 
-Klant: ${order.customerName}
-Email: ${order.customerEmail}
-Product: ${product?.name || 'Onbekend product'}
-Aantal: ${order.quantity}
-Totaal: €${order.totalAmount}
-Status: ${order.status}
-Verzonden op: ${new Date().toLocaleString('nl-NL')}`;
-
+        // Send notification email to admin
         await sendOrderNotification({
           customerName: order.customerName,
           customerEmail: order.customerEmail,
@@ -481,16 +485,16 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}`;
           deliveryMethod: order.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen',
           notes: order.notes || 'Geen opmerkingen'
         });
-
-        console.log(`Siroop order confirmation email sent to admin for order ${id}`);
+        console.log(`Admin notification sent for order ${id}`);
         
         res.json({ 
-          message: `Bevestigingsmail verzonden voor bestelling ${id}`,
-          orderId: order.id
+          message: `Status email verzonden naar klant en admin`,
+          customerEmail: order.customerEmail,
+          status: order.status
         });
       } catch (emailError) {
-        console.error("Failed to send siroop order confirmation:", emailError);
-        res.status(500).json({ message: "Failed to send confirmation email" });
+        console.error("Failed to send status emails:", emailError);
+        res.status(500).json({ message: "Failed to send status emails" });
       }
     } catch (error: any) {
       res.status(500).json({ message: "Error sending confirmation: " + error.message });
