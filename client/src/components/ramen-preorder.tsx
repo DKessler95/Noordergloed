@@ -185,6 +185,10 @@ export function RamenPreorder() {
                       <Button
                         variant="outline"
                         className="text-purple-600 border-purple-600 hover:bg-purple-50"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.location.href = '/chicken-shoyu-ramen';
+                        }}
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         Meer details

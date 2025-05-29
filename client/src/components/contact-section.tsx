@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { MapPin, Phone, Mail, Clock, Send, Instagram, Facebook } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send, Instagram } from "lucide-react";
 
 const contactSchema = z.object({
   firstName: z.string().min(1, "Voornaam is verplicht"),
@@ -139,13 +139,7 @@ export function ContactSection() {
                   >
                     <Instagram className="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-600 border-0 text-white hover:from-yellow-600 hover:to-yellow-700"
-                  >
-                    <Facebook className="w-4 h-4" />
-                  </Button>
+
                 </div>
               </CardContent>
             </Card>
