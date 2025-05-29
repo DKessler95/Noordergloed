@@ -276,26 +276,63 @@ Status: ${ramenOrder.status}
 
   // Submit contact form
   app.post("/api/contact", async (req, res) => {
+    console.log('=== CONTACT FORM SUBMITTED ===');
+    console.log('Request body:', req.body);
+    
     try {
       const messageData = insertContactMessageSchema.parse(req.body);
+      console.log('Parsed message data:', messageData);
+      
       const message = await storage.createContactMessage(messageData);
+      console.log('Message stored in database');
       
-      console.log('Contact form data received:', JSON.stringify(messageData, null, 2));
-      
-      // Send contact notification email to admin (copy exact pattern from ramen orders)
+      // Send admin notification email directly using sendEmail
       try {
-        const { sendContactNotification } = await import('./gmail');
-        await sendContactNotification({
-          firstName: messageData.firstName,
-          lastName: messageData.lastName,
-          email: messageData.email,
-          subject: messageData.subject,
-          message: messageData.message
+        console.log('Attempting to send email notification...');
+        await sendEmail({
+          to: ["dckessler95@gmail.com"],
+          subject: `📬 Nieuw Contact Bericht - ${messageData.subject}`,
+          textContent: `
+Hallo Damian,
+
+Er is een nieuw contact bericht binnengekomen via je website!
+
+Naam: ${messageData.firstName} ${messageData.lastName}
+Email: ${messageData.email}
+Onderwerp: ${messageData.subject}
+
+Bericht:
+${messageData.message}
+
+Verzonden op: ${new Date().toLocaleString('nl-NL')}
+          `,
+          htmlContent: `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+  <h1 style="color: #7c3aed;">📬 Nieuw Contact Bericht</h1>
+  
+  <p>Hallo Damian,</p>
+  
+  <p>Er is een nieuw contact bericht binnengekomen via je website!</p>
+  
+  <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+    <h3 style="color: #374151; margin-top: 0;">Contact Details:</h3>
+    <p><strong>Naam:</strong> ${messageData.firstName} ${messageData.lastName}</p>
+    <p><strong>Email:</strong> ${messageData.email}</p>
+    <p><strong>Onderwerp:</strong> ${messageData.subject}</p>
+    
+    <h4 style="color: #374151; margin-bottom: 10px;">Bericht:</h4>
+    <div style="background-color: white; padding: 15px; border-radius: 5px; border-left: 4px solid #7c3aed;">
+      ${messageData.message.replace(/\n/g, '<br>')}
+    </div>
+  </div>
+  
+  <p><small>Verzonden op: ${new Date().toLocaleString('nl-NL')}</small></p>
+</div>
+          `
         });
-        console.log('Contact notification email sent to admin');
+        console.log('Contact notification email sent successfully!');
       } catch (emailError) {
         console.error('Failed to send contact notification:', emailError);
-        // Continue even if notification fails
       }
       
       res.json(message);
