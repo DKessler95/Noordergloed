@@ -246,6 +246,7 @@ ${statusInfo.message}
 Je bestelling:
 Product: ${orderData.productName}
 Aantal: ${orderData.quantity}
+${orderData.deliveryMethod === 'delivery' ? 'Bezorgkosten: €1.00' : ''}
 Totaal: €${orderData.totalAmount}
 Status: ${orderData.status}
 
@@ -269,6 +270,7 @@ Damian van Pluk & Poot
         <h3 style="color: #374151; margin-top: 0;">Je Bestelling:</h3>
         <p><strong>Product:</strong> ${orderData.productName}</p>
         <p><strong>Aantal:</strong> ${orderData.quantity}</p>
+        ${orderData.deliveryMethod === 'delivery' ? '<p><strong>Bezorgkosten:</strong> €1.00</p>' : ''}
         <p><strong>Totaal:</strong> €${orderData.totalAmount}</p>
         <p><strong>Status:</strong> <span style="background-color: #7c3aed; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${orderData.status.toUpperCase()}</span></p>
         
@@ -308,8 +310,9 @@ Bedankt voor je bestelling bij Pluk & Poot!
 Je bestelling:
 Product: ${orderData.productName}
 Aantal: ${orderData.quantity}
+${orderData.deliveryMethod === 'delivery' ? 'Bezorgkosten: €1.00' : ''}
 Totaal: €${orderData.totalAmount}
-Bezorging: ${orderData.deliveryMethod === 'delivery' ? 'Bezorgen (+€1)' : 'Ophalen (gratis)'}
+Bezorging: ${orderData.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen (gratis)'}
 
 ${orderData.deliveryMethod === 'delivery' && orderData.streetAddress ? `
 Bezorgadres:
@@ -340,8 +343,9 @@ Damian van Pluk & Poot
         <h3 style="color: #374151; margin-top: 0;">Je Bestelling:</h3>
         <p><strong>Product:</strong> ${orderData.productName}</p>
         <p><strong>Aantal:</strong> ${orderData.quantity}</p>
+        ${orderData.deliveryMethod === 'delivery' ? '<p><strong>Bezorgkosten:</strong> €1.00</p>' : ''}
         <p><strong>Totaal:</strong> €${orderData.totalAmount}</p>
-        <p><strong>Bezorging:</strong> ${orderData.deliveryMethod === 'delivery' ? 'Bezorgen (+€1)' : 'Ophalen (gratis)'}</p>
+        <p><strong>Bezorging:</strong> ${orderData.deliveryMethod === 'delivery' ? 'Bezorgen' : 'Ophalen (gratis)'}</p>
         
         ${orderData.deliveryMethod === 'delivery' && orderData.streetAddress ? `
         <h4 style="color: #374151; margin-bottom: 10px;">Bezorgadres:</h4>
