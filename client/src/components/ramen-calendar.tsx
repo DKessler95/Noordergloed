@@ -3,12 +3,16 @@ import { ChevronLeft, ChevronRight, Calendar, Users, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import type { RamenOrder } from "@shared/schema";
 
 interface CalendarDay {
   date: Date;
   available: number;
   total: number;
   isSelectable: boolean;
+  status: 'available' | 'pending' | 'confirmed' | 'full';
+  ordersCount: number;
 }
 
 interface RamenCalendarProps {
@@ -19,27 +23,62 @@ interface RamenCalendarProps {
 export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // Simuleer beschikbaarheid voor vrijdagen (in werkelijke app zou dit van server komen)
-  const getAvailability = (date: Date): { available: number; total: number } => {
+  // Haal echte ramen orders op van de server
+  const { data: ramenOrders = [] } = useQuery<RamenOrder[]>({
+    queryKey: ["/api/ramen-orders"],
+  });
+
+  // Bereken beschikbaarheid en status op basis van echte orders
+  const getDateInfo = (date: Date): { available: number; total: number; status: 'available' | 'pending' | 'confirmed' | 'full'; ordersCount: number } => {
     // Alleen vrijdagen zijn beschikbaar
-    if (date.getDay() !== 5) return { available: 0, total: 12 };
+    if (date.getDay() !== 5) {
+      return { available: 0, total: 12, status: 'full', ordersCount: 0 };
+    }
     
-    // Alle vrijdagavonden zijn beschikbaar - evenement wordt alleen bevestigd bij minimaal 6 mensen
-    return { available: 12, total: 12 };
+    // Tel orders voor deze datum
+    const dateString = date.toISOString().split('T')[0];
+    const ordersForDate = ramenOrders.filter(order => {
+      const orderDate = new Date(order.preferredDate).toISOString().split('T')[0];
+      return orderDate === dateString;
+    });
+
+    const totalOrders = ordersForDate.length;
+    const confirmedOrders = ordersForDate.filter(order => order.status === 'confirmed').length;
+    const available = Math.max(0, 12 - totalOrders);
+
+    // Bepaal status op basis van orders
+    let status: 'available' | 'pending' | 'confirmed' | 'full';
+    if (totalOrders === 0) {
+      status = 'available';
+    } else if (totalOrders >= 12) {
+      status = 'full';
+    } else if (confirmedOrders >= 6) {
+      status = 'confirmed';
+    } else {
+      status = 'pending';
+    }
+
+    return { available, total: 12, status, ordersCount: totalOrders };
   };
 
-  const getStatusColor = (available: number, total: number) => {
-    if (available === 0) return "bg-red-500"; // Rood - vol
-    if (available <= 1) return "bg-orange-500"; // Oranje - bijna vol
-    if (available <= 3) return "bg-blue-500"; // Blauw - half vol
-    return "bg-green-500"; // Groen - ruim beschikbaar
+  const getStatusColor = (status: 'available' | 'pending' | 'confirmed' | 'full') => {
+    switch (status) {
+      case 'available': return "bg-green-500"; // Groen - beschikbaar
+      case 'pending': return "bg-blue-500"; // Blauw - pending orders
+      case 'confirmed': return "bg-orange-500"; // Oranje - bevestigd evenement
+      case 'full': return "bg-red-500"; // Rood - vol
+      default: return "bg-gray-500";
+    }
   };
 
-  const getStatusText = (available: number, total: number) => {
-    if (available === 0) return "Vol";
-    if (available <= 1) return "Bijna vol";
-    if (available <= 3) return "Half vol";
-    return "Beschikbaar";
+  const getStatusText = (status: 'available' | 'pending' | 'confirmed' | 'full', ordersCount: number) => {
+    switch (status) {
+      case 'available': return "Beschikbaar";
+      case 'pending': return `${ordersCount} pending`;
+      case 'confirmed': return "Bevestigd";
+      case 'full': return "Vol";
+      default: return "Niet beschikbaar";
+    }
   };
 
   const getDaysInMonth = (date: Date): CalendarDay[] => {

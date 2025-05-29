@@ -71,73 +71,10 @@ export class MemStorage implements IStorage {
   }
 
   private initializeRamenOrders() {
-    // Clear existing orders
+    // Start with clean slate - no sample orders
     this.ramenOrders.clear();
-    
-    const testDate = new Date('2025-06-06');
-    
-    this.ramenOrders.set(1, {
-      id: 1,
-      customerName: "Emma de Vries",
-      customerEmail: "emma.devries@email.com",
-      customerPhone: "06-12345678",
-      preferredDate: testDate,
-      servings: 1,
-      notes: null,
-      status: "pending",
-      createdAt: new Date()
-    });
-    
-    this.ramenOrders.set(2, {
-      id: 2,
-      customerName: "Pieter Jansen",
-      customerEmail: "pieter.jansen@email.com",
-      customerPhone: "06-87654321",
-      preferredDate: testDate,
-      servings: 1,
-      notes: "Vegetarisch graag",
-      status: "pending",
-      createdAt: new Date()
-    });
-    
-    this.ramenOrders.set(3, {
-      id: 3,
-      customerName: "Sofia Rodriguez",
-      customerEmail: "sofia.rodriguez@email.com",
-      customerPhone: "06-11223344",
-      preferredDate: testDate,
-      servings: 1,
-      notes: null,
-      status: "pending",
-      createdAt: new Date()
-    });
-    
-    this.ramenOrders.set(4, {
-      id: 4,
-      customerName: "Lars van der Berg",
-      customerEmail: "lars.vandenberg@email.com",
-      customerPhone: "06-55667788",
-      preferredDate: testDate,
-      servings: 1,
-      notes: null,
-      status: "pending",
-      createdAt: new Date()
-    });
-    
-    this.ramenOrders.set(5, {
-      id: 5,
-      customerName: "Aisha Osman",
-      customerEmail: "aisha.osman@email.com",
-      customerPhone: "06-99887766",
-      preferredDate: testDate,
-      servings: 1,
-      notes: "Extra pittig",
-      status: "pending",
-      createdAt: new Date()
-    });
-    
-    this.currentRamenOrderId = 6;
-    console.log("STORAGE: Initialized fresh ramen orders, total:", this.ramenOrders.size);
+    this.currentRamenOrderId = 1;
+    console.log("STORAGE: Initialized clean ramen orders, total:", this.ramenOrders.size);
   }
 
   private initializeProducts() {
