@@ -190,20 +190,21 @@ export function RamenPreorder() {
           </Card>
         </div>
 
-        {/* Meer Details Link - Buiten alle forms */}
-        <div className="max-w-4xl mx-auto text-center my-8">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-lg">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-              Meer weten over ons ramen proces?
+        {/* NIEUW: Meer Details Link - Force Cache Refresh */}
+        <div className="max-w-4xl mx-auto text-center my-8" style={{ display: 'block' }}>
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 p-8 rounded-xl shadow-lg border-2 border-purple-200">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              🍜 Meer weten over ons ramen proces?
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-gray-700 dark:text-gray-200 mb-6 text-lg">
               Ontdek hoe we onze authentieke Chicken Shoyu Ramen bereiden, wat je precies krijgt en hoe het ophalen werkt.
             </p>
             <a 
               href="/ramen-details" 
-              className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+              className="inline-flex items-center px-8 py-4 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
+              style={{ textDecoration: 'none' }}
             >
-              <ExternalLink className="w-5 h-5 mr-2" />
+              <ExternalLink className="w-6 h-6 mr-3" />
               Bekijk alle details over bereiding en ophalen
             </a>
           </div>
