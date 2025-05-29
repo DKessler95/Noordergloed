@@ -280,9 +280,11 @@ Status: ${ramenOrder.status}
       const messageData = insertContactMessageSchema.parse(req.body);
       const message = await storage.createContactMessage(messageData);
       
+      console.log('Contact form data received:', JSON.stringify(messageData, null, 2));
+      
       // Send contact notification email to admin
       const { sendContactNotification } = await import('./gmail');
-      await sendContactNotification({
+      const emailSent = await sendContactNotification({
         firstName: messageData.firstName,
         lastName: messageData.lastName,
         email: messageData.email,
@@ -290,8 +292,11 @@ Status: ${ramenOrder.status}
         message: messageData.message
       });
       
+      console.log('Contact notification email sent:', emailSent);
+      
       res.json(message);
     } catch (error) {
+      console.error('Contact form error:', error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid message data", errors: error.errors });
       }
