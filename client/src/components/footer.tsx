@@ -36,6 +36,7 @@ export function Footer() {
                 variant="ghost"
                 size="icon"
                 className="w-10 h-10 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
+                onClick={() => window.open('https://www.instagram.com/pluk_en_poot/', '_blank')}
               >
                 <Instagram className="w-4 h-4" />
               </Button>

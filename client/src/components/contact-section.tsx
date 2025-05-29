@@ -136,6 +136,7 @@ export function ContactSection() {
                     variant="outline"
                     size="icon"
                     className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 border-0 text-white hover:from-purple-600 hover:to-purple-700"
+                    onClick={() => window.open('https://www.instagram.com/pluk_en_poot/', '_blank')}
                   >
                     <Instagram className="w-4 h-4" />
                   </Button>
