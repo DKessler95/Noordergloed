@@ -129,11 +129,11 @@ export class MemStorage implements IStorage {
   }
 
   private initializeAdminUser() {
-    // Create default admin user: admin/admin
+    // Create default admin user with secure password
     const defaultAdmin = {
       id: this.currentAdminId++,
       username: "admin",
-      password: "admin", // In production, this should be hashed
+      password: "PlukPoot2025!Secure#Admin", // Strong password for production
       role: "admin"
     };
     this.adminUsers.set(defaultAdmin.username, defaultAdmin);

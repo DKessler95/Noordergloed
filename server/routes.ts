@@ -381,8 +381,8 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      // For demo purposes, just check if password matches "admin"
-      if (password === "admin") {
+      // Check if password matches the secure admin password
+      if (password === "PlukPoot2025!Secure#Admin") {
         // Set admin session
         (req as any).session.adminId = admin.id;
         (req as any).session.adminUsername = admin.username;
