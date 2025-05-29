@@ -181,14 +181,10 @@ export function RamenPreorder() {
                       </span>
                       <span className="text-gray-500 ml-2">per persoon</span>
                     </div>
-                    <Link href="/chicken-shoyu-ramen">
+                    <Link href="/ramen-details">
                       <Button
                         variant="outline"
                         className="text-purple-600 border-purple-600 hover:bg-purple-50"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          window.location.href = '/chicken-shoyu-ramen';
-                        }}
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         Meer details
