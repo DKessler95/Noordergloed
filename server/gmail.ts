@@ -32,6 +32,8 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
 
     const result = await transporter.sendMail(mailOptions);
     console.log('Gmail email sent successfully:', result.messageId);
+    
+    // REMOVED AUTOMATIC ADMIN COPY to prevent duplicate emails
     return true;
   } catch (error) {
     console.error('Gmail email error:', error);
@@ -90,12 +92,16 @@ Het Pluk & Poot Team
     </div>
   `;
 
-  return await sendEmail({
+  // Send to customer only, no admin copies
+  const result = await sendEmail({
     to: emails,
     subject,
     textContent,
     htmlContent
   });
+  
+  // DO NOT send admin copy to prevent duplicate emails
+  return result;
 }
 
 export async function sendAdminNotification(orderDetails: string): Promise<boolean> {
