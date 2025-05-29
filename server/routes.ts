@@ -282,17 +282,21 @@ Status: ${ramenOrder.status}
       
       console.log('Contact form data received:', JSON.stringify(messageData, null, 2));
       
-      // Send contact notification email to admin
-      const { sendContactNotification } = await import('./gmail');
-      const emailSent = await sendContactNotification({
-        firstName: messageData.firstName,
-        lastName: messageData.lastName,
-        email: messageData.email,
-        subject: messageData.subject,
-        message: messageData.message
-      });
-      
-      console.log('Contact notification email sent:', emailSent);
+      // Send contact notification email to admin (copy exact pattern from ramen orders)
+      try {
+        const { sendContactNotification } = await import('./gmail');
+        await sendContactNotification({
+          firstName: messageData.firstName,
+          lastName: messageData.lastName,
+          email: messageData.email,
+          subject: messageData.subject,
+          message: messageData.message
+        });
+        console.log('Contact notification email sent to admin');
+      } catch (emailError) {
+        console.error('Failed to send contact notification:', emailError);
+        // Continue even if notification fails
+      }
       
       res.json(message);
     } catch (error) {
