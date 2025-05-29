@@ -107,13 +107,15 @@ export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps
       const isFuture = currentDateNormalized > today;
       const isSelectable = isCurrentMonth && isFriday && isFuture && !isWithin4Days;
       
-      const availability = getAvailability(currentDate);
+      const dateInfo = getDateInfo(currentDate);
       
       days.push({
         date: currentDate,
-        available: availability.available,
-        total: availability.total,
-        isSelectable: isSelectable && availability.available > 0
+        available: dateInfo.available,
+        total: dateInfo.total,
+        isSelectable: isSelectable && dateInfo.available > 0,
+        status: dateInfo.status,
+        ordersCount: dateInfo.ordersCount,
       });
     }
     
@@ -182,7 +184,7 @@ export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps
             dayDateNormalized.setHours(0, 0, 0, 0);
             const daysDifference = Math.ceil((dayDateNormalized.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
             const isWithin4Days = daysDifference <= 4 && daysDifference >= 0;
-            const statusColor = getStatusColor(day.available, day.total);
+            const statusColor = getStatusColor(day.status);
             
             return (
               <button
@@ -215,19 +217,19 @@ export function RamenCalendar({ onDateSelect, selectedDate }: RamenCalendarProps
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span>Beschikbaar (4-6 plekken)</span>
+              <span>Beschikbaar</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500" />
-              <span>Half vol (2-3 plekken)</span>
+              <span>Pending orders</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-orange-500" />
-              <span>Bijna vol (1 plek)</span>
+              <span>Bevestigd evenement</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500" />
-              <span>Vol (0 plekken)</span>
+              <span>Vol</span>
             </div>
           </div>
         </div>
