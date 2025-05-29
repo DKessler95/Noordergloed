@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
-import { sendRamenInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendEmail } from "./gmail";
+import { sendRamenInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendEmail } from "./gmail";
 
 const ramenOrderRequestSchema = z.object({
   customerName: z.string().min(1),
@@ -113,6 +113,29 @@ Status: ${order.status}
 Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
       `;
       
+      // Send confirmation email to customer
+      try {
+        await sendCustomerOrderConfirmation({
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone || 'Niet opgegeven',
+          productName: product?.name || 'Onbekend product',
+          quantity: order.quantity,
+          totalAmount: order.totalAmount,
+          status: order.status,
+          deliveryMethod: order.deliveryMethod,
+          streetAddress: order.streetAddress,
+          postalCode: order.postalCode,
+          city: order.city,
+          country: order.country,
+          notes: order.notes
+        });
+        console.log('Customer confirmation email sent for order');
+      } catch (emailError) {
+        console.error('Failed to send customer confirmation:', emailError);
+      }
+
+      // Send notification email to admin
       try {
         await sendOrderNotification({
           customerName: order.customerName,

@@ -202,6 +202,90 @@ Je Pluk & Poot Website
   });
 }
 
+export async function sendCustomerOrderConfirmation(orderData: any): Promise<boolean> {
+  console.log('sendCustomerOrderConfirmation called with data:', JSON.stringify(orderData, null, 2));
+  
+  const textContent = `
+Hallo ${orderData.customerName},
+
+Bedankt voor je bestelling bij Pluk & Poot!
+
+Je bestelling:
+Product: ${orderData.productName}
+Aantal: ${orderData.quantity}
+Totaal: €${orderData.totalAmount}
+Bezorging: ${orderData.deliveryMethod === 'delivery' ? 'Bezorgen (+€1)' : 'Ophalen (gratis)'}
+
+${orderData.deliveryMethod === 'delivery' && orderData.streetAddress ? `
+Bezorgadres:
+${orderData.streetAddress}
+${orderData.postalCode} ${orderData.city}
+${orderData.country}` : ''}
+
+${orderData.notes ? `Opmerkingen: ${orderData.notes}` : ''}
+
+Je bestelling heeft status: ${orderData.status}
+Besteld op: ${new Date().toLocaleString('nl-NL')}
+
+We nemen zo snel mogelijk contact met je op!
+
+Met vriendelijke groet,
+Damian van Pluk & Poot
+  `;
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h1 style="color: #7c3aed;">Bedankt voor je bestelling! 🌿</h1>
+      
+      <p>Hallo ${orderData.customerName},</p>
+      
+      <p>Bedankt voor je bestelling bij <strong>Pluk & Poot</strong>!</p>
+      
+      <div style="background-color: #f3f4f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3 style="color: #374151; margin-top: 0;">Je Bestelling:</h3>
+        <p><strong>Product:</strong> ${orderData.productName}</p>
+        <p><strong>Aantal:</strong> ${orderData.quantity}</p>
+        <p><strong>Totaal:</strong> €${orderData.totalAmount}</p>
+        <p><strong>Bezorging:</strong> ${orderData.deliveryMethod === 'delivery' ? 'Bezorgen (+€1)' : 'Ophalen (gratis)'}</p>
+        
+        ${orderData.deliveryMethod === 'delivery' && orderData.streetAddress ? `
+        <h4 style="color: #374151; margin-bottom: 10px;">Bezorgadres:</h4>
+        <div style="background-color: white; padding: 15px; border-radius: 5px;">
+          ${orderData.streetAddress}<br>
+          ${orderData.postalCode} ${orderData.city}<br>
+          ${orderData.country}
+        </div>
+        ` : ''}
+        
+        ${orderData.notes ? `
+        <h4 style="color: #374151; margin-bottom: 10px;">Opmerkingen:</h4>
+        <div style="background-color: white; padding: 15px; border-radius: 5px;">
+          ${orderData.notes}
+        </div>
+        ` : ''}
+        
+        <p><strong>Status:</strong> <span style="background-color: #7c3aed; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${orderData.status.toUpperCase()}</span></p>
+      </div>
+      
+      <p>We nemen zo snel mogelijk contact met je op!</p>
+      
+      <p><small>Besteld op: ${new Date().toLocaleString('nl-NL')}</small></p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+        <p>Met vriendelijke groet,<br>
+        <strong>Damian van Pluk & Poot</strong></p>
+      </div>
+    </div>
+  `;
+
+  return await sendEmail({
+    to: [orderData.customerEmail],
+    subject: "Bestelling Ontvangen - Pluk & Poot 🌿",
+    textContent,
+    htmlContent
+  });
+}
+
 export async function sendOrderNotification(orderData: any): Promise<boolean> {
   console.log('sendOrderNotification called with data:', JSON.stringify(orderData, null, 2));
   
