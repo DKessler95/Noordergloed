@@ -317,7 +317,7 @@ export default function AdminDashboard() {
     deleteOrderMutation.mutate(id);
   };
 
-  const handleSendOrderConfirmation = (order: Order) => {
+  const handleSendOrderConfirmation = (order: any) => {
     sendSyrupOrderConfirmationMutation.mutate(order);
   };
 
