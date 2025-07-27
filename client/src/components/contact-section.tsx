@@ -110,7 +110,7 @@ export function ContactSection() {
                     <Mail className="text-purple-500 mt-1 w-5 h-5" />
                     <div>
                       <p className="text-gray-900 dark:text-white font-medium">Email</p>
-                      <p className="text-gray-600 dark:text-gray-400">info@digimaatwerk-siroop.nl</p>
+                      <p className="text-gray-600 dark:text-gray-400">info@digimaatwerk-kombucha.nl</p>
                     </div>
                   </div>
                   
@@ -208,7 +208,7 @@ export function ContactSection() {
                       <SelectContent>
                         <SelectItem value="algemeen">Algemene vraag</SelectItem>
                         <SelectItem value="product">Product informatie</SelectItem>
-                        <SelectItem value="ramen">Ramen bestelling</SelectItem>
+                        <SelectItem value="workshop">Workshop bestelling</SelectItem>
                         <SelectItem value="bulk">Bulk bestelling</SelectItem>
                         <SelectItem value="samenwerking">Samenwerking</SelectItem>
                       </SelectContent>

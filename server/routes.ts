@@ -1,11 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOrderSchema, insertRamenOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
+import { insertOrderSchema, insertWorkshopOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
-import { sendRamenInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendCustomerStatusUpdate, sendEmail } from "./gmail";
+import { sendWorkshopInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendCustomerStatusUpdate, sendEmail } from "./gmail";
 
-const ramenOrderRequestSchema = z.object({
+const workshopOrderRequestSchema = z.object({
   customerName: z.string().min(1),
   customerEmail: z.string().email(),
   customerPhone: z.string().min(1),
@@ -166,14 +166,14 @@ Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
   // Create ramen order (per person)
   app.post("/api/orders/ramen", async (req, res) => {
     try {
-      const requestData = ramenOrderRequestSchema.parse(req.body);
+      const requestData = workshopOrderRequestSchema.parse(req.body);
       
       // Parse and validate date
       const preferredDate = new Date(requestData.preferredDate);
       console.log("Ramen order for date:", preferredDate);
 
       // Check existing orders for that date
-      const existingOrders = await storage.getRamenOrdersByDate(preferredDate);
+      const existingOrders = await storage.getWorkshopOrdersByDate(preferredDate);
       if (existingOrders.length >= 6) {
         return res.status(400).json({ 
           message: "This date is fully booked. Please choose another Friday." 
@@ -181,7 +181,7 @@ Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
       }
 
       // Create ramen order (per person)
-      const ramenOrder = await storage.createRamenOrder({
+      const workshopOrder = await storage.createWorkshopOrder({
         customerName: requestData.customerName,
         customerEmail: requestData.customerEmail,
         customerPhone: requestData.customerPhone,
@@ -193,30 +193,30 @@ Besteld op: ${order.createdAt?.toLocaleString('nl-NL')}
 
       // Send notification email to admin
       const orderDetails = `
-Klant: ${ramenOrder.customerName}
-Email: ${ramenOrder.customerEmail}
-Telefoon: ${ramenOrder.customerPhone || 'Niet opgegeven'}
-Gewenste Datum: ${ramenOrder.preferredDate.toLocaleDateString('nl-NL', { 
+Klant: ${workshopOrder.customerName}
+Email: ${workshopOrder.customerEmail}
+Telefoon: ${workshopOrder.customerPhone || 'Niet opgegeven'}
+Gewenste Datum: ${workshopOrder.preferredDate.toLocaleDateString('nl-NL', { 
   weekday: 'long', 
   year: 'numeric', 
   month: 'long', 
   day: 'numeric' 
 })}
-Aantal Porties: ${ramenOrder.servings}
-Opmerkingen: ${ramenOrder.notes || 'Geen opmerkingen'}
-Status: ${ramenOrder.status}
+Aantal Porties: ${workshopOrder.servings}
+Opmerkingen: ${workshopOrder.notes || 'Geen opmerkingen'}
+Status: ${workshopOrder.status}
       `;
       
       // Send customer confirmation email
       try {
-        const { sendRamenOrderConfirmation } = await import('./gmail-ramen');
-        await sendRamenOrderConfirmation({
-          customerName: ramenOrder.customerName,
-          customerEmail: ramenOrder.customerEmail,
-          customerPhone: ramenOrder.customerPhone || 'Niet opgegeven',
-          servings: ramenOrder.servings,
-          notes: ramenOrder.notes,
-          preferredDate: ramenOrder.preferredDate.toLocaleDateString('nl-NL', { 
+        const { sendWorkshopOrderConfirmation } = await import('./gmail-ramen');
+        await sendWorkshopOrderConfirmation({
+          customerName: workshopOrder.customerName,
+          customerEmail: workshopOrder.customerEmail,
+          customerPhone: workshopOrder.customerPhone || 'Niet opgegeven',
+          servings: workshopOrder.servings,
+          notes: workshopOrder.notes,
+          preferredDate: workshopOrder.preferredDate.toLocaleDateString('nl-NL', { 
             weekday: 'long', 
             year: 'numeric', 
             month: 'long', 
@@ -237,11 +237,11 @@ Status: ${ramenOrder.status}
       }
 
       // Check if this booking completed the group of 6
-      const updatedOrders = await storage.getRamenOrdersByDate(preferredDate);
+      const updatedOrders = await storage.getWorkshopOrdersByDate(preferredDate);
       const isConfirmed = updatedOrders.length >= 6 && updatedOrders.every(o => o.status === "confirmed");
 
       res.json({ 
-        ramenOrder, 
+        workshopOrder, 
         totalBookings: updatedOrders.length,
         isConfirmed,
         message: isConfirmed 
@@ -260,7 +260,7 @@ Status: ${ramenOrder.status}
   app.get("/api/ramen/availability/:date", async (req, res) => {
     try {
       const date = new Date(req.params.date);
-      const existingOrders = await storage.getRamenOrdersByDate(date);
+      const existingOrders = await storage.getWorkshopOrdersByDate(date);
       const available = 6 - existingOrders.length;
       
       res.json({ 
@@ -356,9 +356,9 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
   });
 
   // Get all ramen orders
-  app.get("/api/ramen-orders", async (req, res) => {
+  app.get("/api/workshop-orders", async (req, res) => {
     try {
-      const orders = await storage.getRamenOrders();
+      const orders = await storage.getWorkshopOrders();
       console.log("API: Returning ramen orders:", orders.length);
       res.json(orders);
     } catch (error) {
@@ -452,7 +452,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
   });
 
   // Confirm all ramen orders for a specific date (admin)
-  app.post("/api/ramen-orders/confirm", requireAdmin, async (req, res) => {
+  app.post("/api/workshop-orders/confirm", requireAdmin, async (req, res) => {
     try {
       const { date } = req.body;
       
@@ -461,7 +461,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
       }
 
       const targetDate = new Date(date);
-      const confirmedOrders = await storage.confirmRamenOrdersForDate(targetDate);
+      const confirmedOrders = await storage.confirmWorkshopOrdersForDate(targetDate);
       
       if (confirmedOrders.length === 0) {
         return res.status(400).json({ message: "No pending orders found for this date" });
@@ -477,7 +477,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
       });
       
       try {
-        await sendRamenInvitation(emails, dateStr);
+        await sendWorkshopInvitation(emails, dateStr);
         console.log(`Confirmation emails sent to ${emails.length} customers for ${dateStr}`);
       } catch (emailError) {
         console.error("Failed to send confirmation emails:", emailError);
@@ -495,7 +495,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
     }
   });
 
-  app.patch("/api/ramen-orders/:id/status", requireAdmin, async (req, res) => {
+  app.patch("/api/workshop-orders/:id/status", requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { status } = req.body;
@@ -504,7 +504,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
         return res.status(400).json({ message: "Invalid order ID or status" });
       }
 
-      const order = await storage.updateRamenOrderStatus(id, status);
+      const order = await storage.updateWorkshopOrderStatus(id, status);
       
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
@@ -609,7 +609,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
   });
 
   // Send individual confirmation email for a ramen order (admin)
-  app.post("/api/ramen-orders/:id/send-confirmation", requireAdmin, async (req, res) => {
+  app.post("/api/workshop-orders/:id/send-confirmation", requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -618,7 +618,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
       }
 
       // Get the order from storage to get the correct data
-      const orders = await storage.getRamenOrders();
+      const orders = await storage.getWorkshopOrders();
       const order = orders.find(o => o.id === id);
       
       if (!order) {
@@ -634,7 +634,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
       
       try {
         // Send email ONLY to the specific customer
-        await sendRamenInvitation([order.customerEmail], dateStr);
+        await sendWorkshopInvitation([order.customerEmail], dateStr);
         console.log(`Individual confirmation email sent to ${order.customerEmail} for ${dateStr}`);
         
         res.json({ 
@@ -674,7 +674,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
   });
 
   // Delete ramen order (admin)
-  app.delete("/api/ramen-orders/:id", requireAdmin, async (req, res) => {
+  app.delete("/api/workshop-orders/:id", requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -682,7 +682,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
         return res.status(400).json({ message: "Invalid order ID" });
       }
 
-      const success = await storage.deleteRamenOrder(id);
+      const success = await storage.deleteWorkshopOrder(id);
       
       if (!success) {
         return res.status(404).json({ message: "Order not found" });

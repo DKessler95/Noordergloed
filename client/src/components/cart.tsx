@@ -37,7 +37,7 @@ export const cart = {
     cartListeners.forEach(listener => listener());
   },
   updateQuantity: (productId: number, quantity: number) => {
-    // For siroop products, max quantity is 1
+    // For kombucha products, max quantity is 1
     if (quantity > 1) quantity = 1;
     if (quantity <= 0) {
       cart.removeItem(productId);

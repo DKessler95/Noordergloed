@@ -40,9 +40,9 @@ export default function ProductDetail() {
   
   // Convert slug to product ID
   const productSlugMap: Record<string, number> = {
-    "vlierbloesem-siroop": 1,
-    "rozen-siroop": 2,
-    "chicken-shoyu-ramen": 3
+    "vlierbloesem-kombucha": 1,
+    "rozen-kombucha": 2,
+    "chicken-shoyu-workshop": 3
   };
   
   const productId = productSlugMap[params.slug as string] || parseInt(params.id || "0");
@@ -99,7 +99,7 @@ export default function ProductDetail() {
       ingredientsTitle: product.ingredientsTitle || "Ingrediënten & Voedingswaarden",
       ingredientsContent: product.ingredientsContent || getDefaultIngredientsContent(product.name),
       nutritionContent: product.nutritionContent || getDefaultNutritionContent(),
-      storyTitle: product.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Siroop",
+      storyTitle: product.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Kombucha",
       storyContent: product.storyContent || getDefaultStoryContent(product.name),
     });
   };
@@ -109,7 +109,7 @@ export default function ProductDetail() {
     if (name.includes("Vlierbloesem")) {
       return "Onze vlierbloesemstroop wordt met liefde gemaakt van verse vlierbloesems uit onze eigen tuin. De bloesems worden vroeg in de ochtend geplukt wanneer de dauw nog op de bloemblaadjes ligt, voor de meest intense smaak.";
     } else if (name.includes("Rozen")) {
-      return "Deze rozensiroop wordt gemaakt van delicate rozenblaadjes uit onze eigen tuin aan de Star Numanstraat. Een subtiele bloemensmaak die perfect past bij thee of prosecco.";
+      return "Deze rozenkombucha wordt gemaakt van delicate rozenblaadjes uit onze eigen tuin aan de Star Numanstraat. Een subtiele bloemensmaak die perfect past bij thee of prosecco.";
     }
     return "Een verhaal over dit bijzondere product...";
   };
@@ -138,15 +138,15 @@ export default function ProductDetail() {
 
   const getDefaultIngredientsContent = (name: string) => {
     if (name.includes("Vlierbloesem")) {
-      return `Ingrediënten per 100 ml verdunde siroop (1:7 verhouding):
+      return `Ingrediënten per 100 ml verdunde kombucha (1:7 verhouding):
 • Vlierbloeseminfusie (water, verse vlierbloesemschermen)
-• Suiker (33 g per 100 ml siroop)
+• Suiker (33 g per 100 ml kombucha)
 • Citroensap (vers geperst)
 • Citroenzuur (natuurlijk conserveermiddel)`;
     } else if (name.includes("Rozen")) {
-      return `Ingrediënten per 100 ml verdunde siroop (1:7 verhouding):
+      return `Ingrediënten per 100 ml verdunde kombucha (1:7 verhouding):
 • Rozenextract (water, verse rozenblaadjes)
-• Biologische rietsuiker (35 g per 100 ml siroop)
+• Biologische rietsuiker (35 g per 100 ml kombucha)
 • Citroensap (vers geperst)
 • Citroenzuur (natuurlijk conserveermiddel)`;
     }
@@ -165,7 +165,7 @@ Bevat geen kunstmatige kleur-, geur- of smaakstoffen. Gegarandeerd glutenvrij en
 
   const getDefaultStoryContent = (name: string) => {
     if (name.includes("Vlierbloesem")) {
-      return `Midden in de levendige Groningse wijk Korreweg, verscholen tussen karakteristieke jaren-30-woningen en moderne flatgebouwen, ligt de Hamburgervijver – een oase van rust waar jouw vlierbloesemsiroop zijn roots vindt. Deze iconische vijver, onderdeel van het Molukkenplantsoen, werd in de jaren 30 aangelegd als onderdeel van Berlage's visie voor een groene gordel rond de stad.
+      return `Midden in de levendige Groningse wijk Korreweg, verscholen tussen karakteristieke jaren-30-woningen en moderne flatgebouwen, ligt de Hamburgervijver – een oase van rust waar jouw vlierbloesemkombucha zijn roots vindt. Deze iconische vijver, onderdeel van het Molukkenplantsoen, werd in de jaren 30 aangelegd als onderdeel van Berlage's visie voor een groene gordel rond de stad.
 
 Historische Verbinding
 
@@ -173,9 +173,9 @@ De naam "Hamburgervijver" verwijst naar de Hamburgerstraat, die al in 1503 werd 
 
 Natuur in de Stad
 
-Het water reflecteert de seizoenen: in de lente bloeien dotterbloemen langs de oevers, in de zomer weerspiegelen de vlierbloesemschermen zich in het oppervlak. Juist deze bloesems, geplukt in de straten rondom Star Numanstraat, vormen het hart van je siroop. De combinatie van stadse dynamiek en wildpluktraditionele geeft elk flesje een uniek karakter – een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.`;
+Het water reflecteert de seizoenen: in de lente bloeien dotterbloemen langs de oevers, in de zomer weerspiegelen de vlierbloesemschermen zich in het oppervlak. Juist deze bloesems, geplukt in de straten rondom Star Numanstraat, vormen het hart van je kombucha. De combinatie van stadse dynamiek en wildpluktraditionele geeft elk flesje een uniek karakter – een eerbetoon aan Groningens vermogen om natuur en stadsleven te verweven.`;
     } else if (name.includes("Rozen")) {
-      return `Deze rozensiroop wordt gemaakt van delicate rozenblaadjes uit onze eigen tuin aan de Star Numanstraat. Een subtiele bloemensmaak die perfect past bij thee of prosecco.
+      return `Deze rozenkombucha wordt gemaakt van delicate rozenblaadjes uit onze eigen tuin aan de Star Numanstraat. Een subtiele bloemensmaak die perfect past bij thee of prosecco.
 
 De Tuin
 
@@ -296,14 +296,14 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
                   <img
-                    src={isElderflower ? "/images/normaal_voorkant.png" : isRose ? "/images/rozen_voorkant.png" : "/images/voorkant-siroop.png"}
+                    src={isElderflower ? "/images/normaal_voorkant.png" : isRose ? "/images/rozen_voorkant.png" : "/images/voorkant-kombucha.png"}
                     alt={`${product.name} voorkant`}
                     className="w-full h-auto drop-shadow-2xl"
                   />
                 </div>
                 <div className="relative">
                   <img
-                    src={isElderflower ? "/images/normaal_achterkant.png" : isRose ? "/images/rozen_achterkant.png" : "/images/achterkant-siroop.png"}
+                    src={isElderflower ? "/images/normaal_achterkant.png" : isRose ? "/images/rozen_achterkant.png" : "/images/achterkant-kombucha.png"}
                     alt={`${product.name} achterkant`}
                     className="w-full h-auto drop-shadow-2xl"
                   />
@@ -568,7 +568,7 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
                   <div>
                     <label className="block text-sm font-medium mb-2">Verhaal Titel</label>
                     <Input
-                      value={editData.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Siroop"}
+                      value={editData.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Kombucha"}
                       onChange={(e) => setEditData({ ...editData, storyTitle: e.target.value })}
                       placeholder="Verhaal titel..."
                     />
@@ -586,7 +586,7 @@ Elke fles bevat de essentie van tientallen rozen, zorgvuldig geoogst op het perf
               ) : (
                 <>
                   <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-8">
-                    {product.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Siroop"}
+                    {product.storyTitle || "Verhaal: De Hamburgervijver en de Ziel van de Kombucha"}
                   </h2>
                   
                   <div className="space-y-6 text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">

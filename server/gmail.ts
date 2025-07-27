@@ -41,7 +41,7 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
   }
 }
 
-export async function sendRamenInvitation(emails: string[], date: string): Promise<boolean> {
+export async function sendWorkshopInvitation(emails: string[], date: string): Promise<boolean> {
   const subject = `🍜 Ramen Ervaring Bevestiging - ${date}`;
   
   const textContent = `

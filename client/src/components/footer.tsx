@@ -27,7 +27,7 @@ export function Footer() {
             </button>
             
             <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
-              Handgemaakte ambachtelijke siroop uit het hart van Groningen. 
+              Handgemaakte ambachtelijke kombucha uit het hart van Groningen. 
               Met liefde bereid door Elfie en mij, van lokale ingrediënten naar jouw glas.
             </p>
             
@@ -59,7 +59,7 @@ export function Footer() {
                   onClick={() => scrollToSection("producten")}
                   className="hover:text-yellow-400 transition-colors"
                 >
-                  Vlierbloesem Siroop
+                  Vlierbloesem Kombucha
                 </button>
               </li>
               <li>
@@ -67,15 +67,15 @@ export function Footer() {
                   onClick={() => scrollToSection("producten")}
                   className="hover:text-pink-400 transition-colors"
                 >
-                  Rozen Siroop
+                  Rozen Kombucha
                 </button>
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToSection("ramen")}
+                  onClick={() => scrollToSection("workshop")}
                   className="hover:text-purple-400 transition-colors"
                 >
-                  Ramen Pre-order
+                  Workshop Pre-order
                 </button>
               </li>
               <li>

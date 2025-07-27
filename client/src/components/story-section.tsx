@@ -19,7 +19,7 @@ export function StorySection() {
               
               <p>
                 Vanuit onze basis aan de Star Numanstraat experimenteren we met seizoensgebonden 
-                ingrediënten. Elke fles siroop is handgemaakt met zorg voor kwaliteit en respect 
+                ingrediënten. Elke fles kombucha is handgemaakt met zorg voor kwaliteit en respect 
                 voor de natuur om ons heen.
               </p>
               

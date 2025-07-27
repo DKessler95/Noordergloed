@@ -23,24 +23,24 @@ export function HeroSection() {
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <div className="animate-fade-in">
           <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Ambachtelijke Siroop
-            <span className="block text-yellow-300">uit Groningen</span>
+            Artisanale Kombucha
+            <span className="block text-green-300">uit Groningen</span>
           </h1>
           
-          <div className="inline-flex items-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/20">
-            <Heart className="text-yellow-300 mr-2 w-5 h-5" />
-            <span className="text-white font-medium">Met liefde gemaakt door Elfie</span>
+          <div className="inline-flex items-center bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/20">
+            <Heart className="text-green-300 mr-2 w-5 h-5" />
+            <span className="text-white font-medium">Probiotisch & gezond</span>
           </div>
           
           <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Van verse vlierbloesem uit de Hamburgervijver tot rozenblaadjes uit onze eigen tuin. 
-            Elke fles vertelt een verhaal van ambacht en passie.
+            Van verse gember tot bosbessen uit de Groningse natuur. 
+            Elke fles vol probiotica voor je welzijn en gezondheid.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               onClick={() => scrollToSection("producten")}
-              className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Bekijk Producten
             </Button>

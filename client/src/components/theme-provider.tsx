@@ -20,11 +20,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.classList.remove("light", "dark");
     root.classList.add(theme);
     
-    // Update syrup hue for theme
+    // Update kombucha hue for theme
     if (theme === "dark") {
-      root.style.setProperty("--syrup-hue", "200");
+      root.style.setProperty("--kombucha-hue", "200");
     } else {
-      root.style.setProperty("--syrup-hue", "260");
+      root.style.setProperty("--kombucha-hue", "260");
     }
     
     localStorage.setItem("theme", theme);

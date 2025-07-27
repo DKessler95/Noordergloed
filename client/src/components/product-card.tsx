@@ -17,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const orderMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest("POST", "/api/orders/syrup", {
+      return apiRequest("POST", "/api/orders/kombucha", {
         customerName: "Demo Customer",
         customerEmail: "demo@example.com",
         customerPhone: "06-12345678",
@@ -99,16 +99,16 @@ export function ProductCard({ product }: ProductCardProps) {
                 </span>
                 <Button
                   onClick={() => {
-                    if (product.category === "ramen") {
-                      // Voor ramen: scroll naar booking sectie
-                      const ramenSection = document.getElementById('ramen');
-                      if (ramenSection) {
-                        ramenSection.scrollIntoView({ behavior: 'smooth' });
+                    if (product.category === "workshop") {
+                      // Voor workshop: scroll naar booking sectie
+                      const workshopSection = document.getElementById('workshop');
+                      if (workshopSection) {
+                        workshopSection.scrollIntoView({ behavior: 'smooth' });
                       }
                     } else {
-                      // Voor siroopproducten: ga naar detail pagina
-                      const slug = product.name === "Vlierbloesem Siroop" ? "vlierbloesem-siroop" 
-                        : product.name === "Rozen Siroop" ? "rozen-siroop"
+                      // Voor kombuchaproducten: ga naar detail pagina
+                      const slug = product.name === "Vlierbloesem Kombucha" ? "vlierbloesem-kombucha" 
+                        : product.name === "Rozen Kombucha" ? "rozen-kombucha"
                         : product.id.toString();
                       window.location.href = `/producten/${slug}`;
                     }
@@ -116,7 +116,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   disabled={product.stock === 0}
                   className={`${buttonClass} text-white px-6 py-3 rounded-xl font-semibold transition-colors transform hover:scale-105`}
                 >
-                  {product.stock === 0 ? "Uitverkocht" : product.category === "ramen" ? "Boek Nu" : "Bekijk Product"}
+                  {product.stock === 0 ? "Uitverkocht" : product.category === "workshop" ? "Boek Nu" : "Bekijk Product"}
                 </Button>
               </div>
             </div>
@@ -125,12 +125,12 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="order-1 md:order-2">
             <div className="grid grid-cols-2 gap-4">
               <img 
-                src={isElderflower ? "/images/normaal_voorkant.png" : isRose ? "/images/rozen_voorkant.png" : "/images/voorkant-siroop.png"} 
+                src={isElderflower ? "/images/normaal_voorkant.png" : isRose ? "/images/rozen_voorkant.png" : "/images/voorkant-kombucha.png"} 
                 alt={`${product.name} voorkant`} 
                 className="w-full h-auto rounded-xl shadow-lg transform group-hover:scale-105 transition-transform duration-500" 
               />
               <img 
-                src={isElderflower ? "/images/normaal_achterkant.png" : isRose ? "/images/rozen_achterkant.png" : "/images/achterkant-siroop.png"} 
+                src={isElderflower ? "/images/normaal_achterkant.png" : isRose ? "/images/rozen_achterkant.png" : "/images/achterkant-kombucha.png"} 
                 alt={`${product.name} achterkant`} 
                 className="w-full h-auto rounded-xl shadow-lg transform group-hover:scale-105 transition-transform duration-500" 
               />

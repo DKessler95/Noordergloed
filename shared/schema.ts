@@ -9,7 +9,7 @@ export const products = pgTable("products", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   stock: integer("stock").notNull().default(0),
   maxStock: integer("max_stock").notNull().default(20),
-  category: text("category").notNull(), // "syrup" | "ramen"
+  category: text("category").notNull(), // "kombucha" | "workshop"
   imageUrl: text("image_url"),
   featured: boolean("featured").default(false),
   limitedStock: boolean("limited_stock").default(false),
@@ -25,7 +25,7 @@ export const orders = pgTable("orders", {
   productId: integer("product_id").references(() => products.id),
   quantity: integer("quantity").notNull().default(1),
   totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(),
-  orderType: text("order_type").notNull(), // "syrup" | "ramen"
+  orderType: text("order_type").notNull(), // "kombucha" | "workshop"
   status: text("status").notNull().default("pending"), // "pending" | "confirmed" | "completed" | "cancelled"
   notes: text("notes"),
   // Delivery address fields
@@ -37,7 +37,7 @@ export const orders = pgTable("orders", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const ramenOrders = pgTable("ramen_orders", {
+export const workshopOrders = pgTable("workshop_orders", {
   id: serial("id").primaryKey(),
   customerName: text("customer_name").notNull(),
   customerEmail: text("customer_email").notNull(),
@@ -91,7 +91,7 @@ export const insertOrderSchema = createInsertSchema(orders).omit({
   createdAt: true,
 });
 
-export const insertRamenOrderSchema = createInsertSchema(ramenOrders).omit({
+export const insertWorkshopOrderSchema = createInsertSchema(workshopOrders).omit({
   id: true,
   createdAt: true,
 });
@@ -107,8 +107,8 @@ export type Product = typeof products.$inferSelect;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Order = typeof orders.$inferSelect;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
-export type RamenOrder = typeof ramenOrders.$inferSelect;
-export type InsertRamenOrder = z.infer<typeof insertRamenOrderSchema>;
+export type WorkshopOrder = typeof workshopOrders.$inferSelect;
+export type InsertWorkshopOrder = z.infer<typeof insertWorkshopOrderSchema>;
 export type ContactMessage = typeof contactMessages.$inferSelect;
 export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
 export type AdminUser = typeof adminUsers.$inferSelect;

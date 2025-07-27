@@ -161,7 +161,7 @@ export function ShoppingCart() {
           productId: item.product.id,
           quantity: item.quantity,
           totalAmount: (parseFloat(item.product.price) * item.quantity).toFixed(2),
-          orderType: "syrup",
+          orderType: "kombucha",
           deliveryMethod: customerInfo.deliveryMethod,
           streetAddress: customerInfo.streetAddress,
           postalCode: customerInfo.postalCode,

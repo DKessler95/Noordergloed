@@ -14,7 +14,7 @@ import { Trash2, Edit, Plus, LogOut, Check, X, Calendar, Mail } from "lucide-rea
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { useLocation } from "wouter";
-import type { Product, RamenOrder } from "@shared/schema";
+import type { Product, WorkshopOrder } from "@shared/schema";
 
 export default function AdminDashboard() {
   const { toast } = useToast();
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
     price: "",
     stock: "",
     maxStock: "",
-    category: "syrup",
+    category: "kombucha",
     imageUrl: "",
     featured: false,
     limitedStock: false,
@@ -52,8 +52,8 @@ export default function AdminDashboard() {
     queryKey: ["/api/products"],
   });
 
-  const { data: ramenOrders = [] } = useQuery({
-    queryKey: ["/api/ramen-orders"],
+  const { data: workshopOrders = [] } = useQuery({
+    queryKey: ["/api/workshop-orders"],
   });
 
   const { data: orders = [] } = useQuery({
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
         price: "",
         stock: "",
         maxStock: "",
-        category: "syrup",
+        category: "kombucha",
         imageUrl: "",
         featured: false,
         limitedStock: false,
@@ -101,46 +101,46 @@ export default function AdminDashboard() {
     },
   });
 
-  const deleteRamenOrderMutation = useMutation({
+  const deleteWorkshopOrderMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest("DELETE", `/api/ramen-orders/${id}`);
+      const response = await apiRequest("DELETE", `/api/workshop-orders/${id}`);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
-      queryClient.refetchQueries({ queryKey: ["/api/ramen-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/workshop-orders"] });
+      queryClient.refetchQueries({ queryKey: ["/api/workshop-orders"] });
       toast({
-        title: "Ramen order verwijderd",
-        description: "De ramen order is succesvol verwijderd.",
+        title: "Workshop order verwijderd",
+        description: "De workshop order is succesvol verwijderd.",
       });
     },
   });
 
-  const confirmRamenOrderMutation = useMutation({
+  const confirmWorkshopOrderMutation = useMutation({
     mutationFn: async (date: Date) => {
-      const response = await apiRequest("POST", `/api/ramen-orders/confirm`, { 
+      const response = await apiRequest("POST", `/api/workshop-orders/confirm`, { 
         date: date.toISOString() 
       });
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
-      queryClient.refetchQueries({ queryKey: ["/api/ramen-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/workshop-orders"] });
+      queryClient.refetchQueries({ queryKey: ["/api/workshop-orders"] });
       toast({
-        title: "Ramen orders bevestigd",
-        description: "Alle ramen orders voor de geselecteerde datum zijn bevestigd en uitnodigingen zijn verzonden.",
+        title: "Workshop orders bevestigd",
+        description: "Alle workshop orders voor de geselecteerde datum zijn bevestigd en uitnodigingen zijn verzonden.",
       });
     },
   });
 
-  const updateRamenOrderStatusMutation = useMutation({
+  const updateWorkshopOrderStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
-      const response = await apiRequest("PATCH", `/api/ramen-orders/${id}/status`, { status });
+      const response = await apiRequest("PATCH", `/api/workshop-orders/${id}/status`, { status });
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/ramen-orders"] });
-      queryClient.refetchQueries({ queryKey: ["/api/ramen-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/workshop-orders"] });
+      queryClient.refetchQueries({ queryKey: ["/api/workshop-orders"] });
       toast({
         title: "Status bijgewerkt",
         description: "De order status is succesvol aangepast.",
@@ -149,8 +149,8 @@ export default function AdminDashboard() {
   });
 
   const sendIndividualConfirmationMutation = useMutation({
-    mutationFn: async (order: RamenOrder) => {
-      const response = await apiRequest("POST", `/api/ramen-orders/${order.id}/send-confirmation`, {});
+    mutationFn: async (order: WorkshopOrder) => {
+      const response = await apiRequest("POST", `/api/workshop-orders/${order.id}/send-confirmation`, {});
       return response.json();
     },
     onSuccess: () => {
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
     },
   });
 
-  const sendSyrupOrderConfirmationMutation = useMutation({
+  const sendKombuchaOrderConfirmationMutation = useMutation({
     mutationFn: async (order: any) => {
       const response = await apiRequest("POST", `/api/orders/${order.id}/send-confirmation`, {});
       return response.json();
@@ -224,7 +224,7 @@ export default function AdminDashboard() {
     },
   });
 
-  const updateSyrupOrderStatusMutation = useMutation({
+  const updateKombuchaOrderStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
       const response = await apiRequest("PATCH", `/api/orders/${id}/status`, { status });
       return response.json();
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
     },
   });
 
-  const deleteSyrupOrderMutation = useMutation({
+  const deleteKombuchaOrderMutation = useMutation({
     mutationFn: async (id: number) => {
       const response = await apiRequest("DELETE", `/api/orders/${id}`, {});
       return response.json();
@@ -297,35 +297,35 @@ export default function AdminDashboard() {
 
 
 
-  const handleDeleteRamenOrder = (id: number) => {
-    deleteRamenOrderMutation.mutate(id);
+  const handleDeleteWorkshopOrder = (id: number) => {
+    deleteWorkshopOrderMutation.mutate(id);
   };
 
   const handleTestEmail = () => {
     testEmailMutation.mutate();
   };
 
-  const handleConfirmRamenOrders = (date: Date) => {
-    confirmRamenOrderMutation.mutate(date);
+  const handleConfirmWorkshopOrders = (date: Date) => {
+    confirmWorkshopOrderMutation.mutate(date);
   };
 
   const handleUpdateOrderStatus = (id: number, status: string) => {
-    updateSyrupOrderStatusMutation.mutate({ id, status });
+    updateKombuchaOrderStatusMutation.mutate({ id, status });
   };
 
   const handleDeleteOrder = (id: number) => {
-    deleteSyrupOrderMutation.mutate(id);
+    deleteKombuchaOrderMutation.mutate(id);
   };
 
   const handleSendOrderConfirmation = (order: any) => {
-    sendSyrupOrderConfirmationMutation.mutate(order);
+    sendKombuchaOrderConfirmationMutation.mutate(order);
   };
 
-  const handleUpdateRamenOrderStatus = (id: number, status: string) => {
-    updateRamenOrderStatusMutation.mutate({ id, status });
+  const handleUpdateWorkshopOrderStatus = (id: number, status: string) => {
+    updateWorkshopOrderStatusMutation.mutate({ id, status });
   };
 
-  const handleSendIndividualConfirmation = (order: RamenOrder) => {
+  const handleSendIndividualConfirmation = (order: WorkshopOrder) => {
     sendIndividualConfirmationMutation.mutate(order);
   };
 
@@ -375,13 +375,13 @@ export default function AdminDashboard() {
     }
   };
 
-  // Group ramen orders by date
-  const ramenOrdersByDate = (ramenOrders as RamenOrder[]).reduce((acc, order) => {
+  // Group workshop orders by date
+  const workshopOrdersByDate = (workshopOrders as WorkshopOrder[]).reduce((acc, order) => {
     const dateKey = new Date(order.preferredDate).toISOString().split('T')[0];
     if (!acc[dateKey]) acc[dateKey] = [];
     acc[dateKey].push(order);
     return acc;
-  }, {} as Record<string, RamenOrder[]>);
+  }, {} as Record<string, WorkshopOrder[]>);
 
   const handleLogout = async () => {
     try {
@@ -415,8 +415,8 @@ export default function AdminDashboard() {
         <Tabs defaultValue="products" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="products">Producten</TabsTrigger>
-            <TabsTrigger value="orders">Siroop Bestellingen</TabsTrigger>
-            <TabsTrigger value="ramen-orders">Ramen Orders</TabsTrigger>
+            <TabsTrigger value="orders">Kombucha Bestellingen</TabsTrigger>
+            <TabsTrigger value="workshop-orders">Workshop Bookings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="products" className="space-y-6">
@@ -488,8 +488,8 @@ export default function AdminDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="syrup">Siroop</SelectItem>
-                        <SelectItem value="ramen">Ramen</SelectItem>
+                        <SelectItem value="kombucha">Kombucha</SelectItem>
+                        <SelectItem value="workshop">Workshop</SelectItem>
                         <SelectItem value="accessoires">Accessoires</SelectItem>
                       </SelectContent>
                     </Select>
@@ -623,14 +623,14 @@ export default function AdminDashboard() {
           <TabsContent value="orders" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Siroop Bestellingen</CardTitle>
-                <CardDescription>Beheer alle siroop bestellingen en hun status</CardDescription>
+                <CardTitle>Kombucha Bestellingen</CardTitle>
+                <CardDescription>Beheer alle kombucha bestellingen en hun status</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {(orders as any[]).length === 0 ? (
                     <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                      Geen siroop bestellingen gevonden
+                      Geen kombucha bestellingen gevonden
                     </div>
                   ) : (
                     (orders as any[]).map((order: any) => {
@@ -663,7 +663,7 @@ export default function AdminDashboard() {
                             <div className="flex items-center space-x-2 ml-4">
                               <Select
                                 value={order.status}
-                                onValueChange={(status) => updateSyrupOrderStatusMutation.mutate({ id: order.id, status })}
+                                onValueChange={(status) => updateKombuchaOrderStatusMutation.mutate({ id: order.id, status })}
                               >
                                 <SelectTrigger className="w-32">
                                   <SelectValue />
@@ -682,9 +682,9 @@ export default function AdminDashboard() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  sendSyrupOrderConfirmationMutation.mutate(order);
+                                  sendKombuchaOrderConfirmationMutation.mutate(order);
                                 }}
-                                disabled={sendSyrupOrderConfirmationMutation.isPending}
+                                disabled={sendKombuchaOrderConfirmationMutation.isPending}
                               >
                                 <Mail className="h-4 w-4" />
                               </Button>
@@ -694,9 +694,9 @@ export default function AdminDashboard() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  deleteSyrupOrderMutation.mutate(order.id);
+                                  deleteKombuchaOrderMutation.mutate(order.id);
                                 }}
-                                disabled={deleteSyrupOrderMutation.isPending}
+                                disabled={deleteKombuchaOrderMutation.isPending}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -711,12 +711,12 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="ramen-orders" className="space-y-6">
+          <TabsContent value="workshop-orders" className="space-y-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Ramen Orders per Datum</CardTitle>
-                  <CardDescription>Bekijk en beheer ramen pre-orders gegroepeerd per datum</CardDescription>
+                  <CardTitle>Workshop Bookings per Datum</CardTitle>
+                  <CardDescription>Bekijk en beheer workshop bookings gegroepeerd per datum</CardDescription>
                 </div>
                 <Button
                   onClick={handleTestEmail}
@@ -730,7 +730,7 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {Object.entries(ramenOrdersByDate).map(([date, orders]) => (
+                  {Object.entries(workshopOrdersByDate).map(([date, orders]) => (
                     <div key={date} className="border rounded-lg p-4">
                       <div className="flex justify-between items-center mb-4">
                         <div>
@@ -753,8 +753,8 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex space-x-2">
                           <Button
-                            onClick={() => handleConfirmRamenOrders(new Date(date + 'T12:00:00'))}
-                            disabled={confirmRamenOrderMutation.isPending || orders.every(order => order.status === 'confirmed')}
+                            onClick={() => handleConfirmWorkshopOrders(new Date(date + 'T12:00:00'))}
+                            disabled={confirmWorkshopOrderMutation.isPending || orders.every(order => order.status === 'confirmed')}
                             variant={orders.some(order => order.status === 'pending') ? 'default' : 'outline'}
                           >
                             <Check className="h-4 w-4 mr-2" />
@@ -764,7 +764,7 @@ export default function AdminDashboard() {
                       </div>
 
                       <div className="space-y-3">
-                        {orders.map((order: RamenOrder) => (
+                        {orders.map((order: WorkshopOrder) => (
                           <div key={order.id} className="bg-gray-50 dark:bg-gray-800 rounded p-3">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
@@ -783,8 +783,8 @@ export default function AdminDashboard() {
                               <div className="flex items-center space-x-2 ml-4">
                                 <Select
                                   value={order.status}
-                                  onValueChange={(status) => handleUpdateRamenOrderStatus(order.id, status)}
-                                  disabled={updateRamenOrderStatusMutation.isPending}
+                                  onValueChange={(status) => handleUpdateWorkshopOrderStatus(order.id, status)}
+                                  disabled={updateWorkshopOrderStatusMutation.isPending}
                                 >
                                   <SelectTrigger className="w-32">
                                     <SelectValue />
@@ -814,9 +814,9 @@ export default function AdminDashboard() {
                                   onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    handleDeleteRamenOrder(order.id);
+                                    handleDeleteWorkshopOrder(order.id);
                                   }}
-                                  disabled={deleteRamenOrderMutation.isPending}
+                                  disabled={deleteWorkshopOrderMutation.isPending}
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
@@ -828,9 +828,9 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                   
-                  {Object.keys(ramenOrdersByDate).length === 0 && (
+                  {Object.keys(workshopOrdersByDate).length === 0 && (
                     <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                      Geen ramen orders gevonden
+                      Geen workshop orders gevonden
                     </div>
                   )}
                 </div>
@@ -900,15 +900,15 @@ export default function AdminDashboard() {
                   <div>
                     <Label htmlFor="edit-category">Categorie</Label>
                     <Select
-                      value={editProductData.category || "syrup"}
+                      value={editProductData.category || "kombucha"}
                       onValueChange={(value) => setEditProductData({ ...editProductData, category: value })}
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="syrup">Siroop</SelectItem>
-                        <SelectItem value="ramen">Ramen</SelectItem>
+                        <SelectItem value="kombucha">Kombucha</SelectItem>
+                        <SelectItem value="workshop">Workshop</SelectItem>
                         <SelectItem value="accessoires">Accessoires</SelectItem>
                       </SelectContent>
                     </Select>

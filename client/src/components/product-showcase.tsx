@@ -7,7 +7,7 @@ export function ProductShowcase() {
     queryKey: ["/api/products"],
   });
 
-  const syrupProducts = products?.filter(p => p.category === "syrup") || [];
+  const kombuchaProducts = products?.filter(p => p.category === "kombucha") || [];
 
   if (isLoading) {
     return (
@@ -41,7 +41,7 @@ export function ProductShowcase() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
-          {syrupProducts.map(product => (
+          {kombuchaProducts.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

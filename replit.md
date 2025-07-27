@@ -1,8 +1,8 @@
-# Replit.md - Pluk & Poot E-commerce Platform
+# Replit.md - Pluk & Poot Kombucha Platform
 
 ## Overview
 
-This is a modern e-commerce website for artisanal syrups and ramen pre-orders based in Groningen, Netherlands. The application features a product catalog for handmade elderflower and rose syrups, a ramen pre-order system, admin dashboard, email notifications, and responsive design with dark mode support.
+This is a modern e-commerce website for artisanal kombucha and workshop bookings based in Groningen, Netherlands. The application features a product catalog for handmade ginger and berry kombucha, a kombucha brewing workshop booking system, admin dashboard, email notifications, and responsive design with dark mode support.
 
 ## User Preferences
 
@@ -25,9 +25,9 @@ Preferred communication style: Simple, everyday language.
 
 ### Database Schema
 The application uses PostgreSQL with three main tables:
-- **products**: Stores syrup and ramen product information with stock management
-- **orders**: Handles syrup orders with customer details and delivery information
-- **ramenOrders**: Manages ramen pre-orders with date-based scheduling
+- **products**: Stores kombucha and workshop product information with stock management
+- **orders**: Handles kombucha orders with customer details and delivery information
+- **workshopOrders**: Manages kombucha workshop bookings with date-based scheduling
 - **contactMessages**: Stores customer inquiries and feedback
 - **adminUsers**: Admin authentication (implemented in storage layer)
 
@@ -35,13 +35,13 @@ The application uses PostgreSQL with three main tables:
 
 ### Product Management
 - Product catalog with stock indicators and real-time updates
-- Dual product types: syrups (direct purchase) and ramen (pre-order system)
+- Dual product types: kombucha (direct purchase) and workshops (booking system)
 - Admin CRUD operations for product management
 - Stock tracking with low-stock alerts
 
 ### Order System
-- **Syrup Orders**: Direct ordering with customer information and delivery options
-- **Ramen Pre-orders**: Date-based reservation system requiring minimum 6 people
+- **Kombucha Orders**: Direct ordering with customer information and delivery options
+- **Workshop Bookings**: Date-based reservation system requiring minimum participants
 - Order status management (pending, confirmed, completed, cancelled)
 - Email confirmations for all order types
 

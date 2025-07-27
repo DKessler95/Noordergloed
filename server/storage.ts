@@ -3,8 +3,8 @@ import {
   InsertProduct, 
   Order, 
   InsertOrder, 
-  RamenOrder, 
-  InsertRamenOrder,
+  WorkshopOrder, 
+  InsertWorkshopOrder,
   ContactMessage,
   InsertContactMessage 
 } from "@shared/schema";
@@ -24,13 +24,13 @@ export interface IStorage {
   createOrder(order: InsertOrder): Promise<Order>;
   updateOrderStatus(id: number, status: string): Promise<Order | undefined>;
   
-  // Ramen Orders
-  getRamenOrders(): Promise<RamenOrder[]>;
-  createRamenOrder(ramenOrder: InsertRamenOrder): Promise<RamenOrder>;
-  getRamenOrdersByDate(date: Date): Promise<RamenOrder[]>;
-  updateRamenOrderStatus(id: number, status: string): Promise<RamenOrder | undefined>;
-  deleteRamenOrder(id: number): Promise<boolean>;
-  confirmRamenOrdersForDate(date: Date): Promise<RamenOrder[]>;
+  // Workshop Orders
+  getWorkshopOrders(): Promise<WorkshopOrder[]>;
+  createWorkshopOrder(workshopOrder: InsertWorkshopOrder): Promise<WorkshopOrder>;
+  getWorkshopOrdersByDate(date: Date): Promise<WorkshopOrder[]>;
+  updateWorkshopOrderStatus(id: number, status: string): Promise<WorkshopOrder | undefined>;
+  deleteWorkshopOrder(id: number): Promise<boolean>;
+  confirmWorkshopOrdersForDate(date: Date): Promise<WorkshopOrder[]>;
   
   // Contact Messages
   getContactMessages(): Promise<ContactMessage[]>;
@@ -44,88 +44,88 @@ export interface IStorage {
 export class MemStorage implements IStorage {
   private products: Map<number, Product>;
   private orders: Map<number, Order>;
-  private ramenOrders: Map<number, RamenOrder>;
+  private workshopOrders: Map<number, WorkshopOrder>;
   private contactMessages: Map<number, ContactMessage>;
   private adminUsers: Map<string, { id: number; username: string; password: string; role: string }>;
   private currentProductId: number;
   private currentOrderId: number;
-  private currentRamenOrderId: number;
+  private currentWorkshopOrderId: number;
   private currentMessageId: number;
   private currentAdminId: number;
 
   constructor() {
     this.products = new Map();
     this.orders = new Map();
-    this.ramenOrders = new Map();
+    this.workshopOrders = new Map();
     this.contactMessages = new Map();
     this.adminUsers = new Map();
     this.currentProductId = 1;
     this.currentOrderId = 1;
-    this.currentRamenOrderId = 1;
+    this.currentWorkshopOrderId = 1;
     this.currentMessageId = 1;
     this.currentAdminId = 1;
     
     this.initializeProducts();
     this.initializeAdminUser();
-    this.initializeRamenOrders();
+    this.initializeWorkshopOrders();
   }
 
-  private initializeRamenOrders() {
+  private initializeWorkshopOrders() {
     // Start with clean slate - no sample orders
-    this.ramenOrders.clear();
-    this.currentRamenOrderId = 1;
-    console.log("STORAGE: Initialized clean ramen orders, total:", this.ramenOrders.size);
+    this.workshopOrders.clear();
+    this.currentWorkshopOrderId = 1;
+    console.log("STORAGE: Initialized clean workshop orders, total:", this.workshopOrders.size);
   }
 
   private initializeProducts() {
-    const elderflowerSyrup: Product = {
+    const gingerKombucha: Product = {
       id: this.currentProductId++,
-      name: "Vlierbloesem Siroop",
-      description: "Handgeplukt bij de Hamburgervijver. 30 verse schermen per liter voor die authentieke zomersmaak. Perfect voor limonade of cocktails.",
-      price: "6.99",
+      name: "Gember Kombucha",
+      description: "Handgebrouwen kombucha met verse gember uit Groningen. Gerijpt gedurende 2 weken voor die perfecte smaakbalans. Probiotisch en verfrissend.",
+      price: "4.99",
+      stock: 12,
+      maxStock: 20,
+      category: "kombucha",
+      imageUrl: "/images/gember_kombucha.png",
+      featured: true,
+      limitedStock: false,
+      badges: ["Probiotisch"],
+      createdAt: new Date(),
+    };
+
+    const berryKombucha: Product = {
+      id: this.currentProductId++,
+      name: "Bosbes Kombucha",
+      description: "Heerlijke kombucha met verse bosbessen uit de Groningse natuur. Vol antioxidanten en natuurlijke probiotica voor een gezonde levensstijl.",
+      price: "5.49",
       stock: 8,
-      maxStock: 15,
-      category: "syrup",
-      imageUrl: "/images/normaal_voorkant.png",
+      maxStock: 18,
+      category: "kombucha",
+      imageUrl: "/images/bosbes_kombucha.png",
       featured: true,
       limitedStock: false,
-      badges: ["Huistuin delicatesse"],
+      badges: ["Antioxidant Rijk"],
       createdAt: new Date(),
     };
 
-    const roseSyrup: Product = {
+    const kombuchaWorkshop: Product = {
       id: this.currentProductId++,
-      name: "Rozen Siroop",
-      description: "Delicate rozenblaadjes uit onze eigen tuin aan de Star Numanstraat. Een subtiele bloemensmaak die perfect past bij thee of prosecco.",
-      price: "6.99",
-      stock: 5,
-      maxStock: 15,
-      category: "syrup",
-      imageUrl: "/images/rozen_voorkant.png",
+      name: "Kombucha Brouw Workshop",
+      description: "Leer kombucha brouwen in onze workshop! Inclusief SCOBY, ingrediënten en je eigen eerste batch. Perfect voor beginners. €25 per persoon.",
+      price: "25.00",
+      stock: 8,
+      maxStock: 8,
+      category: "workshop",
+      imageUrl: "/images/kombucha-workshop.jpg",
       featured: true,
       limitedStock: false,
-      badges: ["Seizoenspecialiteit"],
+      badges: ["Educatief"],
       createdAt: new Date(),
     };
 
-    const ramenSet: Product = {
-      id: this.currentProductId++,
-      name: "Chicken Shoyu Ramen",
-      description: "Exclusieve Chicken Shoyu Ramen voor 6 personen. Verse lokale ingrediënten, zelfgemaakte noedels en inclusief toppings. €12.50 per persoon.",
-      price: "12.50",
-      stock: 6,
-      maxStock: 6,
-      category: "ramen",
-      imageUrl: "/images/chicken-shoyu-ramen.jpg",
-      featured: true,
-      limitedStock: false,
-      badges: ["Premium"],
-      createdAt: new Date(),
-    };
-
-    this.products.set(elderflowerSyrup.id, elderflowerSyrup);
-    this.products.set(roseSyrup.id, roseSyrup);
-    this.products.set(ramenSet.id, ramenSet);
+    this.products.set(gingerKombucha.id, gingerKombucha);
+    this.products.set(berryKombucha.id, berryKombucha);
+    this.products.set(kombuchaWorkshop.id, kombuchaWorkshop);
   }
 
   private initializeAdminUser() {
@@ -225,46 +225,46 @@ export class MemStorage implements IStorage {
   }
 
   // Ramen Orders
-  async getRamenOrders(): Promise<RamenOrder[]> {
-    const orders = Array.from(this.ramenOrders.values());
-    console.log("Storage: ramenOrders Map size:", this.ramenOrders.size);
-    console.log("Storage: getRamenOrders returning", orders.length, "orders");
+  async getWorkshopOrders(): Promise<WorkshopOrder[]> {
+    const orders = Array.from(this.workshopOrders.values());
+    console.log("Storage: workshopOrders Map size:", this.workshopOrders.size);
+    console.log("Storage: getWorkshopOrders returning", orders.length, "orders");
     console.log("Storage: First few orders:", orders.slice(0, 2));
-    console.log("Storage: All ramen order IDs:", Array.from(this.ramenOrders.keys()));
+    console.log("Storage: All workshop order IDs:", Array.from(this.workshopOrders.keys()));
     return orders;
   }
 
-  async createRamenOrder(insertRamenOrder: InsertRamenOrder): Promise<RamenOrder> {
-    const id = this.currentRamenOrderId++;
-    const ramenOrder: RamenOrder = { 
-      ...insertRamenOrder, 
+  async createWorkshopOrder(insertWorkshopOrder: InsertWorkshopOrder): Promise<WorkshopOrder> {
+    const id = this.currentWorkshopOrderId++;
+    const workshopOrder: WorkshopOrder = { 
+      ...insertWorkshopOrder, 
       id, 
-      customerPhone: insertRamenOrder.customerPhone || null,
-      status: insertRamenOrder.status || "pending",
-      notes: insertRamenOrder.notes || null,
-      servings: insertRamenOrder.servings || 1,
+      customerPhone: insertWorkshopOrder.customerPhone || null,
+      status: insertWorkshopOrder.status || "pending",
+      notes: insertWorkshopOrder.notes || null,
+      servings: insertWorkshopOrder.servings || 1,
       createdAt: new Date()
     };
-    this.ramenOrders.set(id, ramenOrder);
+    this.workshopOrders.set(id, workshopOrder);
     
     // Check if we have 6 people for this date and auto-confirm
-    const ordersForDate = await this.getRamenOrdersByDate(new Date(ramenOrder.preferredDate));
+    const ordersForDate = await this.getWorkshopOrdersByDate(new Date(workshopOrder.preferredDate));
     if (ordersForDate.length >= 6) {
-      await this.confirmRamenOrdersForDate(new Date(ramenOrder.preferredDate));
+      await this.confirmWorkshopOrdersForDate(new Date(workshopOrder.preferredDate));
     }
     
-    return ramenOrder;
+    return workshopOrder;
   }
 
-  async updateRamenOrderStatus(id: number, status: string): Promise<RamenOrder | undefined> {
-    const order = this.ramenOrders.get(id);
+  async updateWorkshopOrderStatus(id: number, status: string): Promise<WorkshopOrder | undefined> {
+    const order = this.workshopOrders.get(id);
     if (order) {
       const updatedOrder = { ...order, status };
-      this.ramenOrders.set(id, updatedOrder);
+      this.workshopOrders.set(id, updatedOrder);
       
       // If order is confirmed, check if we should send emails
       if (status === 'confirmed') {
-        const ordersForDate = await this.getRamenOrdersByDate(new Date(order.preferredDate));
+        const ordersForDate = await this.getWorkshopOrdersByDate(new Date(order.preferredDate));
         const confirmedOrdersForDate = ordersForDate.filter(o => o.status === 'confirmed');
         
         if (confirmedOrdersForDate.length >= 6) {
@@ -277,13 +277,13 @@ export class MemStorage implements IStorage {
     return undefined;
   }
 
-  async confirmRamenOrdersForDate(date: Date): Promise<RamenOrder[]> {
-    const ordersForDate = await this.getRamenOrdersByDate(date);
-    const confirmedOrders: RamenOrder[] = [];
+  async confirmWorkshopOrdersForDate(date: Date): Promise<WorkshopOrder[]> {
+    const ordersForDate = await this.getWorkshopOrdersByDate(date);
+    const confirmedOrders: WorkshopOrder[] = [];
     
     for (const order of ordersForDate) {
       if (order.status === "pending") {
-        const confirmedOrder = await this.updateRamenOrderStatus(order.id, "confirmed");
+        const confirmedOrder = await this.updateWorkshopOrderStatus(order.id, "confirmed");
         if (confirmedOrder) {
           confirmedOrders.push(confirmedOrder);
         }
@@ -293,12 +293,12 @@ export class MemStorage implements IStorage {
     return confirmedOrders;
   }
 
-  async deleteRamenOrder(id: number): Promise<boolean> {
-    return this.ramenOrders.delete(id);
+  async deleteWorkshopOrder(id: number): Promise<boolean> {
+    return this.workshopOrders.delete(id);
   }
 
-  async getRamenOrdersByDate(date: Date): Promise<RamenOrder[]> {
-    return Array.from(this.ramenOrders.values()).filter(order => {
+  async getWorkshopOrdersByDate(date: Date): Promise<WorkshopOrder[]> {
+    return Array.from(this.workshopOrders.values()).filter(order => {
       const orderDate = new Date(order.preferredDate);
       return orderDate.toDateString() === date.toDateString();
     });

@@ -1,8 +1,8 @@
 import { sendEmail } from './gmail';
 
 // Customer confirmation email for new ramen order
-export async function sendRamenOrderConfirmation(orderData: any): Promise<boolean> {
-  console.log('sendRamenOrderConfirmation called with data:', JSON.stringify(orderData, null, 2));
+export async function sendWorkshopOrderConfirmation(orderData: any): Promise<boolean> {
+  console.log('sendWorkshopOrderConfirmation called with data:', JSON.stringify(orderData, null, 2));
   
   const textContent = `
 Hallo ${orderData.customerName},
