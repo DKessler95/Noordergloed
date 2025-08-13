@@ -7,26 +7,25 @@ export function StorySection() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-8">
-              Wie zijn wij?
+              Welkom bij Noordergloed
             </h2>
             
             <div className="space-y-6 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
               <p>
-                Het begon allemaal tijdens onze wandelingen door Groningen. Elfie en ik ontdekten 
-                de schitterende vlierbloesem bij de Hamburgervijver, en ik raakte gefascineerd 
-                door de mogelijkheden van deze natuurlijke ingrediënten.
+                Bij Noordergloed draait alles om verbinden, terug naar de natuur en samen genieten van pure smaken. 
+                Vanuit mijn werkplek aan de Star Numanstraat in Groningen maak ik unieke kombucha, jams, siropen en nog veel meer. 
+                Allemaal met ingrediënten uit de regio, met aandacht voor het seizoen en respect voor de omgeving.
               </p>
               
               <p>
-                Vanuit onze basis aan de Star Numanstraat experimenteren we met seizoensgebonden 
-                ingrediënten. Elke fles kombucha is handgemaakt met zorg voor kwaliteit en respect 
-                voor de natuur om ons heen.
+                Wat je hier vindt, proef je niet in de winkel: verrassende smaken en combinaties die je meenemen naar het Groningse landschap. 
+                Via kleinschalige workshops nodig ik je uit om het plezier van samen ontdekken en creëren te ervaren, 
+                en zo de verbinding met natuur en elkaar te versterken.
               </p>
               
               <p>
-                Elfie is niet alleen mijn trouwe metgezel, maar ook mijn inspiratiebron. 
-                Samen ontdekken we de beste plekjes in Groningen voor onze ingrediënten, 
-                van rozenblaadjes uit onze eigen tuin tot wilde kruiden in de omgeving.
+                Dit is een plek waar mensen samenkomen, delen en zich opnieuw laten inspireren. 
+                Voel je welkom om aan te sluiten bij een workshop, op ontdekkingstocht te gaan of gewoon te komen proeven van al het moois dat Noordergloed te bieden heeft!
               </p>
             </div>
             

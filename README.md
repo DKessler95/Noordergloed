@@ -1,6 +1,6 @@
-# Pluk & Poot - Artisanale Siropen & Ramen
+# Noordergloed - Artisanale Kombucha & Workshops
 
-Een moderne e-commerce website voor artisanale siropen en ramen pre-orders, gevestigd in Groningen.
+Een moderne e-commerce website voor artisanale kombucha en workshops, gevestigd in Groningen.
 
 ## Functies
 

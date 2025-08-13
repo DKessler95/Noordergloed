@@ -1,4 +1,4 @@
-# Replit.md - Pluk & Poot Kombucha Platform
+# Replit.md - Noordergloed Kombucha Platform
 
 ## Overview
 
