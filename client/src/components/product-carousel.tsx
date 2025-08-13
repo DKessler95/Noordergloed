@@ -32,24 +32,19 @@ export function ProductCarousel() {
     <section id="featured-products" className="py-20 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="font-display text-5xl font-bold mb-6">
+        <div className="text-center mb-12">
+          <h2 className="font-display text-3xl font-bold mb-4">
             <span className="brewery-text-gradient">Onze Specialiteiten</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
             Ontdek onze handgemaakte kombucha collectie, gebrouwen met liefde en lokale ingrediënten
           </p>
         </div>
 
-        {/* Product Carousel */}
-        <div className="relative">
-          <div className="overflow-hidden">
-            <div 
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {featuredProducts.slice(0, 4).map((product: Product) => (
-                <div key={product.id} className="w-full flex-shrink-0 px-4">
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {featuredProducts.slice(0, 8).map((product: Product) => (
+            <div key={product.id} className="w-full">
                   <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border-2 border-orange-200/50 hover:border-orange-300">
                     <div className="relative">
                       {/* Product Image */}
@@ -117,26 +112,7 @@ export function ProductCarousel() {
                     </div>
                   </Card>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation Dots */}
-          {featuredProducts.length > 1 && (
-            <div className="flex justify-center mt-8 space-x-2">
-              {featuredProducts.slice(0, 4).map((product, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === currentIndex 
-                      ? 'bg-orange-500 scale-125' 
-                      : 'bg-orange-200 hover:bg-orange-300'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
+          ))}
         </div>
 
         {/* CTA Section */}

@@ -82,6 +82,66 @@ class DatabaseStorage implements IStorage {
             imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
           },
           {
+            name: "Citroen Kombucha",
+            description: "Frisse kombucha met biologische citroen. Een verfrissende smaak perfect voor elke dag van het jaar.",
+            price: "8.75",
+            category: "kombucha",
+            stock: 20,
+            featured: true,
+            badges: ["Klassiek", "Verfrissend"],
+            imageUrl: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
+          },
+          {
+            name: "Hibiscus Kombucha",
+            description: "Exotische kombucha met hibiscusbloemen. Een mooie roze kleur en bloemenachtige smaak.",
+            price: "9.50",
+            category: "kombucha",
+            stock: 15,
+            featured: true,
+            badges: ["Exotisch", "Limited Edition"],
+            imageUrl: "https://images.unsplash.com/photo-1544145945-f90425340c7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
+          },
+          {
+            name: "Groene Thee Kombucha",
+            description: "Traditionele kombucha op basis van groene thee. Pure smaak met alle gezonde eigenschappen.",
+            price: "8.25",
+            category: "kombucha",
+            stock: 30,
+            featured: true,
+            badges: ["Traditioneel", "Gezond"],
+            imageUrl: "https://images.unsplash.com/photo-1556679179-6d946ac01b8a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
+          },
+          {
+            name: "Mango Kombucha",
+            description: "Tropische kombucha met verse mango. Zoet, fruitig en vol van smaak.",
+            price: "9.25",
+            category: "kombucha",
+            stock: 22,
+            featured: true,
+            badges: ["Tropisch", "Zoet"],
+            imageUrl: "https://images.unsplash.com/photo-1605379399642-870262d3d051?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
+          },
+          {
+            name: "Kurkuma Kombucha",
+            description: "Speciale kombucha met kurkuma en zwarte peper. Anti-inflammatoire eigenschappen en unieke smaak.",
+            price: "10.00",
+            category: "kombucha",
+            stock: 12,
+            featured: true,
+            badges: ["Gezondheid", "Speciaal"],
+            imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
+          },
+          {
+            name: "Rozemarijn Kombucha",
+            description: "Kruidenrijke kombucha met verse rozemarijn uit onze eigen tuin. Aromatisch en rustgevend.",
+            price: "9.75",
+            category: "kombucha",
+            stock: 16,
+            featured: true,
+            badges: ["Kruiden", "Eigen Tuin"],
+            imageUrl: "https://images.unsplash.com/photo-1544145945-f90425340c7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
+          },
+          {
             name: "Kombucha Workshop",
             description: "Leer kombucha brouwen in onze workshop! Inclusief materialen, recepten en je eigen kombucha scoby om mee naar huis te nemen.",
             price: "45.00",
