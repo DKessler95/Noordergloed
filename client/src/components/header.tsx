@@ -43,7 +43,7 @@ export function Header() {
               className="w-10 h-10 rounded-full object-cover"
             />
             <span className="font-display font-semibold text-xl text-purple-600 dark:text-purple-400">
-              Noordergloed
+              Brouwerij Noordergloed
             </span>
           </button>
           

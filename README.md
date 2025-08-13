@@ -1,4 +1,4 @@
-# Noordergloed - Artisanale Kombucha & Workshops
+# Brouwerij Noordergloed - Artisanale Kombucha & Workshops
 
 Een moderne e-commerce website voor artisanale kombucha en workshops, gevestigd in Groningen.
 

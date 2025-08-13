@@ -1,4 +1,4 @@
-# Replit.md - Noordergloed Kombucha Platform
+# Replit.md - Brouwerij Noordergloed Kombucha Platform
 
 ## Overview
 

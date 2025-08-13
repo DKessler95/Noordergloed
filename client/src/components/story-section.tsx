@@ -7,12 +7,12 @@ export function StorySection() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-8">
-              Welkom bij Noordergloed
+              Welkom bij Brouwerij Noordergloed
             </h2>
             
             <div className="space-y-6 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
               <p>
-                Bij Noordergloed draait alles om verbinden, terug naar de natuur en samen genieten van pure smaken. 
+                Bij Brouwerij Noordergloed draait alles om verbinden, terug naar de natuur en samen genieten van pure smaken. 
                 Vanuit mijn werkplek aan de Star Numanstraat in Groningen maak ik unieke kombucha, jams, siropen en nog veel meer. 
                 Allemaal met ingrediënten uit de regio, met aandacht voor het seizoen en respect voor de omgeving.
               </p>
@@ -25,7 +25,7 @@ export function StorySection() {
               
               <p>
                 Dit is een plek waar mensen samenkomen, delen en zich opnieuw laten inspireren. 
-                Voel je welkom om aan te sluiten bij een workshop, op ontdekkingstocht te gaan of gewoon te komen proeven van al het moois dat Noordergloed te bieden heeft!
+                Voel je welkom om aan te sluiten bij een workshop, op ontdekkingstocht te gaan of gewoon te komen proeven van al het moois dat Brouwerij Noordergloed te bieden heeft!
               </p>
             </div>
             

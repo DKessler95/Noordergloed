@@ -23,7 +23,7 @@ export function Footer() {
                 alt="Noordergloed Logo" 
                 className="w-12 h-12 rounded-full object-cover"
               />
-              <span className="font-display font-bold text-2xl">Noordergloed</span>
+              <span className="font-display font-bold text-2xl">Brouwerij Noordergloed</span>
             </button>
             
             <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
@@ -124,7 +124,7 @@ export function Footer() {
         
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2025 Noordergloed onderdeel van Digimaatwerk. Handgemaakt in Groningen, nabij de iconische Hamburgervijver.
+            © 2025 Brouwerij Noordergloed onderdeel van Digimaatwerk. Handgemaakt in Groningen, nabij de iconische Hamburgervijver.
           </p>
           <p className="text-gray-500 text-xs mt-4 md:mt-0 flex items-center">
             <Heart className="w-3 h-3 mr-1" />
