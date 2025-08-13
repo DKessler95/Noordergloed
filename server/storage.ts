@@ -19,8 +19,10 @@ import {
 export interface IStorage {
   // Products
   getProducts(): Promise<Product[]>;
+  getProduct(id: number): Promise<Product | undefined>;
   createProduct(insertProduct: InsertProduct): Promise<Product>;
   updateProduct(id: number, updates: Partial<Product>): Promise<Product | undefined>;
+  updateProductStock(id: number, stock: number): Promise<Product | undefined>;
   deleteProduct(id: number): Promise<boolean>;
 
   // Orders
@@ -181,6 +183,11 @@ class DatabaseStorage implements IStorage {
     return await db.select().from(products);
   }
 
+  async getProduct(id: number): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product;
+  }
+
   async createProduct(insertProduct: InsertProduct): Promise<Product> {
     const [product] = await db.insert(products).values(insertProduct).returning();
     return product;
@@ -188,6 +195,11 @@ class DatabaseStorage implements IStorage {
 
   async updateProduct(id: number, updates: Partial<Product>): Promise<Product | undefined> {
     const [product] = await db.update(products).set(updates).where(eq(products.id, id)).returning();
+    return product;
+  }
+
+  async updateProductStock(id: number, stock: number): Promise<Product | undefined> {
+    const [product] = await db.update(products).set({ stock }).where(eq(products.id, id)).returning();
     return product;
   }
 

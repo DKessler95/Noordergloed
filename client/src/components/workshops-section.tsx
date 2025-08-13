@@ -4,68 +4,88 @@ import { ArrowRight, Users, Clock, Award } from "lucide-react";
 
 export function WorkshopsSection() {
   return (
-    <section className="py-20 bg-gradient-to-br from-orange-50/30 to-amber-50/30 dark:from-orange-950/10 dark:to-amber-950/10">
+    <section className="py-20 bg-gradient-to-l from-orange-50/30 to-transparent dark:from-orange-950/10 dark:to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="font-display text-4xl font-bold mb-6">
-            <span className="brewery-text-gradient">Kombucha Workshops</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Leer de kunst van kombucha brouwen in onze interactieve workshops. 
-            Van beginner tot expert - ontdek de geheimen van fermentatie.
-          </p>
-        </div>
-
-        {/* Workshop Features */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <Card className="text-center border-2 border-orange-100 hover:border-orange-300 transition-colors">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 brewery-gradient rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-white" />
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left - Empty space for balance */}
+          <div className="hidden lg:block">
+            <div className="w-full h-96 bg-gradient-to-br from-orange-100/40 to-amber-200/30 rounded-3xl flex items-center justify-center">
+              <div className="text-center text-orange-300">
+                <div className="w-32 h-32 brewery-gradient rounded-full opacity-20 mx-auto mb-4"></div>
+                <p className="text-lg font-display">Kombucha Brouwerij</p>
               </div>
-              <h3 className="font-display text-xl font-bold mb-3">Kleine Groepen</h3>
-              <p className="text-muted-foreground">
-                Maximaal 12 deelnemers per workshop voor persoonlijke begeleiding
-              </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="text-center border-2 border-orange-100 hover:border-orange-300 transition-colors">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 brewery-gradient rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="font-display text-xl font-bold mb-3">3 Uur Ervaring</h3>
-              <p className="text-muted-foreground">
-                Uitgebreide workshop met theorie, praktijk en proeverij
+          {/* Right - Content */}
+          <div className="space-y-8">
+            <div>
+              <h2 className="font-display text-4xl font-bold mb-6">
+                <span className="brewery-text-gradient">Workshops</span>
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8">
+                Leer de kunst van kombucha brouwen in onze interactieve workshops. 
+                Van beginner tot expert - ontdek de geheimen van fermentatie.
               </p>
-            </CardContent>
-          </Card>
+            </div>
 
-          <Card className="text-center border-2 border-orange-100 hover:border-orange-300 transition-colors">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 brewery-gradient rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="font-display text-xl font-bold mb-3">Scoby Mee</h3>
-              <p className="text-muted-foreground">
-                Neem je eigen kombucha scoby mee naar huis om verder te brouwen
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+            {/* Workshop Features - Asymmetric Layout */}
+            <div className="space-y-6">
+              <Card className="border-2 border-orange-100 hover:border-orange-300 transition-colors">
+                <CardContent className="p-6 flex items-center space-x-4">
+                  <div className="w-12 h-12 brewery-gradient rounded-full flex items-center justify-center flex-shrink-0">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold mb-2">Kleine Groepen</h3>
+                    <p className="text-muted-foreground">
+                      Maximaal 12 deelnemers per workshop voor persoonlijke begeleiding
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
 
-        {/* CTA */}
-        <div className="text-center">
-          <Button 
-            size="lg"
-            className="brewery-gradient text-white px-12 py-4 text-xl rounded-full hover:scale-105 transition-all duration-300"
-            onClick={() => window.location.href = "/workshops"}
-          >
-            Ontdek nu onze workshops
-            <ArrowRight className="w-5 h-5 ml-3" />
-          </Button>
+              <Card className="border-2 border-orange-100 hover:border-orange-300 transition-colors ml-8">
+                <CardContent className="p-6 flex items-center space-x-4">
+                  <div className="w-12 h-12 brewery-gradient rounded-full flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold mb-2">3 Uur Ervaring</h3>
+                    <p className="text-muted-foreground">
+                      Uitgebreide workshop met theorie, praktijk en proeverij
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-orange-100 hover:border-orange-300 transition-colors">
+                <CardContent className="p-6 flex items-center space-x-4">
+                  <div className="w-12 h-12 brewery-gradient rounded-full flex items-center justify-center flex-shrink-0">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold mb-2">Scoby Mee</h3>
+                    <p className="text-muted-foreground">
+                      Neem je eigen kombucha scoby mee naar huis om verder te brouwen
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* CTA */}
+            <div className="pt-4">
+              <Button 
+                size="lg"
+                className="brewery-gradient text-white px-12 py-4 text-xl rounded-full hover:scale-105 transition-all duration-300"
+                onClick={() => window.location.href = "/workshops"}
+              >
+                Ontdek nu onze workshops
+                <ArrowRight className="w-5 h-5 ml-3" />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
