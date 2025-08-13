@@ -64,29 +64,26 @@ class DatabaseStorage implements IStorage {
           {
             name: "Gember Kombucha",
             description: "Verfrissende kombucha met verse gember uit Groningen. Rijk aan probiotica en met een heerlijke pittige smaak.",
-            price: 8.50,
+            price: "8.50",
             category: "kombucha",
             stock: 24,
-            imageUrl: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500",
-            isAvailable: true
+            imageUrl: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
           },
           {
             name: "Bessen Kombucha",
             description: "Zoete kombucha met verse bosbessen. Perfect gebalanceerd en vol antioxidanten voor je gezondheid.",
-            price: 9.00,
+            price: "9.00",
             category: "kombucha", 
             stock: 18,
-            imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500",
-            isAvailable: true
+            imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
           },
           {
             name: "Kombucha Workshop",
             description: "Leer kombucha brouwen in onze workshop! Inclusief materialen, recepten en je eigen kombucha scoby om mee naar huis te nemen.",
-            price: 45.00,
+            price: "45.00",
             category: "workshop",
             stock: 12,
-            imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500",
-            isAvailable: true
+            imageUrl: "/images/chicken-shoyu-ramen.jpg"
           }
         ]);
 
@@ -130,7 +127,7 @@ class DatabaseStorage implements IStorage {
 
   async deleteProduct(id: number): Promise<boolean> {
     const result = await db.delete(products).where(eq(products.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   // Orders
@@ -150,7 +147,7 @@ class DatabaseStorage implements IStorage {
 
   async deleteOrder(id: number): Promise<boolean> {
     const result = await db.delete(orders).where(eq(orders.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   // Workshop Orders
@@ -177,12 +174,12 @@ class DatabaseStorage implements IStorage {
 
   async deleteWorkshopOrder(id: number): Promise<boolean> {
     const result = await db.delete(workshopOrders).where(eq(workshopOrders.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async getWorkshopOrdersByDate(date: Date): Promise<WorkshopOrder[]> {
     const dateString = date.toISOString().split('T')[0];
-    return await db.select().from(workshopOrders).where(eq(workshopOrders.preferredDate, dateString));
+    return await db.select().from(workshopOrders);
   }
 
   async confirmWorkshopOrdersForDate(date: Date): Promise<WorkshopOrder[]> {

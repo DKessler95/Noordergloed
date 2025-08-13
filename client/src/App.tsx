@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Home from "@/pages/home";
 import ProductDetail from "@/pages/product-detail";
 import ProductsPage from "@/pages/products";
+import WorkshopsPage from "@/pages/workshops";
 import KombuchaWorkshop from "@/pages/kombucha-workshop";
 import WorkshopDetails from "@/pages/workshop-details";
 import AdminLogin from "@/pages/admin-login";
@@ -18,6 +19,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/products" component={ProductsPage} />
+      <Route path="/workshops" component={WorkshopsPage} />
       <Route path="/producten/:slug" component={ProductDetail} />
       <Route path="/kombucha-workshop" component={KombuchaWorkshop} />
       <Route path="/workshop-details" component={WorkshopDetails} />

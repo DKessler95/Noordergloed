@@ -2,7 +2,14 @@
 
 ## Overview
 
-This is a modern e-commerce website for artisanal kombucha and workshop bookings based in Groningen, Netherlands. The application features a product catalog for handmade ginger and berry kombucha, a kombucha brewing workshop booking system, admin dashboard, email notifications, and responsive design with dark mode support.
+This is a modern e-commerce website for artisanal kombucha and workshop bookings based in Groningen, Netherlands. The application features a product catalog for handmade ginger and berry kombucha, a dedicated workshops page with capacity-managed enrollment system, admin dashboard, email notifications, and responsive design with dark mode support.
+
+**Recent Changes (Jan 2025):**
+- Migrated from MemStorage to DatabaseStorage with PostgreSQL for persistent data
+- Implemented workshop enrollment system with capacity tracking and "Volgeboekt" status
+- Added dedicated /workshops page with workshop registration functionality  
+- Restored Chicken Shoyu image for workshop display
+- Database seeding automatically creates kombucha products and admin user on first run
 
 ## User Preferences
 
@@ -24,12 +31,12 @@ Preferred communication style: Simple, everyday language.
 - **Email Service**: Gmail SMTP for transactional emails (with fallback Mailjet configuration)
 
 ### Database Schema
-The application uses PostgreSQL with three main tables:
+The application uses PostgreSQL with five main tables:
 - **products**: Stores kombucha and workshop product information with stock management
-- **orders**: Handles kombucha orders with customer details and delivery information
+- **orders**: Handles kombucha orders with customer details and delivery information  
 - **workshopOrders**: Manages kombucha workshop bookings with date-based scheduling
 - **contactMessages**: Stores customer inquiries and feedback
-- **adminUsers**: Admin authentication (implemented in storage layer)
+- **adminUsers**: Admin authentication with hashed passwords and role management
 
 ## Key Components
 
@@ -39,9 +46,11 @@ The application uses PostgreSQL with three main tables:
 - Admin CRUD operations for product management
 - Stock tracking with low-stock alerts
 
-### Order System
+### Order System  
 - **Kombucha Orders**: Direct ordering with customer information and delivery options
-- **Workshop Bookings**: Date-based reservation system requiring minimum participants
+- **Workshop Bookings**: Capacity-managed enrollment system (12 spots per workshop)
+- **Workshop Registration**: Dedicated /workshops page with name, email, phone collection
+- **Capacity Tracking**: Real-time stock updates with "Volgeboekt" status when full
 - Order status management (pending, confirmed, completed, cancelled)
 - Email confirmations for all order types
 
