@@ -324,10 +324,10 @@ export default function WorkshopsPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Kombucha Workshops
+            Workshops
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Leer de kunst van kombucha brouwen in onze hands-on workshops. 
+            Leer de kunst van brouwen in onze hands-on workshops. 
             Perfect voor beginners en ervaren brouwers die hun kennis willen uitbreiden.
           </p>
         </div>
