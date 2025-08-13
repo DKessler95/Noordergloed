@@ -11,56 +11,62 @@
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 20 14.3% 4.1%;
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
+  /* Brouwerij Noordergloed Color Scheme */
+  --brewery-orange: 25 100% 50%; /* #FF7900 */
+  --brewery-brown-light: 18 25% 57%; /* #A77B71 */
+  --brewery-brown-dark: 18 35% 35%; /* #7E4438 */
+  --brewery-dark: 18 29% 17%; /* #35231F */
+  
+  --background: 35 20% 98%; /* Light warm background */
+  --foreground: var(--brewery-dark);
+  --muted: 35 15% 92%;
+  --muted-foreground: var(--brewery-brown-dark);
   --popover: 0 0% 100%;
-  --popover-foreground: 20 14.3% 4.1%;
+  --popover-foreground: var(--brewery-dark);
   --card: 0 0% 100%;
-  --card-foreground: 20 14.3% 4.1%;
-  --border: 20 5.9% 90%;
-  --input: 20 5.9% 90%;
-  --primary: 262 83% 58%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 60 4.8% 95.9%;
-  --secondary-foreground: 24 9.8% 10%;
-  --accent: 60 4.8% 95.9%;
-  --accent-foreground: 24 9.8% 10%;
+  --card-foreground: var(--brewery-dark);
+  --border: 35 20% 88%;
+  --input: 35 20% 90%;
+  --primary: var(--brewery-orange);
+  --primary-foreground: 0 0% 100%;
+  --secondary: var(--brewery-brown-light);
+  --secondary-foreground: 0 0% 100%;
+  --accent: var(--brewery-brown-light);
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
-  --ring: 20 14.3% 4.1%;
-  --radius: 0.5rem;
+  --ring: var(--brewery-orange);
+  --radius: 0.75rem;
   
-  /* Custom syrup colors */
+  /* Custom brewery colors for gradients */
   --syrup-accent: oklch(65% 0.25 var(--syrup-hue));
   --elderflower-accent: oklch(75% 0.15 30);
   --rose-accent: oklch(70% 0.20 340);
 }
 
 .dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --primary: 262 83% 58%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
+  --background: var(--brewery-dark);
+  --foreground: 35 20% 95%;
+  --muted: 18 35% 22%;
+  --muted-foreground: var(--brewery-brown-light);
+  --popover: var(--brewery-dark);
+  --popover-foreground: 35 20% 95%;
+  --card: 18 35% 25%;
+  --card-foreground: 35 20% 95%;
+  --border: 18 35% 25%;
+  --input: 18 35% 25%;
+  --primary: var(--brewery-orange);
+  --primary-foreground: 0 0% 100%;
+  --secondary: var(--brewery-brown-dark);
+  --secondary-foreground: 35 20% 95%;
+  --accent: var(--brewery-brown-dark);
+  --accent-foreground: 35 20% 95%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --ring: 240 4.9% 83.9%;
-  --radius: 0.5rem;
+  --ring: var(--brewery-orange);
+  --radius: 0.75rem;
   
-  --syrup-hue: 200;
+  --syrup-hue: 25; /* Orange hue for dark mode */
 }
 
 @layer base {
@@ -92,6 +98,25 @@
     backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .brewery-gradient {
+    background: linear-gradient(135deg, hsl(var(--brewery-orange)) 0%, hsl(var(--brewery-brown-light)) 100%);
+  }
+  
+  .brewery-text-gradient {
+    background: linear-gradient(135deg, hsl(var(--brewery-orange)) 0%, hsl(var(--brewery-brown-dark)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .brewery-hero-gradient {
+    background: linear-gradient(135deg, 
+      hsl(var(--brewery-dark)) 0%, 
+      hsl(var(--brewery-brown-dark)) 50%, 
+      hsl(var(--brewery-brown-light)) 100%
+    );
   }
 }
 

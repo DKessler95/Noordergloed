@@ -67,14 +67,18 @@ class DatabaseStorage implements IStorage {
             price: "8.50",
             category: "kombucha",
             stock: 24,
+            featured: true,
+            badges: ["Seizoenspecialiteit", "Premium"],
             imageUrl: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
           },
           {
             name: "Bessen Kombucha",
             description: "Zoete kombucha met verse bosbessen. Perfect gebalanceerd en vol antioxidanten voor je gezondheid.",
             price: "9.00",
-            category: "kombucha", 
+            category: "kombucha",
             stock: 18,
+            featured: true,
+            badges: ["Huistuin delicatesse"],
             imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=500"
           },
           {
@@ -83,6 +87,8 @@ class DatabaseStorage implements IStorage {
             price: "45.00",
             category: "workshop",
             stock: 12,
+            featured: false,
+            badges: ["Workshop", "Leer & Ervaar"],
             imageUrl: "/images/chicken-shoyu-ramen.jpg"
           }
         ]);

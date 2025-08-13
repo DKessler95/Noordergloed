@@ -30,7 +30,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/90 dark:bg-gray-900/90 border-b border-white/20">
+    <header className="sticky top-0 z-50 backdrop-blur-lg bg-background/95 border-b border-border">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <button 
@@ -42,39 +42,39 @@ export function Header() {
               alt="Pluk & Poot Logo" 
               className="w-10 h-10 rounded-full object-cover"
             />
-            <span className="font-display font-semibold text-xl text-purple-600 dark:text-purple-400">
+            <span className="font-display font-semibold text-xl brewery-text-gradient">
               Brouwerij Noordergloed
             </span>
           </button>
           
           <div className="hidden md:flex items-center space-x-8">
             <button
-              onClick={() => scrollToSection("verhaal")}
-              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              onClick={() => window.location.href = "/"}
+              className="text-foreground hover:text-primary transition-colors font-medium"
             >
-              Ons Verhaal
+              Home
             </button>
             <button
-              onClick={() => scrollToSection("producten")}
-              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              onClick={() => window.location.href = "/webshop"}
+              className="text-foreground hover:text-primary transition-colors font-medium"
             >
-              Producten
+              Webshop
             </button>
             <button
               onClick={() => window.location.href = "/workshops"}
-              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className="text-foreground hover:text-primary transition-colors font-medium"
             >
               Workshops
             </button>
             <button
-              onClick={() => scrollToSection("workshop")}
-              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              onClick={() => scrollToSection("verhaal")}
+              className="text-foreground hover:text-primary transition-colors font-medium"
             >
-              Ramen Pre-order
+              Over ons
             </button>
             <button
               onClick={() => scrollToSection("contact")}
-              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className="text-foreground hover:text-primary transition-colors font-medium"
             >
               Contact
             </button>
