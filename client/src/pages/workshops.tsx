@@ -77,7 +77,7 @@ function WorkshopCard({ workshop, onRegister }: WorkshopCardProps) {
         
         <div className="flex items-center justify-between mb-4">
           <div className="text-2xl font-bold text-green-600">
-            €{workshop.price.toFixed(2)}
+            €{parseFloat(workshop.price.toString()).toFixed(2)}
           </div>
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -153,7 +153,7 @@ function RegistrationModal({ workshop, isOpen, onClose }: RegistrationModalProps
         customerPhone: data.customerPhone,
         productId: workshop!.id,
         quantity: 1,
-        totalAmount: workshop!.price,
+        totalAmount: parseFloat(workshop!.price.toString()),
         notes: data.notes || "",
         status: "confirmed",
         deliveryMethod: "pickup"

@@ -18,10 +18,10 @@ export default function WorkshopDetails() {
           </Link>
           
           <h1 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Chicken Shoyu Workshop
+            Chicken Shoyu Ramen
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300">
-            Alles wat je wilt weten over ons workshop proces, bereiding en ophalen
+            Alles wat je wilt weten over ons Ramen proces, bereiding en ophalen
           </p>
         </div>
 
@@ -122,13 +122,13 @@ export default function WorkshopDetails() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  In elke kom workshop:
+                  In elke kom Ramen:
                 </h3>
                 <ul className="space-y-3 text-gray-600 dark:text-gray-300">
                   <li className="flex items-start">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <div>
-                      <strong>Verse workshop noedels</strong> - Gemaakt door Damian bij hand.
+                      <strong>Verse Ramen noedels</strong> - Gemaakt door Damian met de hand.
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -166,7 +166,7 @@ export default function WorkshopDetails() {
                   <li className="flex items-start">
                     <div className="w-2 h-2 bg-pink-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <div>
-                      <strong>Nori zeewier</strong> - Authentieke Japanse oceaansmaak
+                      <strong>Nori zeewier</strong> - Authentieke Japanse umami
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -236,7 +236,7 @@ export default function WorkshopDetails() {
                   Bezorging helaas nog niet mogelijk
                 </h3>
                 <p className="text-yellow-800 dark:text-yellow-200 text-sm">
-                  Wij bezorgen helaas niet, wij willen ervoor zorgen dat je workshop ervaring authentiek blijft. En het mensenlijk contact behouden.
+                  Wij bezorgen helaas niet, wij willen ervoor zorgen dat je Ramen ervaring authentiek blijft. En het mensenlijk contact behouden.
                 </p>
               </div>
               
@@ -285,7 +285,7 @@ export default function WorkshopDetails() {
               Klaar om te bestellen?
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Ga terug naar de homepage en reserveer je plek voor onze next workshop sessie!
+              Ga terug naar de homepage en reserveer je plek!
             </p>
             <Link href="/">
               <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">

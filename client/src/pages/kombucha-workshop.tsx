@@ -30,7 +30,7 @@ export default function ChickenShoyuWorkshop() {
                   Chicken Shoyu Workshop
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mt-2">
-                  Authentieke Japanse workshop ervaring
+                  Authentieke Japanse Ramen ervaring
                 </p>
               </div>
             </div>

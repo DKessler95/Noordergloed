@@ -75,7 +75,7 @@ export function Footer() {
                   onClick={() => scrollToSection("workshop")}
                   className="hover:text-purple-400 transition-colors"
                 >
-                  Workshop Pre-order
+                  Ramen Pre-order
                 </button>
               </li>
               <li>
