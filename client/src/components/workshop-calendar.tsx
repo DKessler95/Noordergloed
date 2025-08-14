@@ -1,250 +1,363 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Users, Clock } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { Calendar, Clock, Users, MapPin, Star, CheckCircle2, Phone, Mail, User } from "lucide-react";
 import type { WorkshopOrder } from "@shared/schema";
 
-interface CalendarDay {
+const workshopRegistrationSchema = z.object({
+  customerName: z.string().min(1, "Naam is verplicht"),
+  customerEmail: z.string().email("Ongeldig email adres"),
+  customerPhone: z.string().min(1, "Telefoon is verplicht"),
+  preferredDate: z.string().min(1, "Datum is verplicht"),
+  notes: z.string().optional(),
+});
+
+type WorkshopRegistrationForm = z.infer<typeof workshopRegistrationSchema>;
+
+// Generate next 8 Fridays
+function getNextFridays(count: number = 8): Date[] {
+  const fridays: Date[] = [];
+  const today = new Date();
+  let currentDate = new Date(today);
+  
+  // Find next Friday
+  while (currentDate.getDay() !== 5) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  // Generate fridays
+  for (let i = 0; i < count; i++) {
+    fridays.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 7);
+  }
+  
+  return fridays;
+}
+
+interface CalendarDayProps {
   date: Date;
-  available: number;
-  total: number;
-  isSelectable: boolean;
-  status: 'available' | 'pending' | 'confirmed' | 'full';
-  ordersCount: number;
+  registrationCount: number;
+  onSelect: (date: Date) => void;
+  isSelected: boolean;
 }
 
-interface WorkshopCalendarProps {
-  onDateSelect: (date: Date) => void;
-  selectedDate?: Date;
-}
-
-export function WorkshopCalendar({ onDateSelect, selectedDate }: WorkshopCalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-
-  // Haal echte workshop orders op van de server
-  const { data: workshopOrders = [] } = useQuery<WorkshopOrder[]>({
-    queryKey: ["/api/workshop-orders"],
-  });
-
-  // Bereken beschikbaarheid en status op basis van echte orders
-  const getDateInfo = (date: Date): { available: number; total: number; status: 'available' | 'pending' | 'confirmed' | 'full'; ordersCount: number } => {
-    // Alleen zaterdagen zijn beschikbaar
-    if (date.getDay() !== 6) {
-      return { available: 0, total: 12, status: 'full', ordersCount: 0 };
-    }
-    
-    // Tel orders voor deze datum
-    const dateString = date.toISOString().split('T')[0];
-    const ordersForDate = workshopOrders.filter(order => {
-      const orderDate = new Date(order.preferredDate).toISOString().split('T')[0];
-      return orderDate === dateString;
+function CalendarDay({ date, registrationCount, onSelect, isSelected }: CalendarDayProps) {
+  const minCapacity = 6;
+  const maxCapacity = 12;
+  const isConfirmed = registrationCount >= minCapacity;
+  const isFull = registrationCount >= maxCapacity;
+  const spotsLeft = maxCapacity - registrationCount;
+  
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('nl-NL', { 
+      day: 'numeric',
+      month: 'short'
     });
-
-    const totalOrders = ordersForDate.length;
-    const confirmedOrders = ordersForDate.filter(order => order.status === 'confirmed').length;
-    const available = Math.max(0, 12 - totalOrders);
-
-    // Bepaal status op basis van orders
-    let status: 'available' | 'pending' | 'confirmed' | 'full';
-    if (totalOrders === 0) {
-      status = 'available';
-    } else if (totalOrders >= 12) {
-      status = 'full';
-    } else if (confirmedOrders >= 6) {
-      status = 'confirmed';
-    } else {
-      status = 'pending';
-    }
-
-    return { available, total: 12, status, ordersCount: totalOrders };
-  };
-
-  const getStatusColor = (status: 'available' | 'pending' | 'confirmed' | 'full') => {
-    switch (status) {
-      case 'available': return "bg-green-500"; // Groen - beschikbaar
-      case 'pending': return "bg-blue-500"; // Blauw - pending orders
-      case 'confirmed': return "bg-orange-500"; // Oranje - bevestigd evenement
-      case 'full': return "bg-red-500"; // Rood - vol
-      default: return "bg-gray-500";
-    }
-  };
-
-  const getStatusText = (status: 'available' | 'pending' | 'confirmed' | 'full', ordersCount: number) => {
-    switch (status) {
-      case 'available': return "Beschikbaar";
-      case 'pending': return `${ordersCount} pending`;
-      case 'confirmed': return "Bevestigd";
-      case 'full': return "Vol";
-      default: return "Niet beschikbaar";
-    }
-  };
-
-  const getDaysInMonth = (date: Date): CalendarDay[] => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - firstDay.getDay());
-
-    const days: CalendarDay[] = [];
-    
-    for (let i = 0; i < 42; i++) {
-      const currentDate = new Date(startDate);
-      currentDate.setDate(startDate.getDate() + i);
-      
-      const isCurrentMonth = currentDate.getMonth() === month;
-      const isFriday = currentDate.getDay() === 5;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const currentDateNormalized = new Date(currentDate);
-      currentDateNormalized.setHours(0, 0, 0, 0);
-      const daysDifference = Math.ceil((currentDateNormalized.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-      const isWithin4Days = daysDifference <= 4 && daysDifference >= 0;
-      const isFuture = currentDateNormalized > today;
-      const isSelectable = isCurrentMonth && isFriday && isFuture && !isWithin4Days;
-      
-      const dateInfo = getDateInfo(currentDate);
-      
-      days.push({
-        date: currentDate,
-        available: dateInfo.available,
-        total: dateInfo.total,
-        isSelectable: isSelectable && dateInfo.available > 0,
-        status: dateInfo.status,
-        ordersCount: dateInfo.ordersCount,
-      });
-    }
-    
-    return days;
-  };
-
-  const days = getDaysInMonth(currentMonth);
-  const monthNames = [
-    "januari", "februari", "maart", "april", "mei", "juni",
-    "juli", "augustus", "september", "oktober", "november", "december"
-  ];
-  const dayNames = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
-
-  const previousMonth = () => {
-    setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)));
-  };
-
-  const nextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)));
-  };
-
-  const isSelectedDate = (date: Date) => {
-    if (!selectedDate) return false;
-    return date.toDateString() === selectedDate.toDateString();
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="w-5 h-5" />
-          Kies een vrijdag
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="space-y-4">
-        {/* Maand navigatie */}
-        <div className="flex items-center justify-between">
-          <Button variant="outline" size="sm" onClick={previousMonth}>
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <h3 className="font-semibold text-lg">
-            {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
-          </h3>
-          <Button variant="outline" size="sm" onClick={nextMonth}>
-            <ChevronRight className="w-4 h-4" />
-          </Button>
+    <Card 
+      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+        isSelected ? 'ring-2 ring-orange-500 border-orange-300' : 'border-orange-200'
+      } ${isFull ? 'opacity-60' : ''}`}
+      onClick={() => !isFull && onSelect(date)}
+    >
+      <CardContent className="p-4 text-center">
+        <div className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+          {formatDate(date)}
         </div>
-
-        {/* Kalender grid */}
-        <div className="grid grid-cols-7 gap-1">
-          {/* Dag headers */}
-          {dayNames.map(day => (
-            <div key={day} className="text-center text-sm font-medium text-gray-500 p-2">
-              {day}
-            </div>
-          ))}
+        <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          17:00 - 19:00
+        </div>
+        
+        <div className="space-y-1">
+          <Badge 
+            variant={isFull ? "destructive" : isConfirmed ? "default" : "secondary"}
+            className="text-xs"
+          >
+            {isFull ? "Volgeboekt" : isConfirmed ? "Bevestigd" : `${registrationCount}/${minCapacity}`}
+          </Badge>
           
-          {/* Kalender dagen */}
-          {days.map((day, index) => {
-            const isCurrentMonth = day.date.getMonth() === currentMonth.getMonth();
-            const isFriday = day.date.getDay() === 5;
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const dayDateNormalized = new Date(day.date);
-            dayDateNormalized.setHours(0, 0, 0, 0);
-            const daysDifference = Math.ceil((dayDateNormalized.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-            const isWithin4Days = daysDifference <= 4 && daysDifference >= 0;
-            const statusColor = getStatusColor(day.status);
-            
-            return (
-              <button
-                key={index}
-                onClick={() => day.isSelectable && onDateSelect(day.date)}
-                disabled={!day.isSelectable}
-                className={`
-                  relative p-2 text-sm rounded-lg transition-all duration-200
-                  ${isCurrentMonth ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-600'}
-                  ${day.isSelectable ? 'hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer' : 'cursor-not-allowed'}
-                  ${isSelectedDate(day.date) ? 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500' : ''}
-                  ${!isCurrentMonth ? 'opacity-30' : ''}
-                  ${isFriday && isCurrentMonth && isWithin4Days ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300' : ''}
-                `}
+          {!isFull && (
+            <div className="text-xs text-gray-500">
+              {spotsLeft} plekken over
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface RegistrationModalProps {
+  selectedDate: Date | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function RegistrationModal({ selectedDate, isOpen, onClose }: RegistrationModalProps) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const form = useForm<WorkshopRegistrationForm>({
+    resolver: zodResolver(workshopRegistrationSchema),
+    defaultValues: {
+      customerName: "",
+      customerEmail: "",
+      customerPhone: "",
+      preferredDate: selectedDate?.toISOString().split('T')[0] || "",
+      notes: "",
+    },
+  });
+
+  // Update form when selectedDate changes
+  useState(() => {
+    if (selectedDate) {
+      form.setValue("preferredDate", selectedDate.toISOString().split('T')[0]);
+    }
+  });
+
+  const registrationMutation = useMutation({
+    mutationFn: async (data: WorkshopRegistrationForm) => {
+      return await apiRequest("POST", "/api/orders/ramen", {
+        customerName: data.customerName,
+        customerEmail: data.customerEmail,
+        customerPhone: data.customerPhone,
+        preferredDate: data.preferredDate,
+        servings: 1,
+        notes: data.notes || ""
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Aanmelding succesvol!",
+        description: "Je bent aangemeld voor de ramen workshop. Je ontvangt een bevestigingsmail.",
+      });
+      form.reset();
+      onClose();
+      queryClient.invalidateQueries({ queryKey: ["/api/workshop-orders"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Er ging iets mis",
+        description: error.message || "Probeer het later opnieuw.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = (data: WorkshopRegistrationForm) => {
+    registrationMutation.mutate(data);
+  };
+
+  if (!isOpen || !selectedDate) return null;
+
+  const formattedDate = selectedDate.toLocaleDateString('nl-NL', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <CardHeader>
+          <CardTitle className="text-xl brewery-text-gradient">
+            Aanmelden voor Ramen Workshop
+          </CardTitle>
+          <p className="text-muted-foreground">
+            {formattedDate} • 17:00 - 19:00
+          </p>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <div>
+              <label htmlFor="customerName" className="flex items-center text-sm font-medium mb-1">
+                <User className="w-4 h-4 mr-2" />
+                Naam *
+              </label>
+              <Input
+                id="customerName"
+                {...form.register("customerName")}
+                placeholder="Je volledige naam"
+                className="border-orange-200 focus:border-orange-400"
+              />
+              {form.formState.errors.customerName && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.customerName.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="customerEmail" className="flex items-center text-sm font-medium mb-1">
+                <Mail className="w-4 h-4 mr-2" />
+                Email *
+              </label>
+              <Input
+                id="customerEmail"
+                type="email"
+                {...form.register("customerEmail")}
+                placeholder="je@email.nl"
+                className="border-orange-200 focus:border-orange-400"
+              />
+              {form.formState.errors.customerEmail && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.customerEmail.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="customerPhone" className="flex items-center text-sm font-medium mb-1">
+                <Phone className="w-4 h-4 mr-2" />
+                Telefoonnummer *
+              </label>
+              <Input
+                id="customerPhone"
+                type="tel"
+                {...form.register("customerPhone")}
+                placeholder="06-12345678"
+                className="border-orange-200 focus:border-orange-400"
+              />
+              {form.formState.errors.customerPhone && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.customerPhone.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="notes" className="block text-sm font-medium mb-1">
+                Opmerkingen (optioneel)
+              </label>
+              <Textarea
+                id="notes"
+                {...form.register("notes")}
+                placeholder="Allergieën, dieetwensen of andere opmerkingen..."
+                rows={3}
+                className="border-orange-200 focus:border-orange-400"
+              />
+            </div>
+
+            <div className="bg-orange-50 p-3 rounded-lg">
+              <h4 className="font-semibold text-sm mb-2">Workshop Details:</h4>
+              <ul className="text-xs space-y-1">
+                <li>• €12,50 per persoon</li>
+                <li>• Minimaal 6 personen voor bevestiging</li>
+                <li>• Inclusief alle ingrediënten en begeleiding</li>
+                <li>• Locatie wordt nog bekend gemaakt</li>
+              </ul>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="flex-1"
               >
-                <span className="relative z-10">{day.date.getDate()}</span>
-                
-                {/* Status indicator voor vrijdagen */}
-                {isFriday && isCurrentMonth && (
-                  <div className={`absolute bottom-1 right-1 w-2 h-2 rounded-full ${statusColor}`} />
-                )}
-              </button>
-            );
-          })}
+                Annuleren
+              </Button>
+              <Button
+                type="submit"
+                disabled={registrationMutation.isPending}
+                className="flex-1 brewery-gradient text-white"
+              >
+                {registrationMutation.isPending ? "Aanmelden..." : "Aanmelden"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export function WorkshopCalendar() {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Get workshop orders to calculate capacity
+  const { data: workshopOrders = [] } = useQuery<WorkshopOrder[]>({
+    queryKey: ["/api/workshop-orders"],
+    retry: false,
+  });
+
+  const fridays = getNextFridays(8);
+
+  const getRegistrationCount = (date: Date): number => {
+    const dateStr = date.toISOString().split('T')[0];
+    return workshopOrders.filter(order => {
+      const orderDate = new Date(order.preferredDate).toISOString().split('T')[0];
+      return orderDate === dateStr;
+    }).length;
+  };
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDate(null);
+  };
+
+  return (
+    <Card className="shadow-2xl border-2 border-orange-200">
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="text-2xl font-display brewery-text-gradient">
+          Ramen Workshop Agenda
+        </CardTitle>
+        <p className="text-muted-foreground">
+          Kies een vrijdag voor je ramen workshop
+        </p>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          {fridays.map((friday, index) => (
+            <CalendarDay
+              key={index}
+              date={friday}
+              registrationCount={getRegistrationCount(friday)}
+              onSelect={handleDateSelect}
+              isSelected={selectedDate?.getTime() === friday.getTime()}
+            />
+          ))}
         </div>
 
-        {/* Legenda */}
-        <div className="space-y-3 pt-4 border-t">
-          <h4 className="font-medium text-sm">Legenda:</h4>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span>Beschikbaar</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-blue-500" />
-              <span>Pending orders</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-orange-500" />
-              <span>Bevestigd evenement</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <span>Vol</span>
-            </div>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="text-xs">0/6</Badge>
+            <span>Wachtend op minimum aantal deelnemers</span>
           </div>
-        </div>
-
-        {/* Info */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
-          <div className="flex items-start gap-2">
-            <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5" />
-            <div className="text-sm text-blue-700 dark:text-blue-300">
-              <p className="font-medium">Alleen vrijdagen beschikbaar</p>
-              <p className="text-xs mt-1">Workshop wordt vers bereid voor max 6 personen per avond</p>
-            </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="default" className="text-xs">Bevestigd</Badge>
+            <span>Workshop gaat door</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="destructive" className="text-xs">Volgeboekt</Badge>
+            <span>Geen plekken meer beschikbaar</span>
           </div>
         </div>
       </CardContent>
+
+      <RegistrationModal
+        selectedDate={selectedDate}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </Card>
   );
 }
