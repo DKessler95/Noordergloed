@@ -73,7 +73,7 @@ export function Header() {
               Over ons
             </button>
             <button
-              onClick={() => scrollToSection("contact")}
+              onClick={() => window.location.href = "/contact"}
               className="text-foreground hover:text-primary transition-colors font-medium"
             >
               Contact

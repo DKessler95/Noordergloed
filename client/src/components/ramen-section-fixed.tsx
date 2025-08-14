@@ -374,7 +374,7 @@ export function RamenSection() {
                 Reserveer je plek voor de volgende ramen avond
               </p>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pb-4">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">

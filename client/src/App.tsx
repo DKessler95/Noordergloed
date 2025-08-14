@@ -17,6 +17,7 @@ import WorkshopDetails from "@/pages/workshop-details";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import NotFound from "@/pages/not-found";
+import Contact from "@/pages/contact";
 
 function Router() {
   return (
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/product/:id" component={ProductPage} />
       <Route path="/ramen/chicken-shoyu" component={ChickenShoyuPage} />
       <Route path="/ramen/tonkotsu-shoyu" component={TonkotsuShoyuPage} />
+      <Route path="/contact" component={Contact} />
       <Route path="/kombucha-workshop" component={KombuchaWorkshop} />
       <Route path="/workshop-details" component={WorkshopDetails} />
       <Route path="/admin/login" component={AdminLogin} />
