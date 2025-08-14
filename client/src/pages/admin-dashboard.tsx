@@ -136,7 +136,7 @@ function LiveProductEditor({ productId, products, categories, updateProductMutat
                 if (currentBadges.includes(badge)) {
                   setEditData({
                     ...editData,
-                    badges: currentBadges.filter(b => b !== badge)
+                    badges: currentBadges.filter((b: string) => b !== badge)
                   });
                 } else {
                   setEditData({
@@ -360,9 +360,12 @@ export default function AdminDashboard() {
   }
 
   if (!(adminStatus as any)?.isAdmin) {
+    console.log("Not admin, redirecting to /admin");
     setLocation('/admin');
     return null;
   }
+  
+  console.log("Admin authenticated, rendering dashboard");
 
   const handleLogout = async () => {
     try {
@@ -816,7 +819,7 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody>
-                        {orders.map((order: any) => (
+                        {(orders as any[]).map((order: any) => (
                           <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
                               <div>

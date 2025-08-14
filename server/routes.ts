@@ -5,7 +5,11 @@ import { insertOrderSchema, insertWorkshopOrderSchema, insertContactMessageSchem
 import { z } from "zod";
 import { sendWorkshopInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendCustomerStatusUpdate, sendEmail } from "./gmail";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
-// import { ObjectPermission } from "./objectAcl";
+// Simplified object permission enum
+enum ObjectPermission {
+  READ = "read",
+  WRITE = "write"
+}
 
 const workshopOrderRequestSchema = z.object({
   customerName: z.string().min(1),
