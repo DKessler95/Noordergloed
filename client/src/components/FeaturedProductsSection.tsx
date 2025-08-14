@@ -18,7 +18,7 @@ function FeaturedProductsSection() {
     <section className="py-12 bg-gradient-to-l from-purple-50/20 to-transparent dark:from-purple-950/5 dark:to-transparent">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h2 className="font-display text-2xl font-bold mb-3">
+          <h2 className="font-display text-4xl font-bold mb-6">
             <span className="brewery-text-gradient">Andere Producten</span>
           </h2>
           <p className="text-muted-foreground">
@@ -29,9 +29,9 @@ function FeaturedProductsSection() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {featuredProducts.map((product) => (
             <Link key={product.id} href={`/product/${product.id}`} className="block">
-              <Card className="border-2 border-purple-100 hover:border-purple-300 transition-colors group cursor-pointer h-full">
+              <Card className="border-2 border-purple-100 hover:border-purple-300 transition-colors cursor-pointer h-full">
                 <CardContent className="p-4 text-center">
-                  <div className="aspect-square w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="aspect-square w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
                     {(product.imagePath || product.imageUrl) ? (
                       <img 
                         src={(product.imagePath || product.imageUrl) as string} 
@@ -51,7 +51,7 @@ function FeaturedProductsSection() {
                     {product.description}
                   </p>
                   <div className="flex items-center justify-center gap-2">
-                    <span className="font-bold text-purple-600 text-sm">€{product.price}</span>
+                    <span className="font-bold text-purple-600 text-xs">€{product.price}</span>
                     {product.stock <= 5 && (
                       <Badge variant="secondary" className="text-xs">Beperkt</Badge>
                     )}

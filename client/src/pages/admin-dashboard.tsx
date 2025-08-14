@@ -10,11 +10,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Edit, Plus, LogOut, Check, X, Calendar, Mail } from "lucide-react";
+import { Trash2, Edit, Plus, LogOut, Check, X, Calendar, Mail, Upload, Eye, Save, Image } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { useLocation } from "wouter";
 import type { Product, WorkshopOrder } from "@shared/schema";
+import { ProductImageUploader } from "@/components/ProductImageUploader";
 
 export default function AdminDashboard() {
   const { toast } = useToast();
@@ -37,6 +38,10 @@ export default function AdminDashboard() {
   });
   const [availableBadges, setAvailableBadges] = useState(["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]);
   const [newBadge, setNewBadge] = useState("");
+  const [categories, setCategories] = useState(["kombucha", "andere", "workshop", "ramen"]);
+  const [newCategory, setNewCategory] = useState("");
+  const [liveEditingProduct, setLiveEditingProduct] = useState<number | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Check admin authentication
   const { data: adminStatus, isLoading: adminLoading } = useQuery({
@@ -258,7 +263,7 @@ export default function AdminDashboard() {
 
   // Redirect if not authenticated
   useEffect(() => {
-    if (!adminLoading && adminStatus && !adminStatus.isAdmin) {
+    if (!adminLoading && adminStatus && !(adminStatus as any).isAdmin) {
       setLocation('/admin/login');
     }
   }, [adminStatus, adminLoading, setLocation]);
@@ -273,7 +278,7 @@ export default function AdminDashboard() {
   }
 
   // Don't render if not authenticated
-  if (adminStatus && !adminStatus.isAdmin) {
+  if (adminStatus && !(adminStatus as any).isAdmin) {
     return null;
   }
 
@@ -497,12 +502,10 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <Label htmlFor="imageUrl">Afbeelding URL</Label>
-                  <Input
-                    id="imageUrl"
-                    value={newProduct.imageUrl}
-                    onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
+                  <Label>Product Afbeelding</Label>
+                  <ProductImageUploader
+                    currentImageUrl={newProduct.imageUrl}
+                    onImageUploaded={(imageUrl) => setNewProduct(prev => ({ ...prev, imageUrl }))}
                   />
                 </div>
 
@@ -552,6 +555,196 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
+            {/* Live Editing Interface */}
+            {liveEditingProduct && (
+              <Card className="border-2 border-green-200 bg-green-50/50">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                  <CardTitle className="text-green-800">Live Product Editing</CardTitle>
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        const product = products.find((p: any) => p.id === liveEditingProduct);
+                        if (product) {
+                          window.open(`/`, '_blank');
+                        }
+                      }}
+                    >
+                      <Eye className="h-4 w-4 mr-1" />
+                      Bekijk Live
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setLiveEditingProduct(null)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    const product = products.find((p: any) => p.id === liveEditingProduct);
+                    if (!product) return null;
+                    
+                    return (
+                      <div className="space-y-4">
+                        <div className="text-sm text-green-700 mb-4 bg-green-100 p-3 rounded-md">
+                          <strong>Live editing voor:</strong> {product.name} - Alle wijzigingen worden direct opgeslagen en zichtbaar op de website.
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label>Naam</Label>
+                            <Input
+                              value={product.name}
+                              onChange={(e) => {
+                                const updatedProduct = { ...product, name: e.target.value };
+                                updateProductMutation.mutate({
+                                  id: product.id,
+                                  data: updatedProduct
+                                });
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <Label>Prijs (€)</Label>
+                            <Input
+                              type="text"
+                              value={product.price}
+                              onChange={(e) => {
+                                const updatedProduct = { ...product, price: e.target.value };
+                                updateProductMutation.mutate({
+                                  id: product.id,
+                                  data: updatedProduct
+                                });
+                              }}
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <Label>Beschrijving</Label>
+                          <Textarea
+                            value={product.description}
+                            rows={3}
+                            onChange={(e) => {
+                              const updatedProduct = { ...product, description: e.target.value };
+                              updateProductMutation.mutate({
+                                id: product.id,
+                                data: updatedProduct
+                              });
+                            }}
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                          <div>
+                            <Label>Categorie</Label>
+                            <Select
+                              value={product.category || "kombucha"}
+                              onValueChange={(value) => {
+                                const updatedProduct = { ...product, category: value };
+                                updateProductMutation.mutate({
+                                  id: product.id,
+                                  data: updatedProduct
+                                });
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories.map(cat => (
+                                  <SelectItem key={cat} value={cat}>
+                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Voorraad</Label>
+                            <Input
+                              type="number"
+                              value={product.stock}
+                              onChange={(e) => {
+                                const updatedProduct = { ...product, stock: parseInt(e.target.value) || 0 };
+                                updateProductMutation.mutate({
+                                  id: product.id,
+                                  data: updatedProduct
+                                });
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <Label>Max Voorraad</Label>
+                            <Input
+                              type="number"
+                              value={product.maxStock}
+                              onChange={(e) => {
+                                const updatedProduct = { ...product, maxStock: parseInt(e.target.value) || 0 };
+                                updateProductMutation.mutate({
+                                  id: product.id,
+                                  data: updatedProduct
+                                });
+                              }}
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <Label>Product Afbeelding</Label>
+                          <ProductImageUploader
+                            productId={product.id}
+                            currentImageUrl={product.imageUrl || product.imagePath}
+                            onImageUploaded={(imageUrl) => {
+                              const updatedProduct = { ...product, imageUrl };
+                              updateProductMutation.mutate({
+                                id: product.id,
+                                data: updatedProduct
+                              });
+                            }}
+                          />
+                        </div>
+                        
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={product.featured || false}
+                              onCheckedChange={(checked) => {
+                                const updatedProduct = { ...product, featured: checked };
+                                updateProductMutation.mutate({
+                                  id: product.id,
+                                  data: updatedProduct
+                                });
+                              }}
+                            />
+                            <Label>Uitgelicht</Label>
+                          </div>
+                          
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={product.limitedStock || false}
+                              onCheckedChange={(checked) => {
+                                const updatedProduct = { ...product, limitedStock: checked };
+                                updateProductMutation.mutate({
+                                  id: product.id,
+                                  data: updatedProduct
+                                });
+                              }}
+                            />
+                            <Label>Beperkte voorraad</Label>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+            )}
+
             <Card>
               <CardHeader>
                 <CardTitle>Producten Beheer</CardTitle>
@@ -587,6 +780,15 @@ export default function AdminDashboard() {
                           />
                         </div>
                         <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => setLiveEditingProduct(product.id)}
+                            className="bg-green-50 hover:bg-green-100 text-green-700"
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            Live Edit
+                          </Button>
                           <Button 
                             variant="outline" 
                             size="sm" 
@@ -916,11 +1118,11 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <Label htmlFor="edit-imageUrl">Afbeelding URL</Label>
-                  <Input
-                    id="edit-imageUrl"
-                    value={editProductData.imageUrl || ""}
-                    onChange={(e) => setEditProductData({ ...editProductData, imageUrl: e.target.value })}
+                  <Label>Product Afbeelding</Label>
+                  <ProductImageUploader
+                    productId={editingProduct}
+                    currentImageUrl={editProductData.imageUrl}
+                    onImageUploaded={(imageUrl) => setEditProductData({ ...editProductData, imageUrl })}
                   />
                 </div>
 
