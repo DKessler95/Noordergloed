@@ -36,12 +36,16 @@ export default function AdminLogin() {
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate auth status to refresh admin state
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/status'] });
+      
       toast({
         title: "Ingelogd",
         description: "Welkom in het admin dashboard!",
       });
-      // Force a hard redirect to ensure the page refreshes with new auth state
-      window.location.href = "/admin/dashboard";
+      
+      // Use React Router navigation instead of hard redirect
+      setLocation("/admin/dashboard");
     },
     onError: (error: any) => {
       toast({

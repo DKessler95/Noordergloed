@@ -5,7 +5,7 @@ import { insertOrderSchema, insertWorkshopOrderSchema, insertContactMessageSchem
 import { z } from "zod";
 import { sendWorkshopInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendCustomerStatusUpdate, sendEmail } from "./gmail";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
-import { ObjectPermission } from "./objectAcl";
+// import { ObjectPermission } from "./objectAcl";
 
 const workshopOrderRequestSchema = z.object({
   customerName: z.string().min(1),
@@ -868,7 +868,7 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
         streetAddress: order.streetAddress,
         city: order.city,
         postalCode: order.postalCode,
-        orderDate: new Date(order.createdAt).toISOString()
+        orderDate: new Date(order.createdAt || new Date()).toISOString()
       });
       
       res.json({ message: "Email sent successfully" });
