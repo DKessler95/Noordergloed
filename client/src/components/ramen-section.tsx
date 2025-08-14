@@ -3,10 +3,94 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, MapPin, ChefHat, Users, Phone, Mail, User, Star } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import type { WorkshopOrder } from "@shared/schema";
+
+// Friday Calendar Component
+function FridayCalendar({ selectedDate, onDateSelect }: { selectedDate: string, onDateSelect: (date: string) => void }) {
+  const { data: workshopOrders = [] } = useQuery<WorkshopOrder[]>({
+    queryKey: ["/api/workshop-orders"],
+    retry: false,
+  });
+
+  // Generate next 8 Fridays
+  const getNextFridays = (count: number = 8): Date[] => {
+    const fridays: Date[] = [];
+    const today = new Date();
+    let currentDate = new Date(today);
+    
+    // Find next Friday
+    while (currentDate.getDay() !== 5) {
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    // Generate fridays
+    for (let i = 0; i < count; i++) {
+      fridays.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+    
+    return fridays;
+  };
+
+  const getRegistrationCount = (date: Date): number => {
+    const dateStr = date.toISOString().split('T')[0];
+    return workshopOrders.filter(order => {
+      const orderDate = new Date(order.preferredDate).toISOString().split('T')[0];
+      return orderDate === dateStr;
+    }).length;
+  };
+
+  const fridays = getNextFridays(8);
+
+  return (
+    <div className="grid grid-cols-4 gap-2">
+      {fridays.map((friday, index) => {
+        const dateStr = friday.toISOString().split('T')[0];
+        const registrationCount = getRegistrationCount(friday);
+        const minCapacity = 6;
+        const maxCapacity = 12;
+        const isSelected = selectedDate === dateStr;
+        const isConfirmed = registrationCount >= minCapacity;
+        const isFull = registrationCount >= maxCapacity;
+        
+        let dotColor = 'bg-gray-400'; // Default
+        if (isFull) dotColor = 'bg-red-500'; // Full
+        else if (isConfirmed) dotColor = 'bg-blue-500'; // Confirmed
+        else if (registrationCount > 0) dotColor = 'bg-green-500'; // Some registrations
+
+        return (
+          <button
+            key={index}
+            type="button"
+            disabled={isFull}
+            onClick={() => !isFull && onDateSelect(dateStr)}
+            className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+              isSelected 
+                ? 'border-orange-500 bg-orange-50' 
+                : 'border-gray-200 hover:border-orange-300'
+            } ${isFull ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-50'}`}
+          >
+            <div className="text-center">
+              <div className="text-sm font-semibold">
+                {friday.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}
+              </div>
+              <div className="text-xs text-gray-500 mb-2">17:00-19:00</div>
+              <div className={`w-3 h-3 rounded-full mx-auto ${dotColor}`} />
+              <div className="text-xs mt-1">
+                {isFull ? 'Vol' : isConfirmed ? 'Gaat door' : `${registrationCount}/${minCapacity}`}
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 export function RamenSection() {
   const [formData, setFormData] = useState({
@@ -131,13 +215,33 @@ export function RamenSection() {
             {/* Chicken Shoyu Ramen Product Card */}
             <Card className="border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50">
               <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-display text-2xl font-bold text-orange-800">
-                    Chicken Shoyu Ramen
-                  </h3>
-                  <div className="text-right">
-                    <div className="text-3xl font-bold text-orange-600">€12,50</div>
-                    <div className="text-sm text-muted-foreground">per persoon</div>
+                <div className="flex gap-6 items-start mb-4">
+                  <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0">
+                    <img
+                      src="/images/chicken-shoyu-ramen.jpg"
+                      alt="Chicken Shoyu Ramen"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        target.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <div className="hidden w-full h-full bg-gradient-to-br from-orange-200 to-amber-200 flex items-center justify-center">
+                      <ChefHat className="w-12 h-12 text-orange-600" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="font-display text-2xl font-bold text-orange-800">
+                        Chicken Shoyu Ramen
+                      </h3>
+                      <div className="text-right">
+                        <div className="text-3xl font-bold text-orange-600">€12,50</div>
+                        <div className="text-sm text-muted-foreground">per persoon</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
@@ -234,37 +338,32 @@ export function RamenSection() {
                   />
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="date" className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Gewenste Datum *
-                    </Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={formData.preferredDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, preferredDate: e.target.value }))}
-                      className="border-orange-200 focus:border-orange-400"
-                      min={new Date().toISOString().split('T')[0]}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="servings" className="flex items-center">
-                      <Users className="w-4 h-4 mr-2" />
-                      Aantal Personen
-                    </Label>
-                    <Input
-                      id="servings"
-                      type="number"
-                      min="1"
-                      max="4"
-                      value={formData.servings}
-                      onChange={(e) => setFormData(prev => ({ ...prev, servings: parseInt(e.target.value) }))}
-                      className="border-orange-200 focus:border-orange-400"
-                    />
-                  </div>
+                {/* Friday Calendar */}
+                <div className="space-y-4">
+                  <Label className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Kies een vrijdag *
+                  </Label>
+                  <FridayCalendar 
+                    selectedDate={formData.preferredDate}
+                    onDateSelect={(date) => setFormData(prev => ({ ...prev, preferredDate: date }))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="servings" className="flex items-center">
+                    <Users className="w-4 h-4 mr-2" />
+                    Aantal Personen
+                  </Label>
+                  <Input
+                    id="servings"
+                    type="number"
+                    min="1"
+                    max="4"
+                    value={formData.servings}
+                    onChange={(e) => setFormData(prev => ({ ...prev, servings: parseInt(e.target.value) }))}
+                    className="border-orange-200 focus:border-orange-400"
+                  />
                 </div>
 
                 <div className="space-y-2">

@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertOrderSchema, insertWorkshopOrderSchema, insertContactMessageSchema, insertProductSchema } from "@shared/schema";
 import { z } from "zod";
 import { sendWorkshopInvitation, sendAdminNotification, sendContactNotification, sendOrderNotification, sendCustomerOrderConfirmation, sendCustomerStatusUpdate, sendEmail } from "./gmail";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 const workshopOrderRequestSchema = z.object({
   customerName: z.string().min(1),
@@ -795,6 +796,81 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
       }
     } catch (error: any) {
       res.status(500).json({ message: "Error sending confirmation: " + error.message });
+    }
+  });
+
+  // Object storage endpoints for image uploads
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Failed to get upload URL" });
+    }
+  });
+
+  // Update product image endpoint
+  app.put("/api/products/:id/image", async (req, res) => {
+    try {
+      const productId = parseInt(req.params.id);
+      const { imageURL } = req.body;
+
+      if (!imageURL) {
+        return res.status(400).json({ error: "imageURL is required" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      const imagePath = objectStorageService.normalizeObjectEntityPath(imageURL);
+
+      const updatedProduct = await storage.updateProduct(productId, { imagePath });
+      
+      if (!updatedProduct) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+
+      res.json({ 
+        success: true, 
+        imagePath,
+        product: updatedProduct 
+      });
+    } catch (error) {
+      console.error("Error updating product image:", error);
+      res.status(500).json({ error: "Failed to update product image" });
+    }
+  });
+
+  // Serve uploaded objects
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const objectFile = await objectStorageService.getObjectEntityFile(
+        req.path,
+      );
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error checking object access:", error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
+  // Serve public objects
+  app.get("/public-objects/:filePath(*)", async (req, res) => {
+    const filePath = req.params.filePath;
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const file = await objectStorageService.searchPublicObject(filePath);
+      if (!file) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      objectStorageService.downloadObject(file, res);
+    } catch (error) {
+      console.error("Error searching for public object:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
   });
 

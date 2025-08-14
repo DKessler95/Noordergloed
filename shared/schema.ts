@@ -11,6 +11,7 @@ export const products = pgTable("products", {
   maxStock: integer("max_stock").notNull().default(20),
   category: text("category").notNull(), // "kombucha" | "workshop"
   imageUrl: text("image_url"),
+  imagePath: text("image_path"), // For uploaded images via object storage
   featured: boolean("featured").default(false),
   limitedStock: boolean("limited_stock").default(false),
   badges: text("badges").array().default([]), // ["Seizoenspecialiteit", "Huistuin delicatesse", "Premium"]

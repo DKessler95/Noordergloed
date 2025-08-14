@@ -85,10 +85,10 @@ export function WorkshopBookingFixed() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="font-display text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            Workshop Voorbestelling
+            Ramen Voorbestelling
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Authentieke Japanse workshop bereid met verse lokale ingrediënten. 
+            Authentieke Japanse Ramen bereid met verse lokale ingrediënten. 
             Alleen op vrijdag, minimaal 6 personen voor bevestiging.
           </p>
         </div>
@@ -103,7 +103,7 @@ export function WorkshopBookingFixed() {
                 Alleen Vrijdagen
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Verse workshop elke vrijdag tussen 17:00-19:00. Minimaal 4 dagen van tevoren boeken.
+                Verse Ramen elke vrijdag tussen 17:00-19:00. Minimaal 4 dagen van tevoren boeken.
               </p>
             </CardContent>
           </Card>
@@ -151,7 +151,7 @@ export function WorkshopBookingFixed() {
                 </div>
                 <div className="p-8 flex flex-col justify-center">
                   <h3 className="font-display text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                    Chicken Shoyu Workshop
+                    Chicken Shoyu Ramen
                   </h3>
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center text-gray-600 dark:text-gray-400">
@@ -195,7 +195,7 @@ export function WorkshopBookingFixed() {
         <div className="max-w-4xl mx-auto text-center my-8" style={{ display: 'block' }}>
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 p-8 rounded-xl shadow-lg border-2 border-purple-200">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              🍜 Meer weten over ons workshop proces?
+              🍜 Meer weten over ons Ramen proces?
             </h3>
             <p className="text-gray-700 dark:text-gray-200 mb-6 text-lg">
               Ontdek hoe we onze authentieke Chicken Shoyu Workshop bereiden, wat je precies krijgt en hoe het ophalen werkt.

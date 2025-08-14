@@ -90,7 +90,7 @@ export default function Webshop() {
                 <SelectItem value="all">Alle Categorieën</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                    {category === 'andere' ? 'Andere Producten' : category.charAt(0).toUpperCase() + category.slice(1)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -117,17 +117,26 @@ export default function Webshop() {
               <div className="relative">
                 {/* Product Image */}
                 <div className="aspect-square bg-gradient-to-br from-orange-100 to-amber-200 relative overflow-hidden">
-                  {product.imageUrl ? (
+                  {(product.imagePath || product.imageUrl) ? (
                     <img 
-                      src={product.imageUrl} 
+                      src={product.imagePath || product.imageUrl} 
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        // Fallback to imageUrl if imagePath fails
+                        const target = e.target as HTMLImageElement;
+                        if (product.imagePath && product.imageUrl && target.src !== product.imageUrl) {
+                          target.src = product.imageUrl;
+                        } else {
+                          target.style.display = 'none';
+                          target.nextElementSibling?.classList.remove('hidden');
+                        }
+                      }}
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-24 h-24 brewery-gradient rounded-full opacity-20"></div>
-                    </div>
-                  )}
+                  ) : null}
+                  <div className={`w-full h-full flex items-center justify-center ${(product.imagePath || product.imageUrl) ? 'hidden' : ''}`}>
+                    <div className="w-24 h-24 brewery-gradient rounded-full opacity-20"></div>
+                  </div>
                   
                   {/* Badges */}
                   <div className="absolute top-4 left-4 space-y-2">
@@ -162,7 +171,7 @@ export default function Webshop() {
                   <div className="space-y-4">
                     <div>
                       <Badge variant="outline" className="mb-2 text-orange-600 border-orange-300">
-                        {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+                        {product.category === 'andere' ? 'Andere Producten' : product.category.charAt(0).toUpperCase() + product.category.slice(1)}
                       </Badge>
                       <h3 className="font-display text-xl font-bold text-foreground mb-2">
                         {product.name}

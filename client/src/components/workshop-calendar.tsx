@@ -318,10 +318,10 @@ export function WorkshopCalendar() {
     <Card className="shadow-2xl border-2 border-orange-200">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-2xl font-display brewery-text-gradient">
-          Ramen Workshop Agenda
+          Ramen Agenda
         </CardTitle>
         <p className="text-muted-foreground">
-          Kies een vrijdag voor je ramen workshop
+          Kies een vrijdag voor je Ramen
         </p>
       </CardHeader>
       <CardContent>

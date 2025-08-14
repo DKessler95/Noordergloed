@@ -21,10 +21,10 @@ export function WorkshopsSection() {
           <div className="space-y-8">
             <div>
               <h2 className="font-display text-4xl font-bold mb-6">
-                <span className="brewery-text-gradient">Workshops</span>
+                <span className="brewery-text-gradient">Workshops & Starterspakketen</span>
               </h2>
               <p className="text-xl text-muted-foreground mb-8">
-                Leer de kunst van kombucha brouwen in onze interactieve workshops. 
+                Doe mee met onze interactieve workshops. Leer de kunst van fermenteren en andere brouwtechnieken.
                 Van beginner tot expert - ontdek de geheimen van fermentatie.
               </p>
             </div>
@@ -51,9 +51,9 @@ export function WorkshopsSection() {
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl font-bold mb-2">3 Uur Ervaring</h3>
+                    <h3 className="font-display text-xl font-bold mb-2">Leer alles over brouwen & fermenteren</h3>
                     <p className="text-muted-foreground">
-                      Uitgebreide workshop met theorie, praktijk en proeverij
+                       Het gehele proces van start tot finish.
                     </p>
                   </div>
                 </CardContent>
@@ -65,9 +65,9 @@ export function WorkshopsSection() {
                     <Award className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl font-bold mb-2">Scoby Mee</h3>
+                    <h3 className="font-display text-xl font-bold mb-2">Uitgebreide workshop</h3>
                     <p className="text-muted-foreground">
-                      Neem je eigen kombucha scoby mee naar huis om verder te brouwen
+                      Theorie, benodigheden, praktijk en een proeverij als afsluiting. Na de workshop ga je naar huis met je eigen brouwsel om te laten fermenteren.
                     </p>
                   </div>
                 </CardContent>
