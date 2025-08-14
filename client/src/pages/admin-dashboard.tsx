@@ -17,6 +17,143 @@ import { useLocation } from "wouter";
 import type { Product, WorkshopOrder } from "@shared/schema";
 import { ProductImageUploader } from "@/components/ProductImageUploader";
 
+// Live Product Editor Component
+function LiveProductEditor({ productId, products, categories, updateProductMutation }: {
+  productId: number;
+  products: Product[];
+  categories: string[];
+  updateProductMutation: any;
+}) {
+  const product = products.find((p: Product) => p.id === productId);
+  const [editData, setEditData] = useState<any>(product || {});
+
+  // Update editData when product changes
+  useEffect(() => {
+    if (product) {
+      setEditData(product);
+    }
+  }, [product]);
+
+  if (!product) return null;
+
+  const handleSave = () => {
+    updateProductMutation.mutate({
+      id: product.id,
+      data: editData
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="text-sm text-green-700 mb-4 bg-green-100 p-3 rounded-md">
+        <strong>Live editing voor:</strong> {product.name} - Wijzig de velden hieronder en klik op "Opslaan" om de changes live te zien.
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Naam</Label>
+          <Input
+            value={editData.name || ""}
+            onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+          />
+        </div>
+        <div>
+          <Label>Prijs (€)</Label>
+          <Input
+            type="text"
+            value={editData.price || ""}
+            onChange={(e) => setEditData({ ...editData, price: e.target.value })}
+          />
+        </div>
+      </div>
+      
+      <div>
+        <Label>Beschrijving</Label>
+        <Textarea
+          value={editData.description || ""}
+          rows={3}
+          onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+        />
+      </div>
+      
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <Label>Categorie</Label>
+          <Select
+            value={editData.category || "kombucha"}
+            onValueChange={(value) => setEditData({ ...editData, category: value })}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map(cat => (
+                <SelectItem key={cat} value={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Voorraad</Label>
+          <Input
+            type="number"
+            value={editData.stock || 0}
+            onChange={(e) => setEditData({ ...editData, stock: parseInt(e.target.value) || 0 })}
+          />
+        </div>
+        <div>
+          <Label>Max Voorraad</Label>
+          <Input
+            type="number"
+            value={editData.maxStock || 0}
+            onChange={(e) => setEditData({ ...editData, maxStock: parseInt(e.target.value) || 0 })}
+          />
+        </div>
+      </div>
+      
+      <div>
+        <Label>Product Afbeelding</Label>
+        <ProductImageUploader
+          productId={product.id}
+          currentImageUrl={editData.imageUrl || editData.imagePath}
+          onImageUploaded={(imageUrl) => setEditData({ ...editData, imageUrl })}
+        />
+      </div>
+      
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <Switch
+            checked={editData.featured || false}
+            onCheckedChange={(checked) => setEditData({ ...editData, featured: checked })}
+          />
+          <Label>Uitgelicht</Label>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <Switch
+            checked={editData.limitedStock || false}
+            onCheckedChange={(checked) => setEditData({ ...editData, limitedStock: checked })}
+          />
+          <Label>Beperkte voorraad</Label>
+        </div>
+      </div>
+      
+      <div className="flex justify-end space-x-2 pt-4 border-t">
+        <Button 
+          onClick={handleSave} 
+          disabled={updateProductMutation.isPending}
+          className="bg-green-600 hover:bg-green-700"
+        >
+          <Save className="h-4 w-4 mr-1" />
+          {updateProductMutation.isPending ? "Opslaan..." : "Opslaan & Live Updaten"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -555,6 +692,49 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
+            {/* Category Management */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Categorie Beheer</CardTitle>
+                <CardDescription>Beheer productcategorieën</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {categories.map((category) => (
+                      <Badge key={category} variant="secondary" className="text-sm">
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Input
+                      placeholder="Nieuwe categorie naam"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                    />
+                    <Button 
+                      onClick={() => {
+                        if (newCategory.trim() && !categories.includes(newCategory.trim().toLowerCase())) {
+                          setCategories(prev => [...prev, newCategory.trim().toLowerCase()]);
+                          setNewCategory("");
+                          toast({
+                            title: "Categorie toegevoegd",
+                            description: `Categorie "${newCategory}" is succesvol toegevoegd.`,
+                          });
+                        }
+                      }}
+                      disabled={!newCategory.trim()}
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Toevoegen
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Live Editing Interface */}
             {liveEditingProduct && (
               <Card className="border-2 border-green-200 bg-green-50/50">
@@ -565,10 +745,7 @@ export default function AdminDashboard() {
                       variant="outline" 
                       size="sm"
                       onClick={() => {
-                        const product = products.find((p: any) => p.id === liveEditingProduct);
-                        if (product) {
-                          window.open(`/`, '_blank');
-                        }
+                        window.open(`/`, '_blank');
                       }}
                     >
                       <Eye className="h-4 w-4 mr-1" />
@@ -584,163 +761,12 @@ export default function AdminDashboard() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {(() => {
-                    const product = products.find((p: any) => p.id === liveEditingProduct);
-                    if (!product) return null;
-                    
-                    return (
-                      <div className="space-y-4">
-                        <div className="text-sm text-green-700 mb-4 bg-green-100 p-3 rounded-md">
-                          <strong>Live editing voor:</strong> {product.name} - Alle wijzigingen worden direct opgeslagen en zichtbaar op de website.
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label>Naam</Label>
-                            <Input
-                              value={product.name}
-                              onChange={(e) => {
-                                const updatedProduct = { ...product, name: e.target.value };
-                                updateProductMutation.mutate({
-                                  id: product.id,
-                                  data: updatedProduct
-                                });
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <Label>Prijs (€)</Label>
-                            <Input
-                              type="text"
-                              value={product.price}
-                              onChange={(e) => {
-                                const updatedProduct = { ...product, price: e.target.value };
-                                updateProductMutation.mutate({
-                                  id: product.id,
-                                  data: updatedProduct
-                                });
-                              }}
-                            />
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <Label>Beschrijving</Label>
-                          <Textarea
-                            value={product.description}
-                            rows={3}
-                            onChange={(e) => {
-                              const updatedProduct = { ...product, description: e.target.value };
-                              updateProductMutation.mutate({
-                                id: product.id,
-                                data: updatedProduct
-                              });
-                            }}
-                          />
-                        </div>
-                        
-                        <div className="grid grid-cols-3 gap-4">
-                          <div>
-                            <Label>Categorie</Label>
-                            <Select
-                              value={product.category || "kombucha"}
-                              onValueChange={(value) => {
-                                const updatedProduct = { ...product, category: value };
-                                updateProductMutation.mutate({
-                                  id: product.id,
-                                  data: updatedProduct
-                                });
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {categories.map(cat => (
-                                  <SelectItem key={cat} value={cat}>
-                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label>Voorraad</Label>
-                            <Input
-                              type="number"
-                              value={product.stock}
-                              onChange={(e) => {
-                                const updatedProduct = { ...product, stock: parseInt(e.target.value) || 0 };
-                                updateProductMutation.mutate({
-                                  id: product.id,
-                                  data: updatedProduct
-                                });
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <Label>Max Voorraad</Label>
-                            <Input
-                              type="number"
-                              value={product.maxStock}
-                              onChange={(e) => {
-                                const updatedProduct = { ...product, maxStock: parseInt(e.target.value) || 0 };
-                                updateProductMutation.mutate({
-                                  id: product.id,
-                                  data: updatedProduct
-                                });
-                              }}
-                            />
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <Label>Product Afbeelding</Label>
-                          <ProductImageUploader
-                            productId={product.id}
-                            currentImageUrl={product.imageUrl || product.imagePath}
-                            onImageUploaded={(imageUrl) => {
-                              const updatedProduct = { ...product, imageUrl };
-                              updateProductMutation.mutate({
-                                id: product.id,
-                                data: updatedProduct
-                              });
-                            }}
-                          />
-                        </div>
-                        
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-2">
-                            <Switch
-                              checked={product.featured || false}
-                              onCheckedChange={(checked) => {
-                                const updatedProduct = { ...product, featured: checked };
-                                updateProductMutation.mutate({
-                                  id: product.id,
-                                  data: updatedProduct
-                                });
-                              }}
-                            />
-                            <Label>Uitgelicht</Label>
-                          </div>
-                          
-                          <div className="flex items-center space-x-2">
-                            <Switch
-                              checked={product.limitedStock || false}
-                              onCheckedChange={(checked) => {
-                                const updatedProduct = { ...product, limitedStock: checked };
-                                updateProductMutation.mutate({
-                                  id: product.id,
-                                  data: updatedProduct
-                                });
-                              }}
-                            />
-                            <Label>Beperkte voorraad</Label>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
+                  <LiveProductEditor 
+                    productId={liveEditingProduct} 
+                    products={products as Product[]} 
+                    categories={categories}
+                    updateProductMutation={updateProductMutation}
+                  />
                 </CardContent>
               </Card>
             )}

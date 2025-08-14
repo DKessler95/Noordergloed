@@ -495,6 +495,33 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
     }
   });
 
+  // Update product (for live editing)
+  app.patch("/api/products/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid product ID" });
+      }
+
+      // For live editing, we receive the data in req.body.data or directly in req.body
+      const productData = req.body.data || req.body;
+      
+      console.log("Updating product", id, "with data:", productData);
+      
+      const updatedProduct = await storage.updateProduct(id, productData);
+      
+      if (!updatedProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.json(updatedProduct);
+    } catch (error: any) {
+      console.error("Error updating product:", error);
+      res.status(500).json({ message: "Failed to update product: " + error.message });
+    }
+  });
+
   app.patch("/api/products/:id/stock", async (req, res) => {
     try {
       const id = parseInt(req.params.id);

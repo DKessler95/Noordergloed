@@ -250,6 +250,23 @@ class DatabaseStorage implements IStorage {
     return order;
   }
 
+  // Category management
+  async getCategories(): Promise<string[]> {
+    // Return default categories for now - in a real app this could be stored in DB
+    return ['kombucha', 'workshop', 'accessoires', 'ramen', 'andere'];
+  }
+
+  async addCategory(name: string): Promise<string> {
+    // In a real implementation, this would add to a categories table
+    // For now, we'll just return the name as confirmation
+    return name;
+  }
+
+  async removeCategory(name: string): Promise<void> {
+    // In a real implementation, this would remove from a categories table
+    // For now, this is a no-op
+  }
+
   async deleteWorkshopOrder(id: number): Promise<boolean> {
     const result = await db.delete(workshopOrders).where(eq(workshopOrders.id, id));
     return (result.rowCount || 0) > 0;
