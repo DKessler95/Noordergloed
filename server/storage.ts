@@ -316,6 +316,18 @@ class DatabaseStorage implements IStorage {
     }).returning();
     return { id: admin.id, username: admin.username, role: admin.role };
   }
+
+  // Get single order by ID
+  async getOrderById(id: number): Promise<Order | null> {
+    const [order] = await db.select().from(orders).where(eq(orders.id, id));
+    return order || null;
+  }
+
+  // Get single workshop order by ID  
+  async getWorkshopOrderById(id: number): Promise<WorkshopOrder | null> {
+    const [order] = await db.select().from(workshopOrders).where(eq(workshopOrders.id, id));
+    return order || null;
+  }
 }
 
 export const storage = new DatabaseStorage();

@@ -837,6 +837,83 @@ Verzonden op: ${new Date().toLocaleString('nl-NL')}
     }
   });
 
+  // Send email to customer for order (admin)
+  app.post("/api/orders/:id/send-email", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+
+      const orders = await storage.getOrders();
+      const order = orders.find(o => o.id === id);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      const products = await storage.getProducts();
+      const product = products.find(p => p.id === order.productId);
+      
+      await sendOrderNotification({
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        customerPhone: order.customerPhone,
+        productName: product?.name || 'Kombucha Product',
+        quantity: order.quantity,
+        totalAmount: order.totalAmount,
+        notes: order.notes,
+        deliveryMethod: order.deliveryMethod,
+        streetAddress: order.streetAddress,
+        city: order.city,
+        postalCode: order.postalCode,
+        orderDate: new Date(order.createdAt).toISOString()
+      });
+      
+      res.json({ message: "Email sent successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error sending email: " + error.message });
+    }
+  });
+
+  // Send email to customer for workshop order (admin)
+  app.post("/api/workshop-orders/:id/send-email", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid workshop order ID" });
+      }
+
+      const orders = await storage.getWorkshopOrders();
+      const order = orders.find(o => o.id === id);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Workshop order not found" });
+      }
+
+      const { sendWorkshopOrderConfirmation } = await import('./gmail-ramen');
+      await sendWorkshopOrderConfirmation({
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        customerPhone: order.customerPhone || 'Niet opgegeven',
+        servings: order.servings,
+        notes: order.notes,
+        preferredDate: order.preferredDate.toLocaleDateString('nl-NL', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })
+      });
+      
+      res.json({ message: "Email sent successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error sending email: " + error.message });
+    }
+  });
+
   app.post("/api/orders/:id/send-confirmation", requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);

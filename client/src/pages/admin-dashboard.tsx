@@ -16,11 +16,12 @@ import type { Product, WorkshopOrder } from "@shared/schema";
 import { ProductImageUploader } from "@/components/ProductImageUploader";
 
 // Live Product Editor Component
-function LiveProductEditor({ productId, products, categories, updateProductMutation }: {
+function LiveProductEditor({ productId, products, categories, updateProductMutation, availableBadges }: {
   productId: number;
   products: Product[];
   categories: string[];
   updateProductMutation: any;
+  availableBadges: string[];
 }) {
   const product = products.find((p: Product) => p.id === productId);
   const [editData, setEditData] = useState<any>(product || {});
@@ -109,6 +110,43 @@ function LiveProductEditor({ productId, products, categories, updateProductMutat
               ))}
             </SelectContent>
           </Select>
+        </div>
+      </div>
+      
+      <div>
+        <Label>Product Afbeelding</Label>
+        <ProductImageUploader
+          currentImageUrl={editData.imageUrl}
+          onImageUploaded={(imageUrl) => setEditData({ ...editData, imageUrl })}
+        />
+      </div>
+      
+      <div className="space-y-4">
+        <Label>Tags/Badges</Label>
+        <div className="flex flex-wrap gap-2 mb-2">
+          {availableBadges.map((badge) => (
+            <Badge
+              key={badge}
+              variant={(editData.badges || []).includes(badge) ? "default" : "outline"}
+              className="cursor-pointer"
+              onClick={() => {
+                const currentBadges = editData.badges || [];
+                if (currentBadges.includes(badge)) {
+                  setEditData({
+                    ...editData,
+                    badges: currentBadges.filter(b => b !== badge)
+                  });
+                } else {
+                  setEditData({
+                    ...editData,
+                    badges: [...currentBadges, badge]
+                  });
+                }
+              }}
+            >
+              {badge}
+            </Badge>
+          ))}
         </div>
       </div>
       
@@ -270,6 +308,41 @@ export default function AdminDashboard() {
     },
   });
 
+  const updateOrderStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: string }) => {
+      const response = await apiRequest("PATCH", `/api/orders/${id}/status`, { status });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      toast({
+        title: "Bestelling bijgewerkt",
+        description: "De bestellingsstatus is aangepast en klant is geïnformeerd.",
+      });
+    },
+  });
+
+  const sendCustomerEmailMutation = useMutation({
+    mutationFn: async ({ orderId, type }: { orderId: number; type: 'syrup' | 'workshop' }) => {
+      const endpoint = type === 'syrup' ? `/api/orders/${orderId}/send-email` : `/api/workshop-orders/${orderId}/send-email`;
+      const response = await apiRequest("POST", endpoint);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Email verzonden",
+        description: "Bevestiging email is naar de klant gestuurd.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Email fout",
+        description: "Er is een probleem opgetreden bij het verzenden van de email.",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Authentication redirect
   if (adminLoading) {
     return (
@@ -279,7 +352,7 @@ export default function AdminDashboard() {
     );
   }
 
-  if (!adminStatus?.isAdmin) {
+  if (!(adminStatus as any)?.isAdmin) {
     setLocation('/admin');
     return null;
   }
@@ -456,6 +529,61 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                       
+                      <div>
+                        <Label>Product Afbeelding</Label>
+                        <ProductImageUploader
+                          currentImageUrl={newProduct.imageUrl}
+                          onImageUploaded={(imageUrl) => setNewProduct(prev => ({ ...prev, imageUrl }))}
+                        />
+                      </div>
+
+                      <div className="space-y-4">
+                        <Label>Tags/Badges</Label>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          {availableBadges.map((badge) => (
+                            <Badge
+                              key={badge}
+                              variant={newProduct.badges.includes(badge) ? "default" : "outline"}
+                              className="cursor-pointer"
+                              onClick={() => {
+                                if (newProduct.badges.includes(badge)) {
+                                  setNewProduct(prev => ({
+                                    ...prev,
+                                    badges: prev.badges.filter(b => b !== badge)
+                                  }));
+                                } else {
+                                  setNewProduct(prev => ({
+                                    ...prev,
+                                    badges: [...prev.badges, badge]
+                                  }));
+                                }
+                              }}
+                            >
+                              {badge}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex space-x-2">
+                          <Input
+                            value={newBadge}
+                            onChange={(e) => setNewBadge(e.target.value)}
+                            placeholder="Nieuwe badge"
+                          />
+                          <Button onClick={() => {
+                            if (newBadge.trim() && !availableBadges.includes(newBadge.trim())) {
+                              setAvailableBadges(prev => [...prev, newBadge.trim()]);
+                              setNewBadge("");
+                              toast({
+                                title: "Badge toegevoegd",
+                                description: `Badge "${newBadge}" is toegevoegd aan beschikbare badges.`,
+                              });
+                            }
+                          }} variant="outline" size="sm">
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2">
                           <Switch
@@ -651,6 +779,7 @@ export default function AdminDashboard() {
                         products={products as Product[]} 
                         categories={categories}
                         updateProductMutation={updateProductMutation}
+                        availableBadges={availableBadges}
                       />
                     </CardContent>
                   </Card>
@@ -676,6 +805,7 @@ export default function AdminDashboard() {
                           <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-left">Totaal</th>
                           <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-left">Status</th>
                           <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-left">Datum</th>
+                          <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-left">Acties</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -688,7 +818,7 @@ export default function AdminDashboard() {
                               </div>
                             </td>
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                              {products.find((p: any) => p.id === order.productId)?.name || 'Onbekend product'}
+                              {(products as any[]).find((p: any) => p.id === order.productId)?.name || 'Onbekend product'}
                             </td>
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">{order.quantity}</td>
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">€{order.totalAmount}</td>
@@ -699,6 +829,31 @@ export default function AdminDashboard() {
                             </td>
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
                               {new Date(order.createdAt).toLocaleDateString('nl-NL')}
+                            </td>
+                            <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
+                              <div className="flex space-x-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    const newStatus = order.status === 'pending' ? 'confirmed' : order.status === 'confirmed' ? 'completed' : 'pending';
+                                    updateOrderStatusMutation.mutate({ id: order.id, status: newStatus });
+                                  }}
+                                  disabled={updateOrderStatusMutation.isPending}
+                                >
+                                  {order.status === 'pending' ? 'Bevestigen' : 
+                                   order.status === 'confirmed' ? 'Voltooien' : 'Reset'}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={() => sendCustomerEmailMutation.mutate({ orderId: order.id, type: 'syrup' })}
+                                  disabled={sendCustomerEmailMutation.isPending}
+                                >
+                                  <Mail className="h-4 w-4 mr-1" />
+                                  Email
+                                </Button>
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -742,7 +897,7 @@ export default function AdminDashboard() {
                               {order.customerPhone}
                             </td>
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                              {new Date(order.workshopDate).toLocaleDateString('nl-NL')}
+                              {new Date(order.preferredDate).toLocaleDateString('nl-NL')}
                             </td>
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
                               <Badge variant={order.status === 'confirmed' ? 'default' : 'secondary'}>
@@ -750,19 +905,31 @@ export default function AdminDashboard() {
                               </Badge>
                             </td>
                             <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={() => {
-                                  const newStatus = order.status === 'pending' ? 'confirmed' : 'pending';
-                                  updateWorkshopOrderStatusMutation.mutate({
-                                    id: order.id,
-                                    status: newStatus
-                                  });
-                                }}
-                              >
-                                {order.status === 'pending' ? 'Bevestigen' : 'Ongedaan maken'}
-                              </Button>
+                              <div className="flex space-x-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => {
+                                    const newStatus = order.status === 'pending' ? 'confirmed' : 'pending';
+                                    updateWorkshopOrderStatusMutation.mutate({
+                                      id: order.id,
+                                      status: newStatus
+                                    });
+                                  }}
+                                  disabled={updateWorkshopOrderStatusMutation.isPending}
+                                >
+                                  {order.status === 'pending' ? 'Bevestigen' : 'Ongedaan maken'}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={() => sendCustomerEmailMutation.mutate({ orderId: order.id, type: 'workshop' })}
+                                  disabled={sendCustomerEmailMutation.isPending}
+                                >
+                                  <Mail className="h-4 w-4 mr-1" />
+                                  Email
+                                </Button>
+                              </div>
                             </td>
                           </tr>
                         ))}
