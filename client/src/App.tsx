@@ -33,6 +33,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/kombucha-workshop" component={KombuchaWorkshop} />
       <Route path="/workshop-details" component={WorkshopDetails} />
+      <Route path="/admin" component={AdminLogin} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route component={NotFound} />
