@@ -36,6 +36,8 @@ function LiveProductEditor({ productId, products, categories, updateProductMutat
   const handleSave = () => {
     if (!product) return;
     
+    console.log("Saving product data:", editData);
+    
     updateProductMutation.mutate({
       id: productId,
       productData: {
@@ -274,7 +276,11 @@ export default function AdminDashboard() {
 
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, productData }: { id: number; productData: any }) => {
+      console.log("Sending PATCH request with data:", productData);
       const response = await apiRequest("PATCH", `/api/products/${id}`, productData);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+      }
       return response.json();
     },
     onSuccess: () => {
@@ -283,12 +289,13 @@ export default function AdminDashboard() {
         title: "Product bijgewerkt",
         description: "Wijzigingen zijn live doorgevoerd op de website.",
       });
+      setLiveEditingProduct(null); // Close live editor on success
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Error updating product:", error);
       toast({
         title: "Fout bij opslaan",
-        description: "Er is een fout opgetreden bij het bijwerken van het product.",
+        description: error.message || "Er is een fout opgetreden bij het bijwerken van het product.",
         variant: "destructive",
       });
     },
