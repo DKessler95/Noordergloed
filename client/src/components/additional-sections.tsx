@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, Award } from "lucide-react";
+import FeaturedProductsSection from "./FeaturedProductsSection";
 
 export function AdditionalSections() {
   return (
@@ -66,101 +67,8 @@ export function AdditionalSections() {
         </div>
       </section>
 
-      {/* Other Products Section - Right Aligned */}
-      <section className="py-20 bg-gradient-to-l from-purple-50/30 to-transparent dark:from-purple-950/10 dark:to-transparent">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left - Decorative Space */}
-            <div className="hidden lg:block">
-              <div className="w-full h-96 bg-gradient-to-br from-purple-100/40 to-pink-200/30 rounded-3xl flex items-center justify-center">
-                <div className="text-center text-purple-300">
-                  <div className="w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <Award className="w-16 h-16 text-purple-500/40" />
-                  </div>
-                  <p className="text-lg font-display">Lokale Specialiteiten</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right - Content */}
-            <div className="space-y-8">
-              <div>
-                <h2 className="font-display text-4xl font-bold mb-6">
-                  <span className="brewery-text-gradient">Onze Andere Producten</span>
-                </h2>
-                <p className="text-xl text-muted-foreground mb-8">
-                  Naast onze kombucha en workshops bieden we ook andere lokale 
-                  specialiteiten aan. Van seizoensgebonden jam tot verse limonade.
-                </p>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-6">
-                <Card className="border-2 border-purple-100 hover:border-purple-300 transition-colors group cursor-pointer"
-                      onClick={() => window.location.href = "/webshop"}>
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <span className="text-2xl">🍓</span>
-                    </div>
-                    <h3 className="font-display text-lg font-bold mb-2">Seizoensjam</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Verse jam van lokale vruchten
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-2 border-purple-100 hover:border-purple-300 transition-colors group cursor-pointer ml-4"
-                      onClick={() => window.location.href = "/webshop"}>
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <span className="text-2xl">🥐</span>
-                    </div>
-                    <h3 className="font-display text-lg font-bold mb-2">Soms Gebak</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Vers gebak wanneer beschikbaar
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-2 border-purple-100 hover:border-purple-300 transition-colors group cursor-pointer"
-                      onClick={() => window.location.href = "/webshop"}>
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <span className="text-2xl">🍋</span>
-                    </div>
-                    <h3 className="font-display text-lg font-bold mb-2">Limonade</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Verse biologische limonade
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-2 border-purple-100 hover:border-purple-300 transition-colors group cursor-pointer ml-4"
-                      onClick={() => window.location.href = "/webshop"}>
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <span className="text-2xl">✨</span>
-                    </div>
-                    <h3 className="font-display text-lg font-bold mb-2">Andere Specialiteiten</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Wisselende lokale producten
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="pt-4">
-                <button 
-                  className="brewery-gradient text-white px-12 py-4 text-xl rounded-full hover:scale-105 transition-all duration-300 font-semibold"
-                  onClick={() => window.location.href = "/webshop"}
-                >
-                  Bekijk Alle Producten
-                  <span className="ml-3">→</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Featured Products Section - Right Aligned */}
+      <FeaturedProductsSection />
     </>
   );
 }
