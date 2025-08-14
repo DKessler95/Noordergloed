@@ -45,7 +45,10 @@ export function ProductCarousel() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {featuredProducts.slice(0, 8).map((product: Product) => (
             <div key={product.id} className="w-full">
-                  <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border-2 border-orange-200/50 hover:border-orange-300">
+                  <Card 
+                    className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border-2 border-orange-200/50 hover:border-orange-300 cursor-pointer"
+                    onClick={() => window.location.href = `/product/${product.id}`}
+                  >
                     <div className="relative">
                       {/* Product Image */}
                       <div className="aspect-square bg-gradient-to-br from-orange-100 to-amber-200 relative overflow-hidden">
@@ -101,10 +104,13 @@ export function ProductCarousel() {
                             
                             <Button 
                               className="brewery-gradient text-white hover:scale-105 transition-all duration-200 rounded-full"
-                              onClick={() => window.location.href = `/webshop?product=${product.id}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.location.href = `/product/${product.id}`;
+                              }}
                             >
                               <ShoppingCart className="w-4 h-4 mr-2" />
-                              Bestel Nu
+                              Bekijk Product
                             </Button>
                           </div>
                         </div>

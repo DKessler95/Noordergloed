@@ -469,7 +469,7 @@ export function RamenSection() {
                   {mutation.isPending ? "Aanmelden..." : "Aanmelden voor Ramen Avond"}
                 </Button>
 
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="text-xs text-muted-foreground text-center mb-0">
                   * Verplichte velden. We nemen binnen 24 uur contact met je op voor bevestiging.
                 </p>
               </form>
