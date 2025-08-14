@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Clock, MapPin, ChefHat, Users, Phone, Mail, User } from "lucide-react";
+import { Calendar, Clock, MapPin, ChefHat, Users, Phone, Mail, User, Star } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -73,8 +73,7 @@ export function RamenSection() {
                 <span className="brewery-text-gradient">Ramen Workshop Agenda</span>
               </h2>
               <p className="text-xl text-muted-foreground mb-6">
-                Leer de kunst van authentieke ramen maken in onze intieme workshops. 
-                Van bouillon tot noodles - ontdek alle geheimen van de Japanse keuken.
+                Verse ramen elke vrijdag tussen 17:00-19:00. Minimaal 4 dagen van tevoren boeken.
               </p>
             </div>
 
@@ -86,8 +85,8 @@ export function RamenSection() {
                     <Calendar className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold">Elke Zaterdag</h4>
-                    <p className="text-sm text-muted-foreground">14:00 - 18:00</p>
+                    <h4 className="font-semibold">Alleen Vrijdagen</h4>
+                    <p className="text-sm text-muted-foreground">17:00 - 19:00</p>
                   </div>
                 </CardContent>
               </Card>
@@ -98,8 +97,8 @@ export function RamenSection() {
                     <Users className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold">Max 12 Personen</h4>
-                    <p className="text-sm text-muted-foreground">Persoonlijke begeleiding</p>
+                    <h4 className="font-semibold">Minimaal 6 Personen</h4>
+                    <p className="text-sm text-muted-foreground">Intieme setting voor beste kwaliteit</p>
                   </div>
                 </CardContent>
               </Card>
@@ -110,8 +109,8 @@ export function RamenSection() {
                     <ChefHat className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold">Inclusief Recept</h4>
-                    <p className="text-sm text-muted-foreground">Neem recepten mee</p>
+                    <h4 className="font-semibold">Lokale Ingrediënten</h4>
+                    <p className="text-sm text-muted-foreground">Verse ingrediënten uit Groningen</p>
                   </div>
                 </CardContent>
               </Card>
@@ -122,30 +121,59 @@ export function RamenSection() {
                     <MapPin className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold">Afhalen Mogelijk</h4>
-                    <p className="text-sm text-muted-foreground">Neem je ramen mee</p>
+                    <h4 className="font-semibold">Authentieke Technieken</h4>
+                    <p className="text-sm text-muted-foreground">Japanse methoden</p>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Process Link */}
-            <div className="bg-card rounded-lg p-6 border border-orange-200">
-              <h4 className="font-semibold text-lg mb-3 flex items-center">
-                <ChefHat className="w-5 h-5 mr-2 text-orange-600" />
-                Bereidingsproces & Informatie
-              </h4>
-              <p className="text-muted-foreground mb-4">
-                Ontdek ons volledige bereidingsproces, ingrediënten en wat je kunt verwachten tijdens de workshop.
-              </p>
-              <Button 
-                variant="outline" 
-                className="border-orange-300 text-orange-600 hover:bg-orange-50"
-                onClick={() => window.location.href = "/workshop-details"}
-              >
-                Bekijk Bereidingsproces
-              </Button>
-            </div>
+            {/* Chicken Shoyu Ramen Product Card */}
+            <Card className="border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="font-display text-2xl font-bold text-orange-800">
+                    Chicken Shoyu Ramen
+                  </h3>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-orange-600">€12,50</div>
+                    <div className="text-sm text-muted-foreground">per persoon</div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center text-sm">
+                    <Star className="w-4 h-4 text-orange-500 mr-2" />
+                    Verse zelfgemaakte noedels
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Star className="w-4 h-4 text-orange-500 mr-2" />
+                    Krokante kip met perfecte textuur
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Star className="w-4 h-4 text-orange-500 mr-2" />
+                    Rijke shoyu bouillon (24+ uur getrokken)
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Star className="w-4 h-4 text-orange-500 mr-2" />
+                    Verse toppings: ajitsuke tamago, nori, lente-ui en meer
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Star className="w-4 h-4 text-orange-500 mr-2" />
+                    Lokale ingrediënten uit Groningen
+                  </div>
+                </div>
+
+                <Button 
+                  variant="outline" 
+                  className="w-full border-orange-300 text-orange-600 hover:bg-orange-50"
+                  onClick={() => window.location.href = "/workshop-details"}
+                >
+                  <ChefHat className="w-4 h-4 mr-2" />
+                  Bekijk Bereidingsproces
+                </Button>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right - Booking Form */}

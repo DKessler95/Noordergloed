@@ -4,6 +4,7 @@ import { WelcomeSection } from "@/components/welcome-section";
 import { ProductCarousel } from "@/components/product-carousel";
 import { WorkshopsSection } from "@/components/workshops-section";
 import { RamenSection } from "@/components/ramen-section";
+import { AdditionalSections } from "@/components/additional-sections";
 import { ContactSection } from "@/components/contact-section";
 import { Footer } from "@/components/footer";
 
@@ -16,6 +17,7 @@ export default function Home() {
       <ProductCarousel />
       <WorkshopsSection />
       <RamenSection />
+      <AdditionalSections />
       <ContactSection />
       <Footer />
     </div>
